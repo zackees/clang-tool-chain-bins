@@ -1,0 +1,13 @@
+{
+  "platforms": [
+    {
+      "platform": "win",
+      "architectures": [
+        {
+          "arch": "x86_64",
+          "manifest_path": "win/x86_64/manifest.json"
+        }
+      ]
+    }
+  ]
+}
