@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clang Toolchain Binary Distributions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .tool-card {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+
+        .tool-card h2 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+
+        .tool-card p {
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 0.5rem;
+        }
+
+        .download-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            overflow-x: auto;
+            display: block;
+        }
+
+        .download-table thead {
+            background: #667eea;
+            color: white;
+        }
+
+        .download-table th,
+        .download-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .download-table tbody tr:hover {
+            background: #f9f9f9;
+        }
+
+        .download-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .download-link:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.6rem;
+            background: #667eea;
+            color: white;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .info-box {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        .info-box h3 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            margin-top: 3rem;
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .platform-icon {
+            font-weight: bold;
+            margin-right: 0.3rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .download-table {
+                font-size: 0.9rem;
+            }
+
+            .download-table th,
+            .download-table td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Clang Toolchain Binary Distributions</h1>
+        <p>Pre-built LLVM/Clang, IWYU, and MinGW binaries for multiple platforms</p>
+        <p style="margin-top: 1rem; font-size: 0.95rem;">
+            <a href="https://github.com/zackees/clang-tool-chain-bins" style="color: white; opacity: 0.9;">View on GitHub</a>
+        </p>
+    </div>
+
+    <div class="container">
+        <div class="tools-grid">
+            <div class="tool-card">
+                <h2>LLVM/Clang</h2>
+                <p>Complete LLVM/Clang compiler toolchain with essential tools for C/C++ development. Ultra-compressed archives using zstd level 22.</p>
+                <span class="badge">548 MB Total</span>
+                <span class="badge">6 Platforms</span>
+            </div>
+
+            <div class="tool-card">
+                <h2>Include-What-You-Use</h2>
+                <p>Tool for analyzing and optimizing C/C++ #include directives. Helps reduce compile times and improve code quality.</p>
+                <span class="badge">Version 0.25</span>
+                <span class="badge">5 Platforms</span>
+            </div>
+
+            <div class="tool-card">
+                <h2>MinGW Sysroot</h2>
+                <p>MinGW-w64 sysroot for Windows GNU ABI development. Includes headers and libraries for cross-platform compilation.</p>
+                <span class="badge">20 MB</span>
+                <span class="badge">Windows x64</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>LLVM/Clang Downloads</h2>
+
+            <div class="info-box">
+                <h3>Features</h3>
+                <ul style="margin-left: 1.5rem; color: #555;">
+                    <li>Compressed with zstd level 22 (~94% size reduction)</li>
+                    <li>Hard-link deduplication for duplicate binaries</li>
+                    <li>Essential tools: compilers, linkers, binary utilities</li>
+                    <li>SHA256 checksums for integrity verification</li>
+                </ul>
+            </div>
+
+            <table class="download-table">
+                <thead>
+                    <tr>
+                        <th>Platform</th>
+                        <th>Architecture</th>
+                        <th>Version</th>
+                        <th>File</th>
+                        <th>Size</th>
+                        <th>Download</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="platform-icon">🪟</span>Windows</td>
+                        <td>x86_64</td>
+                        <td>21.1.5</td>
+                        <td>llvm-21.1.5-win-x86_64.tar.zst</td>
+                        <td>52 MB</td>
+                        <td>
+                            <a href="assets/clang/win/x86_64/llvm-21.1.5-win-x86_64.tar.zst" class="download-link">Download</a> |
+                            <a href="assets/clang/win/x86_64/llvm-21.1.5-win-x86_64.tar.zst.sha256" class="download-link">SHA256</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="platform-icon">🪟</span>Windows (MinGW)</td>
+                        <td>x86_64</td>
+                        <td>20251104</td>
+                        <td>llvm-mingw-20251104-win-x86_64.tar.zst</td>
+                        <td>~35 MB</td>
+                        <td>
+                            <a href="assets/clang/win/mingw/x86_64/llvm-mingw-20251104-win-x86_64.tar.zst" class="download-link">Download</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="platform-icon">🐧</span>Linux</td>
+                        <td>x86_64</td>
+                        <td>21.1.5</td>
+                        <td>llvm-21.1.5-linux-x86_64.tar.zst</td>
+                        <td>~110 MB</td>
+                        <td>
+                            <a href="assets/clang/linux/x86_64/llvm-21.1.5-linux-x86_64.tar.zst" class="download-link">Download</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="platform-icon">🐧</span>Linux</td>
+                        <td>ARM64</td>
+                        <td>21.1.5</td>
+                        <td>llvm-21.1.5-linux-arm64.tar.zst</td>
+                        <td>~115 MB</td>
+                        <td>
+                            <a href="assets/clang/linux/arm64/llvm-21.1.5-linux-arm64.tar.zst" class="download-link">Download</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="platform-icon">🍎</span>macOS</td>
+                        <td>x86_64</td>
+                        <td>19.1.7</td>
+                        <td>llvm-19.1.7-darwin-x86_64.tar.zst</td>
+                        <td>~100 MB</td>
+                        <td>
+                            <a href="assets/clang/darwin/x86_64/llvm-19.1.7-darwin-x86_64.tar.zst" class="download-link">Download</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="platform-icon">🍎</span>macOS</td>
+                        <td>ARM64</td>
+                        <td>19.1.7</td>
+                        <td>llvm-19.1.7-darwin-arm64.tar.zst</td>
+                        <td>~85 MB</td>
+                        <td>
+                            <a href="assets/clang/darwin/arm64/llvm-19.1.7-darwin-arm64.tar.zst" class="download-link">Download</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p style="margin-top: 1rem; color: #666;">
+                <strong>Documentation:</strong> <a href="assets/clang/README.md" class="download-link">View README</a>
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>Include-What-You-Use (IWYU) Downloads</h2>
+
+            <div class="info-box">
+                <h3>About IWYU</h3>
+                <p style="color: #555;">
+                    A tool for analyzing and optimizing C/C++ <code>#include</code> directives.
+                    Helps remove unnecessary includes and add missing ones, improving compile times and code quality.
+                </p>
+            </div>
+
+            <table class="download-table">
+                <thead>
+                    <tr>
+                        <th>Platform</th>
+                        <th>Architecture</th>
+                        <th>Version</th>
+                        <th>File</th>
+                        <th>Size</th>
+                        <th>Download</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="platform-icon">🪟</span>Windows</td>
+                        <td>x86_64</td>
+                        <td>0.25</td>
+                        <td>iwyu-0.25-win-x86_64.tar.zst</td>
+                        <td>1.5 MB</td>
+                        <td>
+                            <a href="assets/iwyu/win/x86_64/iwyu-0.25-win-x86_64.tar.zst" class="download-link">Download</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="platform-icon">🐧</span>Linux</td>
+                        <td>x86_64</td>
+                        <td>0.25</td>
+                        <td>iwyu-0.25-linux-x86_64.tar.zst</td>
+                        <td>1.5 MB</td>
+                        <td>
+                            <a href="assets/iwyu/linux/x86_64/iwyu-0.25-linux-x86_64.tar.zst" class="download-link">Download</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="platform-icon">🐧</span>Linux</td>
+                        <td>ARM64</td>
+                        <td>0.25</td>
+                        <td>iwyu-0.25-linux-arm64.tar.zst</td>
+                        <td>1.5 MB</td>
+                        <td>
+                            <a href="assets/iwyu/linux/arm64/iwyu-0.25-linux-arm64.tar.zst" class="download-link">Download</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="platform-icon">🍎</span>macOS</td>
+                        <td>x86_64</td>
+                        <td>0.25</td>
+                        <td>iwyu-0.25-darwin-x86_64.tar.zst</td>
+                        <td>1.2 MB</td>
+                        <td>
+                            <a href="assets/iwyu/darwin/x86_64/iwyu-0.25-darwin-x86_64.tar.zst" class="download-link">Download</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="platform-icon">🍎</span>macOS</td>
+                        <td>ARM64</td>
+                        <td>0.25</td>
+                        <td>iwyu-0.25-darwin-arm64.tar.zst</td>
+                        <td>1.2 MB</td>
+                        <td>
+                            <a href="assets/iwyu/darwin/arm64/iwyu-0.25-darwin-arm64.tar.zst" class="download-link">Download</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p style="margin-top: 1rem; color: #666;">
+                <strong>Documentation:</strong>
+                <a href="assets/iwyu/DOWNLOAD_SUMMARY.md" class="download-link">Download Summary</a>
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>MinGW Sysroot Downloads</h2>
+
+            <div class="info-box">
+                <h3>About MinGW Sysroot</h3>
+                <p style="color: #555;">
+                    MinGW-w64 sysroot for Windows GNU ABI development. Includes C/C++ standard library headers
+                    and import libraries for compiling with MinGW target. Automatically used by clang-tool-chain
+                    for Windows GNU development.
+                </p>
+            </div>
+
+            <table class="download-table">
+                <thead>
+                    <tr>
+                        <th>Platform</th>
+                        <th>Architecture</th>
+                        <th>Version</th>
+                        <th>File</th>
+                        <th>Size</th>
+                        <th>Download</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="platform-icon">🪟</span>Windows</td>
+                        <td>x86_64</td>
+                        <td>21.1.5</td>
+                        <td>mingw-sysroot-21.1.5-win-x86_64.tar.zst</td>
+                        <td>20 MB</td>
+                        <td>
+                            <a href="assets/mingw/win/x86_64/mingw-sysroot-21.1.5-win-x86_64.tar.zst" class="download-link">Download</a> |
+                            <a href="assets/mingw/win/x86_64/mingw-sysroot-21.1.5-win-x86_64.tar.zst.sha256" class="download-link">SHA256</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p style="margin-top: 1rem; color: #666;">
+                <strong>Documentation:</strong> <a href="assets/mingw/README.md" class="download-link">View README</a>
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>Installation & Usage</h2>
+
+            <div class="info-box">
+                <h3>Extract Archives</h3>
+                <p style="color: #555; margin-bottom: 0.5rem;">All archives are compressed with zstd. You'll need zstd to extract them:</p>
+                <code style="display: block; padding: 0.8rem; background: #2d2d2d; color: #f8f8f8; border-radius: 4px; margin-top: 0.5rem;">
+                    tar --use-compress-program=unzstd -xvf llvm-21.1.5-win-x86_64.tar.zst
+                </code>
+            </div>
+
+            <div class="info-box" style="margin-top: 1rem;">
+                <h3>Verify Checksums</h3>
+                <p style="color: #555; margin-bottom: 0.5rem;">For files with checksums, verify integrity before use:</p>
+                <code style="display: block; padding: 0.8rem; background: #2d2d2d; color: #f8f8f8; border-radius: 4px; margin-top: 0.5rem;">
+                    sha256sum -c llvm-21.1.5-win-x86_64.tar.zst.sha256
+                </code>
+            </div>
+
+            <div class="info-box" style="margin-top: 1rem;">
+                <h3>Integration</h3>
+                <p style="color: #555;">
+                    These binaries are designed to work seamlessly with the
+                    <a href="https://github.com/zackees/clang-tool-chain" class="download-link">clang-tool-chain</a>
+                    project, which provides automated installation and management.
+                </p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Technical Details</h2>
+
+            <table class="download-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Compression</strong></td>
+                        <td>zstd level 22 (~94% size reduction)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Deduplication</strong></td>
+                        <td>Hard-link deduplication for duplicate binaries</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Integrity</strong></td>
+                        <td>SHA256 and MD5 checksums for verification</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Platforms</strong></td>
+                        <td>Windows (x86_64, MinGW), Linux (x86_64, ARM64), macOS (x86_64, ARM64)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total Size</strong></td>
+                        <td>~548 MB (all archives combined)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Archive Count</strong></td>
+                        <td>13 compressed archives</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Clang Toolchain Binary Distributions</p>
+        <p style="margin-top: 0.5rem;">
+            <a href="https://github.com/zackees/clang-tool-chain-bins" style="color: #667eea; text-decoration: none;">GitHub Repository</a>
+        </p>
+    </div>
+</body>
+</html>
