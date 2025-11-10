@@ -6,6 +6,10 @@
         {
           "arch": "x86_64",
           "manifest_path": "win/x86_64/manifest.json"
+        },
+        {
+          "arch": "mingw-x86_64",
+          "manifest_path": "win/mingw/x86_64/manifest.json"
         }
       ]
     },
