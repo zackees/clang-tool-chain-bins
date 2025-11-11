@@ -1,7 +1,7 @@
 {
   "latest": "4.0.15",
   "4.0.15": {
-    "href": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/emscripten/linux/x86_64/emscripten-4.0.15-linux-x86_64.tar.zst",
+    "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/emscripten/linux/x86_64/emscripten-4.0.15-linux-x86_64.tar.zst",
     "sha256": "7cc00921f58ddbc835c4fdaef44921040a7d8acaab6431cd5b58415b4bef93de"
   }
 }

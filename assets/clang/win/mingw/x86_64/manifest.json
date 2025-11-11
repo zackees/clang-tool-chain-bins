@@ -1,7 +1,7 @@
 {
   "latest": "20251104",
   "20251104": {
-    "href": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang/win/mingw/x86_64/llvm-mingw-20251104-win-x86_64.tar.zst",
+    "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang/win/mingw/x86_64/llvm-mingw-20251104-win-x86_64.tar.zst",
     "sha256": "a18059f62f4435c0f023073e186f7c14be5fdfc07a193b1f1e627bcad7f15d87"
   }
 }
