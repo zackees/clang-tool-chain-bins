@@ -1,0 +1,28 @@
+# Temporary working directories used by maintainer scripts
+work/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Downloaded archives (should be in ../assets/)
+*.tar.zst
+*.tar.gz
+*.zip
+
+# Temporary extraction directories
+extracted/
+temp/
+tmp/
+
+# Build artifacts
+*.o
+*.a
+*.so
+*.dll
+*.exe
+
+# Checksums (should be in ../assets/)
+*.sha256
+*.md5
