@@ -39,6 +39,7 @@ from typing import Any
 # ============================================================================
 
 LLVM_VERSION = "19.1.7"
+LLVM_MINGW_VERSION = "20251104"  # Match current MinGW version
 
 # Official LLVM download URLs
 LLVM_DOWNLOAD_URLS = {
@@ -705,6 +706,148 @@ def deduplicate_binaries(bin_dir: Path) -> dict[str, Any]:
 
 
 # ============================================================================
+# MinGW Integration Functions (Windows GNU ABI Support)
+# ============================================================================
+
+
+def download_llvm_mingw(arch: str, work_dir: Path) -> Path:
+    """
+    Download LLVM-MinGW release for header extraction.
+
+    Args:
+        arch: Architecture (x86_64 or arm64)
+        work_dir: Working directory for downloads
+
+    Returns:
+        Path to downloaded archive
+    """
+    urls = {
+        "x86_64": f"https://github.com/mstorsjo/llvm-mingw/releases/download/{LLVM_MINGW_VERSION}/llvm-mingw-{LLVM_MINGW_VERSION}-ucrt-x86_64.zip",
+        "arm64": f"https://github.com/mstorsjo/llvm-mingw/releases/download/{LLVM_MINGW_VERSION}/llvm-mingw-{LLVM_MINGW_VERSION}-ucrt-aarch64.zip",
+    }
+
+    url = urls.get(arch)
+    if not url:
+        raise ValueError(f"Unsupported architecture for MinGW: {arch}")
+
+    work_dir.mkdir(parents=True, exist_ok=True)
+    archive_path = work_dir / f"llvm-mingw-{LLVM_MINGW_VERSION}-{arch}.zip"
+
+    if archive_path.exists():
+        print(f"LLVM-MinGW already downloaded: {archive_path}")
+        return archive_path
+
+    print(f"Downloading LLVM-MinGW from: {url}")
+    urllib.request.urlretrieve(url, archive_path)
+    print(f"Downloaded: {archive_path.stat().st_size / (1024*1024):.2f} MB")
+
+    return archive_path
+
+
+def extract_mingw_headers(archive_path: Path, extract_dir: Path, arch: str) -> Path:
+    """
+    Extract MinGW headers and sysroot from LLVM-MinGW archive.
+
+    Args:
+        archive_path: Path to LLVM-MinGW zip file
+        extract_dir: Directory to extract to
+        arch: Architecture (x86_64 or arm64)
+
+    Returns:
+        Path to extracted LLVM-MinGW root directory
+    """
+    import zipfile
+
+    print(f"Extracting LLVM-MinGW archive: {archive_path}")
+
+    # Extract entire archive
+    temp_extract = extract_dir / "mingw_temp"
+    temp_extract.mkdir(parents=True, exist_ok=True)
+
+    with zipfile.ZipFile(archive_path, "r") as zf:
+        zf.extractall(path=temp_extract)
+
+    # Find the llvm-mingw root directory
+    llvm_mingw_root = None
+    for item in temp_extract.iterdir():
+        if item.is_dir() and item.name.startswith("llvm-mingw"):
+            llvm_mingw_root = item
+            break
+
+    if not llvm_mingw_root:
+        raise RuntimeError(f"Could not find llvm-mingw root in {temp_extract}")
+
+    print(f"Found LLVM-MinGW root: {llvm_mingw_root}")
+    return llvm_mingw_root
+
+
+def integrate_mingw_into_hardlinked(mingw_root: Path, hardlinked_dir: Path, arch: str) -> None:
+    """
+    Copy MinGW headers and sysroot into hardlinked directory structure.
+
+    Args:
+        mingw_root: Path to extracted LLVM-MinGW root
+        hardlinked_dir: Path to hardlinked directory (e.g., win_hardlinked/)
+        arch: Architecture (x86_64 or arm64)
+    """
+    print(f"\nIntegrating MinGW components into {hardlinked_dir}")
+
+    # Determine sysroot name based on architecture
+    sysroot_name = "x86_64-w64-mingw32" if arch == "x86_64" else "aarch64-w64-mingw32"
+
+    # 1. Copy include/ directory (C/C++/Windows headers)
+    include_src = mingw_root / "include"
+    if include_src.exists():
+        include_dst = hardlinked_dir / "include"
+        print(f"Copying headers: include/ -> {include_dst.name}/")
+        if include_dst.exists():
+            shutil.rmtree(include_dst)
+        shutil.copytree(include_src, include_dst, symlinks=True)
+        header_count = len(list(include_dst.rglob("*.h")))
+        print(f"  Copied {header_count} header files")
+
+    # 2. Copy sysroot directory (x86_64-w64-mingw32/ or aarch64-w64-mingw32/)
+    sysroot_src = mingw_root / sysroot_name
+    if sysroot_src.exists():
+        sysroot_dst = hardlinked_dir / sysroot_name
+        print(f"Copying sysroot: {sysroot_name}/ -> {sysroot_dst.name}/")
+        if sysroot_dst.exists():
+            shutil.rmtree(sysroot_dst)
+        shutil.copytree(sysroot_src, sysroot_dst, symlinks=True)
+
+        # Count libraries
+        lib_count = len(list((sysroot_dst / "lib").glob("*.a"))) if (sysroot_dst / "lib").exists() else 0
+        print(f"  Copied sysroot with {lib_count} libraries")
+
+    # 3. Copy generic headers if they exist
+    generic_src = mingw_root / "generic-w64-mingw32"
+    if generic_src.exists():
+        generic_dst = hardlinked_dir / "generic-w64-mingw32"
+        print(f"Copying generic headers: generic-w64-mingw32/")
+        if generic_dst.exists():
+            shutil.rmtree(generic_dst)
+        shutil.copytree(generic_src, generic_dst, symlinks=True)
+
+    # 4. Copy lib/clang/ directory (compiler-rt headers and libraries)
+    clang_lib_src = mingw_root / "lib" / "clang"
+    if clang_lib_src.exists():
+        clang_lib_dst = hardlinked_dir / "lib" / "clang"
+        print(f"Copying clang resources: lib/clang/")
+        clang_lib_dst.parent.mkdir(parents=True, exist_ok=True)
+
+        if clang_lib_dst.exists():
+            shutil.rmtree(clang_lib_dst)
+        shutil.copytree(clang_lib_src, clang_lib_dst, symlinks=True)
+
+        # Count resource headers
+        resource_headers = len(list(clang_lib_dst.rglob("*.h")))
+        resource_libs = len(list(clang_lib_dst.rglob("*.a")))
+        print(f"  Copied {resource_headers} resource headers and {resource_libs} libraries")
+
+    print(f"✓ MinGW integration complete\n")
+
+
+# ============================================================================
 # Step 5: Create Hard-Linked Structure
 # ============================================================================
 
@@ -1267,6 +1410,17 @@ Note: Press Ctrl+C at any time to safely interrupt the operation.
         # Step 3.5: Strip Linux binaries (remove debug symbols)
         strip_linux_binaries(stripped_dir / "bin", args.platform)
 
+        # Step 3.75: Download and extract LLVM-MinGW (Windows only)
+        mingw_root = None
+        if args.platform == "win":
+            print_section("INTEGRATING LLVM-MINGW HEADERS")
+
+            # Download LLVM-MinGW
+            mingw_archive = download_llvm_mingw(args.arch, work_dir / "mingw_download")
+
+            # Extract LLVM-MinGW
+            mingw_root = extract_mingw_headers(mingw_archive, work_dir / "mingw_extract", args.arch)
+
         # Step 4: Deduplicate
         manifest_data = deduplicate_binaries(stripped_dir / "bin")
 
@@ -1286,6 +1440,16 @@ Note: Press Ctrl+C at any time to safely interrupt the operation.
             lib_dst = hardlinked_dir / "lib" / "clang"
             print("\nCopying lib/clang directory (builtin headers)...")
             shutil.copytree(lib_clang_src, lib_dst, dirs_exist_ok=True)
+
+        # Step 5.5: Integrate MinGW components into hardlinked directory (Windows only)
+        if args.platform == "win" and mingw_root:
+            integrate_mingw_into_hardlinked(mingw_root, hardlinked_dir, args.arch)
+
+            # Clean up temporary MinGW extraction
+            mingw_extract_dir = work_dir / "mingw_extract"
+            if mingw_extract_dir.exists():
+                print("Cleaning up temporary MinGW files...")
+                shutil.rmtree(mingw_extract_dir)
 
         # Step 6: Create TAR
         tar_file = work_dir / f"{archive_name}.tar"

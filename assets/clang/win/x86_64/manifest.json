@@ -1,5 +1,9 @@
 {
-  "latest": "21.1.5",
+  "latest": "19.1.7",
+  "19.1.7": {
+    "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang/win/x86_64/llvm-19.1.7-win-x86_64.tar.zst",
+    "sha256": "ee1a916e555dd48251d3dbc0c846c11d09d037d64a1264361bfbcca6c373b813"
+  },
   "21.1.5": {
     "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang/win/x86_64/llvm-21.1.5-win-x86_64.tar.zst",
     "sha256": "3c21e45edeee591fe8ead5427d25b62ddb26c409575b41db03d6777c77bba44f"
