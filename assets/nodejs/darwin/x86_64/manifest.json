@@ -1,0 +1,7 @@
+{
+  "latest": "22.11.0",
+  "22.11.0": {
+    "href": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/nodejs/darwin/x86_64/nodejs-22.11.0-darwin-x86_64.tar.zst",
+    "sha256": "PLACEHOLDER_CHECKSUM_TO_BE_GENERATED_IN_ITERATION_13"
+  }
+}

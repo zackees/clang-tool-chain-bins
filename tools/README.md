@@ -43,6 +43,81 @@ Extracts MinGW-w64 sysroot for Windows GNU ABI support.
 python extract_mingw_sysroot.py --arch x86_64 --work-dir work --output-dir ../assets/mingw/win
 ```
 
+### `fetch_and_archive_nodejs.py`
+Create minimal Node.js binary archives for bundled Emscripten runtime support.
+
+**Usage:**
+```bash
+# Package Node.js for Windows x86_64
+python fetch_and_archive_nodejs.py --platform win --arch x86_64
+
+# Package for Linux ARM64
+python fetch_and_archive_nodejs.py --platform linux --arch arm64
+
+# Package for all platforms
+python fetch_and_archive_nodejs.py --platform win --arch x86_64
+python fetch_and_archive_nodejs.py --platform linux --arch x86_64
+python fetch_and_archive_nodejs.py --platform linux --arch arm64
+python fetch_and_archive_nodejs.py --platform darwin --arch x86_64
+python fetch_and_archive_nodejs.py --platform darwin --arch arm64
+```
+
+**What it does:**
+1. Downloads official Node.js binaries from nodejs.org
+2. Extracts the archive (ZIP, TAR.XZ, TAR.GZ)
+3. Verifies checksum against official SHASUMS256.txt
+4. Strips unnecessary files:
+   - ❌ `include/` (headers, ~5-10 MB)
+   - ❌ `share/` (docs, man pages, ~2-5 MB)
+   - ❌ README, CHANGELOG (docs)
+5. Keeps minimal runtime:
+   - ✅ `bin/node[.exe]` (binary)
+   - ✅ `lib/node_modules` (core libraries including npm, corepack)
+   - ✅ `LICENSE`
+6. Creates hard-linked TAR archive (preserves deduplication)
+7. Compresses with zstd level 22 (~27% reduction vs official)
+8. Generates checksums (SHA256, MD5)
+9. Creates manifest.json with version, href, sha256
+10. Places in `../assets/nodejs/{platform}/{arch}/`
+
+**Size Reduction:**
+| Platform | Official Size | Our Size | Reduction |
+|----------|--------------|----------|-----------|
+| Windows x64 | 34 MB | ~23-24 MB | ~27-29% |
+| Linux x64 | 29 MB | ~23-24 MB | ~17-21% |
+| Linux ARM64 | 28 MB | ~23-24 MB | ~14-18% |
+| macOS x64 | 49 MB | ~24-25 MB | ~49-51% |
+| macOS ARM64 | 48 MB | ~23-24 MB | ~50-52% |
+| **Total** | **188 MB** | **~117 MB** | **~38%** |
+
+**Node.js Version:**
+- Current: Node.js 22.11.0 LTS "Jod"
+- Support: Until 2027-04-30
+- Update policy: LTS releases only (stability priority)
+
+**Requirements:**
+```bash
+pip install zstandard requests
+```
+
+**Output:**
+```
+../assets/nodejs/
+├── manifest.json
+├── README.md
+├── win/x86_64/
+│   ├── manifest.json
+│   ├── nodejs-22.11.0-win-x86_64.tar.zst (~23-24 MB)
+│   ├── nodejs-22.11.0-win-x86_64.tar.zst.sha256
+│   └── nodejs-22.11.0-win-x86_64.tar.zst.md5
+├── linux/x86_64/
+│   ├── manifest.json
+│   ├── nodejs-22.11.0-linux-x86_64.tar.zst (~23-24 MB)
+│   └── ...
+└── darwin/arm64/
+    └── ...
+```
+
 ## Individual Component Scripts
 
 ### `download_binaries.py`
@@ -78,10 +153,22 @@ Archives are placed in:
 │   │   └── manifest.json
 │   ├── linux/x86_64/
 │   └── darwin/arm64/
-└── mingw/
-    └── win/x86_64/
-        ├── mingw-sysroot-{version}-win-x86_64.tar.zst
-        └── manifest.json
+├── mingw/
+│   └── win/x86_64/
+│       ├── mingw-sysroot-{version}-win-x86_64.tar.zst
+│       └── manifest.json
+├── nodejs/
+│   ├── manifest.json
+│   ├── win/x86_64/
+│   │   ├── nodejs-{version}-win-x86_64.tar.zst
+│   │   └── manifest.json
+│   ├── linux/x86_64/
+│   ├── linux/arm64/
+│   ├── darwin/x86_64/
+│   └── darwin/arm64/
+└── emscripten/
+    └── linux/x86_64/
+        └── ...
 ```
 
 ## Development Workflow
@@ -111,16 +198,25 @@ Archives are placed in:
    python extract_mingw_sysroot.py --arch x86_64 --work-dir work --output-dir ../assets/mingw/win
    ```
 
-4. **Update manifests** in `../assets/clang/{platform}/{arch}/manifest.json` with new version info
+4. **Generate Node.js archives (for Emscripten runtime):**
+   ```bash
+   python fetch_and_archive_nodejs.py --platform win --arch x86_64
+   python fetch_and_archive_nodejs.py --platform linux --arch x86_64
+   python fetch_and_archive_nodejs.py --platform linux --arch arm64
+   python fetch_and_archive_nodejs.py --platform darwin --arch x86_64
+   python fetch_and_archive_nodejs.py --platform darwin --arch arm64
+   ```
 
-5. **Commit to this repository:**
+5. **Update manifests** in `../assets/clang/{platform}/{arch}/manifest.json` with new version info
+
+6. **Commit to this repository:**
    ```bash
    git add ../assets/
    git commit -m "Add LLVM version X.Y.Z"
    git push origin main
    ```
 
-6. **Update main repository** to reference new submodule commit:
+7. **Update main repository** to reference new submodule commit:
    ```bash
    cd ../..  # Back to main repo
    git add downloads-bins
