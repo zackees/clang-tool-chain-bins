@@ -168,8 +168,48 @@ Each toolchain has a two-tier manifest structure:
 | **LLVM/Clang** | ✅ | ⚠️ Untested | ✅ | ✅ | ✅ | ✅ |
 | **LLVM MinGW** | ✅ | - | - | - | - | - |
 | **IWYU** | ✅ | - | ✅ | ✅ | ✅ | ✅ |
-| **MinGW Sysroot** | ✅ | - | - | - | - | - |
+| **MinGW Sysroot** | ✅ (deprecated) | - | - | - | - | - |
 | **Emscripten** | ✅ | - | ✅ | ✅ | ✅ | ✅ |
+
+## Windows GNU ABI Support
+
+For Windows platforms, the Clang archive now includes integrated MinGW headers and sysroot (as of LLVM 19.1.7, November 2025):
+
+**What's included:**
+- **LLVM/Clang binaries**: Compiler, linker, binary utilities
+- **MinGW headers**: Windows API headers, C/C++ standard library headers
+- **Sysroot**: Import libraries and runtime DLLs for GNU ABI
+- **Compiler-rt**: Clang resource headers (intrinsics) and runtime libraries
+
+This integration eliminates the need for a separate MinGW sysroot download.
+
+**Archive structure:**
+```
+win_hardlinked/
+├── bin/                          # LLVM/Clang binaries
+│   ├── clang.exe
+│   ├── clang++.exe
+│   └── ...
+├── include/                      # MinGW C/C++/Windows headers
+│   ├── GL/
+│   ├── windows.h
+│   └── ...
+├── x86_64-w64-mingw32/          # MinGW sysroot
+│   ├── lib/                     # Import libraries (.a files)
+│   └── bin/                     # Runtime DLLs
+└── lib/
+    └── clang/
+        └── 19/                  # Clang resource headers
+            ├── include/         # Compiler intrinsics (mm_malloc.h, etc.)
+            └── lib/            # compiler-rt libraries
+```
+
+This structure enables GNU ABI compilation on Windows without additional downloads.
+
+### Legacy MinGW Archive
+
+The separate MinGW archive (`assets/mingw/win/`) is deprecated as of November 2025.
+It remains available for backward compatibility with older versions of clang-tool-chain.
 
 ## Key Architecture Decisions
 
