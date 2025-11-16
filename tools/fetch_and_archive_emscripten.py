@@ -58,14 +58,9 @@ def install_emscripten(emsdk_dir: Path, version: str, platform: str) -> str:
     # Determine emsdk executable based on platform
     # Use python emsdk.py for cross-platform compatibility
     emsdk_py = emsdk_dir / "emsdk.py"
-    if platform == "win":
-        # Use python emsdk.py instead of emsdk.bat for MSYS2 compatibility
-        # Use absolute path to avoid path resolution issues
-        emsdk_cmd = ["python", str(emsdk_py.resolve())]
-    else:
-        emsdk_cmd = [str(emsdk_dir / "emsdk")]
-        # Make executable
-        os.chmod(emsdk_cmd[0], 0o755)
+    # Use python emsdk.py on all platforms for consistency and reliability
+    # Absolute path avoids path resolution issues
+    emsdk_cmd = ["python3", str(emsdk_py.resolve())]
 
     try:
         # Install
