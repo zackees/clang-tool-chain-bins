@@ -325,7 +325,7 @@ def create_manifest(output_dir: Path, version: str, platform: str, arch: str, ch
         "versions": {
             version: {
                 "version": version,
-                "href": f"https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/emscripten/{platform}/{arch}/{archive_name}",
+                "href": f"https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/emscripten/{platform}/{arch}/{archive_name}",
                 "sha256": checksums["sha256"],
             }
         },
