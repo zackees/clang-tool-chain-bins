@@ -179,17 +179,21 @@ def strip_unnecessary_files(extract_dir: Path) -> int:
     bytes_removed = 0
 
     for pattern in patterns_to_remove:
-        for path in extract_dir.glob(pattern):
-            if path.is_file():
-                size = path.stat().st_size
-                path.unlink()
-                files_removed += 1
-                bytes_removed += size
-            elif path.is_dir():
-                size = sum(f.stat().st_size for f in path.rglob('*') if f.is_file())
-                shutil.rmtree(path)
-                files_removed += 1
-                bytes_removed += size
+        try:
+            for path in extract_dir.glob(pattern):
+                if path.is_file():
+                    size = path.stat().st_size
+                    path.unlink()
+                    files_removed += 1
+                    bytes_removed += size
+                elif path.is_dir():
+                    size = sum(f.stat().st_size for f in path.rglob('*') if f.is_file())
+                    shutil.rmtree(path)
+                    files_removed += 1
+                    bytes_removed += size
+        except (FileNotFoundError, OSError):
+            # Skip patterns that don't match or have path issues
+            continue
 
     final_size = sum(f.stat().st_size for f in extract_dir.rglob('*') if f.is_file())
     actual_saved = initial_size - final_size

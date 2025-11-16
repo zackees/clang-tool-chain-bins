@@ -1,4 +1,17 @@
 {
-  "latest": "PENDING",
-  "versions": {}
+  "latest": "4.0.19",
+  "4.0.19": {
+    "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/emscripten/win/x86_64/emscripten-latest-win-x86_64.tar.zst",
+    "sha256": "2a3004d0dc4c0e58a105a930dc4cc8a468925bb6f4c78604e002bd1aaad715c8",
+    "parts": [
+      {
+        "href": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/emscripten/win/x86_64/emscripten-latest-win-x86_64.tar.zst.part1",
+        "sha256": "a6c4c282eb02d4f0534b8812388aed5a76160df8c901b663ad6174a575f74ba1"
+      },
+      {
+        "href": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/emscripten/win/x86_64/emscripten-latest-win-x86_64.tar.zst.part2",
+        "sha256": "ca08ac9266a899234714892128b7f7d0e78f79bf43a974bc96d14b69d55c7d90"
+      }
+    ]
+  }
 }
