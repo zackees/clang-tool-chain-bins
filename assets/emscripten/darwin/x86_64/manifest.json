@@ -1,4 +1,10 @@
 {
-  "latest": "PENDING",
-  "versions": {}
+  "latest": "releases-8b01e2ec3f33e6b94842096d7312ce4ef5f33f6c",
+  "versions": {
+    "releases-8b01e2ec3f33e6b94842096d7312ce4ef5f33f6c": {
+      "version": "releases-8b01e2ec3f33e6b94842096d7312ce4ef5f33f6c",
+      "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/emscripten/darwin/x86_64/emscripten-releases-8b01e2ec3f33e6b94842096d7312ce4ef5f33f6c-darwin-x86_64.tar.zst",
+      "sha256": "3d2802d83ba8c82d503dd069bd03a59af5d601875208605b3691120f4546d62d"
+    }
+  }
 }
