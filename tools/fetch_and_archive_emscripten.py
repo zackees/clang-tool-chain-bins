@@ -402,6 +402,15 @@ def main() -> None:
             print(f"  Copying {src_name}...")
             shutil.copytree(src, dst, symlinks=True)
 
+    # Copy .emscripten config file
+    config_file = emsdk_dir / ".emscripten"
+    if config_file.exists():
+        dst_config = staging_dir / ".emscripten"
+        print(f"  Copying .emscripten config...")
+        shutil.copy2(config_file, dst_config)
+    else:
+        print(f"  Warning: .emscripten config file not found at {config_file}")
+
     # Step 4: Strip unnecessary files
     bytes_saved = strip_unnecessary_files(staging_dir)
 
