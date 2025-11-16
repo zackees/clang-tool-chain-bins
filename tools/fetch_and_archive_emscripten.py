@@ -56,18 +56,22 @@ def install_emscripten(emsdk_dir: Path, version: str, platform: str) -> str:
     print(f"\nInstalling Emscripten {version}...")
 
     # Determine emsdk executable based on platform
+    # Use python emsdk.py for cross-platform compatibility
+    emsdk_py = emsdk_dir / "emsdk.py"
     if platform == "win":
-        emsdk_cmd = str(emsdk_dir / "emsdk.bat")
+        # Use python emsdk.py instead of emsdk.bat for MSYS2 compatibility
+        # Use absolute path to avoid path resolution issues
+        emsdk_cmd = ["python", str(emsdk_py.resolve())]
     else:
-        emsdk_cmd = str(emsdk_dir / "emsdk")
+        emsdk_cmd = [str(emsdk_dir / "emsdk")]
         # Make executable
-        os.chmod(emsdk_cmd, 0o755)
+        os.chmod(emsdk_cmd[0], 0o755)
 
     try:
         # Install
-        print(f"Running: {emsdk_cmd} install {version}")
+        print(f"Running: {' '.join(emsdk_cmd)} install {version}")
         result = subprocess.run(
-            [emsdk_cmd, "install", version],
+            emsdk_cmd + ["install", version],
             cwd=emsdk_dir,
             check=True,
             capture_output=True,
@@ -76,9 +80,9 @@ def install_emscripten(emsdk_dir: Path, version: str, platform: str) -> str:
         print(result.stdout)
 
         # Activate
-        print(f"Running: {emsdk_cmd} activate {version}")
+        print(f"Running: {' '.join(emsdk_cmd)} activate {version}")
         result = subprocess.run(
-            [emsdk_cmd, "activate", version],
+            emsdk_cmd + ["activate", version],
             cwd=emsdk_dir,
             check=True,
             capture_output=True,
@@ -88,7 +92,7 @@ def install_emscripten(emsdk_dir: Path, version: str, platform: str) -> str:
 
         # Get installed version info
         result = subprocess.run(
-            [emsdk_cmd, "list"],
+            emsdk_cmd + ["list"],
             cwd=emsdk_dir,
             check=True,
             capture_output=True,
