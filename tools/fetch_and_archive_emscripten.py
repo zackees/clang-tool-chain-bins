@@ -163,9 +163,16 @@ def strip_unnecessary_files(extract_dir: Path) -> int:
 
     initial_size = sum(f.stat().st_size for f in extract_dir.rglob('*') if f.is_file())
 
+    # Critical files that must NOT be removed
+    critical_files = {
+        "emscripten-version.txt",  # Required by emscripten initialization
+        "LICENSE.txt",             # License files should be preserved
+        "COPYING",                 # GPL copying files
+        "COPYING.txt",             # GPL copying files
+    }
+
     patterns_to_remove = [
         "**/*.md",          # Documentation
-        "**/*.txt",         # Text files (keep LICENSE files)
         "**/docs/**",       # Documentation directories
         "**/tests/**",      # Test files
         "**/test/**",       # Test files
@@ -178,6 +185,7 @@ def strip_unnecessary_files(extract_dir: Path) -> int:
     files_removed = 0
     bytes_removed = 0
 
+    # Process general patterns first (directories and .md files)
     for pattern in patterns_to_remove:
         try:
             for path in extract_dir.glob(pattern):
@@ -195,10 +203,28 @@ def strip_unnecessary_files(extract_dir: Path) -> int:
             # Skip patterns that don't match or have path issues
             continue
 
+    # Now handle .txt files separately - remove only non-critical ones
+    print("  Processing .txt files (preserving critical files)...")
+    txt_files_removed = 0
+    for txt_file in extract_dir.rglob("*.txt"):
+        if txt_file.name not in critical_files:
+            try:
+                size = txt_file.stat().st_size
+                txt_file.unlink()
+                files_removed += 1
+                txt_files_removed += 1
+                bytes_removed += size
+            except (FileNotFoundError, OSError):
+                pass
+        else:
+            print(f"    Preserving: {txt_file.relative_to(extract_dir)}")
+
+    print(f"  Removed {txt_files_removed} .txt files, preserved {len([f for f in extract_dir.rglob('*.txt')])} critical .txt files")
+
     final_size = sum(f.stat().st_size for f in extract_dir.rglob('*') if f.is_file())
     actual_saved = initial_size - final_size
 
-    print(f"  Removed {files_removed} items")
+    print(f"  Removed {files_removed} items total")
     print(f"  Saved: {actual_saved / (1024*1024):.2f} MB")
 
     return actual_saved
