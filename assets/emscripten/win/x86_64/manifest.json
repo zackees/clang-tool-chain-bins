@@ -1,6 +1,6 @@
 {
-  "latest": {
-    "version": "latest",
+  "latest": "4.0.19",
+  "4.0.19": {
     "href": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/emscripten/win/x86_64/emscripten-latest-win-x86_64.tar.zst",
     "sha256": "6e9635de9ff5220a09156d48cd5a615e5dd15134a661a13f2fa2b98421bfe5a4",
     "parts": [
