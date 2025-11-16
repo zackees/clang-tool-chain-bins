@@ -419,19 +419,33 @@ def main() -> None:
         print("Emscripten installation may have failed")
         sys.exit(1)
 
-    # Copy essential directories
+    # Create upstream/ directory in staging to match expected structure
+    staging_upstream = staging_dir / "upstream"
+    staging_upstream.mkdir(parents=True, exist_ok=True)
+    print(f"  Created upstream/ directory structure")
+
+    # Copy essential directories into upstream/
     for src_name in ["emscripten", "bin", "lib"]:
         src = upstream_dir / src_name
         if src.exists():
-            dst = staging_dir / src_name
-            print(f"  Copying {src_name}...")
+            dst = staging_upstream / src_name
+            print(f"  Copying {src_name} to upstream/...")
             shutil.copytree(src, dst, symlinks=True)
 
-    # Copy .emscripten config file
+    # Copy emscripten-version.txt to staging root (critical file)
+    version_file = upstream_dir / "emscripten" / "emscripten-version.txt"
+    if version_file.exists():
+        dst_version = staging_dir / "emscripten-version.txt"
+        print(f"  Copying emscripten-version.txt to root...")
+        shutil.copy2(version_file, dst_version)
+    else:
+        print(f"  Warning: emscripten-version.txt not found at {version_file}")
+
+    # Copy .emscripten config file to staging root
     config_file = emsdk_dir / ".emscripten"
     if config_file.exists():
         dst_config = staging_dir / ".emscripten"
-        print(f"  Copying .emscripten config...")
+        print(f"  Copying .emscripten config to root...")
         shutil.copy2(config_file, dst_config)
     else:
         print(f"  Warning: .emscripten config file not found at {config_file}")
