@@ -143,11 +143,9 @@ def identify_minimal_files(emsdk_dir: Path) -> list[Path]:
             files_to_include.append((full_path, rel_path))
             print(f"  + {dir_path}")
 
-    # Also include .emscripten config file if it exists
-    config_file = emsdk_dir / ".emscripten"
-    if config_file.exists():
-        files_to_include.append((config_file, ".emscripten"))
-        print(f"  + .emscripten")
+    # NOTE: .emscripten config file is NOT included in the archive
+    # The installer creates its own .emscripten with correct paths via create_emscripten_config()
+    # Including the emsdk .emscripten would cause path conflicts (upstream/bin vs bin)
 
     return files_to_include
 
