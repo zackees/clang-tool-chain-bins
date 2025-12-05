@@ -41,7 +41,7 @@ jobs:
 
       - name: Verify archive structure
         run: |
-          python3 << 'EOF'
+          uv run python3 << 'EOF'
           import tarfile
           import pyzstd
           import io
