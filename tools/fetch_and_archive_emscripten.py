@@ -417,17 +417,15 @@ def main() -> None:
         print("Emscripten installation may have failed")
         sys.exit(1)
 
-    # Create upstream/ directory in staging to match expected structure
-    staging_upstream = staging_dir / "upstream"
-    staging_upstream.mkdir(parents=True, exist_ok=True)
-    print(f"  Created upstream/ directory structure")
-
-    # Copy essential directories into upstream/
+    # Copy essential directories directly to staging root (NOT into upstream/)
+    # This ensures archive has correct structure: bin/, emscripten/, lib/
+    # Previously, files were copied to staging/upstream/ which caused archives
+    # to have upstream/ prefix, breaking the installer which expects bin/ directly
     for src_name in ["emscripten", "bin", "lib"]:
         src = upstream_dir / src_name
         if src.exists():
-            dst = staging_upstream / src_name
-            print(f"  Copying {src_name} to upstream/...")
+            dst = staging_dir / src_name  # Copy directly to staging root
+            print(f"  Copying {src_name} to staging root...")
             shutil.copytree(src, dst, symlinks=True)
 
     # Copy emscripten-version.txt to staging root (critical file)

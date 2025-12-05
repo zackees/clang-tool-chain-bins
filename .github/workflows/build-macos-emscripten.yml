@@ -1,0 +1,139 @@
+name: Build macOS Emscripten Archive
+
+on:
+  workflow_dispatch:
+    inputs:
+      arch:
+        description: 'Architecture (x86_64 or arm64)'
+        required: true
+        default: 'arm64'
+        type: choice
+        options:
+          - arm64
+          - x86_64
+
+jobs:
+  build:
+    # Use macos-14 for ARM64 (M1), macos-13 for x86_64 (Intel)
+    runs-on: ${{ inputs.arch == 'arm64' && 'macos-14' || 'macos-13' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Install dependencies
+        run: |
+          uv sync
+
+      - name: Build Emscripten archive
+        run: |
+          uv run python tools/fetch_and_archive_emscripten.py --platform darwin --arch ${{ inputs.arch }}
+
+      - name: Verify archive structure
+        run: |
+          python3 << 'EOF'
+          import tarfile
+          import pyzstd
+          import io
+          import sys
+          from pathlib import Path
+
+          # Find the generated archive
+          arch = "${{ inputs.arch }}"
+          search_path = Path(f"assets/emscripten/darwin/{arch}/")
+          archives = list(search_path.glob(f"emscripten-*-darwin-{arch}.tar.zst"))
+
+          if not archives:
+              print(f"ERROR: No archive found in {search_path}")
+              sys.exit(1)
+
+          archive_path = archives[0]
+          print(f"Verifying archive: {archive_path}")
+          print(f"Size: {archive_path.stat().st_size / (1024*1024):.2f} MB")
+
+          # Extract and check structure
+          with open(archive_path, 'rb') as f:
+              compressed_data = f.read()
+              decompressed = pyzstd.decompress(compressed_data)
+
+          with tarfile.open(fileobj=io.BytesIO(decompressed), mode='r') as tar:
+              members = tar.getmembers()
+              print(f"\nTotal files in archive: {len(members)}")
+              print("\nFirst 30 entries:")
+              for i, member in enumerate(members[:30]):
+                  print(f"  {member.name}")
+
+              # Check for upstream/ prefix (should NOT exist)
+              upstream_files = [m.name for m in members if m.name.startswith('upstream/')]
+
+              if upstream_files:
+                  print(f"\n❌ ERROR: Archive contains {len(upstream_files)} files with 'upstream/' prefix!")
+                  print("First 10 problematic files:")
+                  for f in upstream_files[:10]:
+                      print(f"  {f}")
+                  sys.exit(1)
+
+              # Check for required files at correct paths
+              required_files = ['bin/clang', 'emscripten/emcc.py', 'bin/wasm-opt']
+              missing = []
+              for req in required_files:
+                  if not any(m.name == req for m in members):
+                      missing.append(req)
+
+              if missing:
+                  print(f"\n❌ ERROR: Required files missing from archive:")
+                  for m in missing:
+                      print(f"  {m}")
+                  sys.exit(1)
+
+              print("\n✅ SUCCESS: Archive structure is correct!")
+              print("   - No 'upstream/' prefix found")
+              print("   - All required files present at correct paths")
+          EOF
+
+      - name: List generated files
+        run: |
+          echo "Generated files:"
+          ls -lh assets/emscripten/darwin/${{ inputs.arch }}/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: emscripten-darwin-${{ inputs.arch }}
+          path: |
+            assets/emscripten/darwin/${{ inputs.arch }}/emscripten-*.tar.zst
+            assets/emscripten/darwin/${{ inputs.arch }}/emscripten-*.tar.zst.sha256
+            assets/emscripten/darwin/${{ inputs.arch }}/emscripten-*.tar.zst.md5
+            assets/emscripten/darwin/${{ inputs.arch }}/manifest.json
+          retention-days: 7
+
+      - name: Display next steps
+        run: |
+          cat << 'EOF'
+
+          ========================================
+          Next Steps:
+          ========================================
+
+          1. Download the artifact from this workflow run
+          2. Extract the files to your local clang-tool-chain-bins repo
+          3. Verify the archive structure locally
+          4. Commit and push to Git LFS:
+             git add assets/emscripten/darwin/${{ inputs.arch }}/
+             git commit -m "fix(emscripten): rebuild macOS ${{ inputs.arch }} archive with correct structure"
+             git lfs push origin main
+             git push origin main
+          5. Test the installation in clang-tool-chain repo
+
+          ========================================
+          EOF
