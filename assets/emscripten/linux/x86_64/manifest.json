@@ -1,7 +1,15 @@
 {
-  "latest": "4.0.15",
-  "4.0.15": {
-    "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/emscripten/linux/x86_64/emscripten-4.0.15-linux-x86_64.tar.zst",
-    "sha256": "7cc00921f58ddbc835c4fdaef44921040a7d8acaab6431cd5b58415b4bef93de"
+  "latest": "4.0.21",
+  "versions": {
+    "4.0.15": {
+      "version": "4.0.15",
+      "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/emscripten/linux/x86_64/emscripten-4.0.15-linux-x86_64.tar.zst",
+      "sha256": "7cc00921f58ddbc835c4fdaef44921040a7d8acaab6431cd5b58415b4bef93de"
+    },
+    "4.0.21": {
+      "version": "4.0.21",
+      "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/emscripten/linux/x86_64/emscripten-4.0.21-linux-x86_64.tar.zst",
+      "sha256": "5cd3cbe0316d37c9b39bdc63691c014f136a5d82a9f08ed29bb7ad62f7a83655"
+    }
   }
 }
