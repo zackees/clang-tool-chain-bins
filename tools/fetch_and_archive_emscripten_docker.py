@@ -116,7 +116,7 @@ def get_emscripten_version(upstream_dir: Path) -> str:
     version_file = upstream_dir / "emscripten" / "emscripten-version.txt"
 
     if version_file.exists():
-        version = version_file.read_text().strip()
+        version = version_file.read_text().strip().strip('"')
         print(f"✓ Detected Emscripten version: {version}")
         return version
 
@@ -134,15 +134,16 @@ def create_archive_structure(upstream_dir: Path, output_dir: Path) -> Path:
     """
     Create the final archive structure with required directories.
 
-    Emscripten needs:
-    - emscripten/ (Python scripts)
-    - bin/ (LLVM/Clang binaries)
-    - lib/ (system libraries)
-    - share/ (additional resources)
+    The packaging script expects:
+    - emsdk/upstream/emscripten/ (Python scripts)
+    - emsdk/upstream/bin/ (LLVM/Clang binaries)
+    - emsdk/upstream/lib/ (system libraries)
+    - emsdk/upstream/share/ (additional resources)
     """
     print("\nCreating archive structure...")
 
-    structure_dir = output_dir / "archive_structure"
+    # Create emsdk/upstream/ structure for packaging script compatibility
+    structure_dir = output_dir / "archive_structure" / "upstream"
     structure_dir.mkdir(parents=True, exist_ok=True)
 
     essential_dirs = {
@@ -161,10 +162,11 @@ def create_archive_structure(upstream_dir: Path, output_dir: Path) -> Path:
             print(f"  ⚠️ Missing: {name}/ (expected at {source})")
 
     # Calculate size
-    total_size = sum(f.stat().st_size for f in structure_dir.rglob('*') if f.is_file())
+    archive_root = output_dir / "archive_structure"
+    total_size = sum(f.stat().st_size for f in archive_root.rglob('*') if f.is_file())
     print(f"\nTotal size: {total_size / (1024*1024):.2f} MB")
 
-    return structure_dir
+    return archive_root
 
 
 def main():
@@ -238,6 +240,13 @@ def main():
         print(f"  --skip-install --work-dir {archive_structure.parent}")
         return 0
 
+    # Rename archive_structure to emsdk for packaging script compatibility
+    emsdk_dir = work_dir / "emsdk"
+    if emsdk_dir.exists():
+        shutil.rmtree(emsdk_dir)
+    archive_structure.rename(emsdk_dir)
+    print(f"✓ Renamed archive structure to: {emsdk_dir}")
+
     # Call the main packaging script
     print("\n" + "=" * 70)
     print("CREATING COMPRESSED ARCHIVE")
@@ -248,7 +257,7 @@ def main():
 
     if not packaging_script.exists():
         print(f"❌ Packaging script not found: {packaging_script}")
-        print(f"\nExtracted files are in: {archive_structure}")
+        print(f"\nExtracted files are in: {emsdk_dir}")
         return 1
 
     try:
@@ -259,7 +268,7 @@ def main():
                 "--platform", args.platform,
                 "--arch", args.arch,
                 "--version", version,
-                "--work-dir", str(archive_structure.parent),
+                "--work-dir", str(work_dir),
                 "--skip-install"
             ],
             check=True,
@@ -271,7 +280,7 @@ def main():
 
     except subprocess.CalledProcessError as e:
         print(f"\n❌ Failed to create archive: {e}")
-        print(f"\nExtracted files are in: {archive_structure}")
+        print(f"\nExtracted files are in: {emsdk_dir}")
         return 1
 
 
