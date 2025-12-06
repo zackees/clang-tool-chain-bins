@@ -41,14 +41,21 @@ def check_docker_available() -> bool:
         return False
 
 
-def pull_docker_image(image: str = "emscripten/emsdk:latest") -> bool:
+def pull_docker_image(image: str = "emscripten/emsdk:latest", platform: str = None) -> bool:
     """Pull the official Emscripten Docker image."""
     print(f"\nPulling Docker image: {image}")
+    if platform:
+        print(f"Platform: {platform}")
     print("This may take a few minutes...")
 
     try:
+        cmd = ["docker", "pull"]
+        if platform:
+            cmd.extend(["--platform", platform])
+        cmd.append(image)
+
         subprocess.run(
-            ["docker", "pull", image],
+            cmd,
             check=True,
             stdout=sys.stdout,
             stderr=sys.stderr
@@ -60,7 +67,7 @@ def pull_docker_image(image: str = "emscripten/emsdk:latest") -> bool:
         return False
 
 
-def extract_from_docker(image: str, output_dir: Path) -> bool:
+def extract_from_docker(image: str, output_dir: Path, platform: str = None) -> bool:
     """
     Extract Emscripten files from Docker container.
 
@@ -73,8 +80,13 @@ def extract_from_docker(image: str, output_dir: Path) -> bool:
     try:
         # Create a temporary container
         print(f"Creating temporary container: {container_name}")
+        cmd = ["docker", "create", "--name", container_name]
+        if platform:
+            cmd.extend(["--platform", platform])
+        cmd.append(image)
+
         subprocess.run(
-            ["docker", "create", "--name", container_name, image],
+            cmd,
             check=True,
             capture_output=True
         )
@@ -216,13 +228,17 @@ def main():
 
     print(f"\nWorking directory: {work_dir}")
 
+    # Determine Docker platform string
+    docker_platform = f"{args.platform}/{args.arch}"
+    print(f"Target platform: {docker_platform}")
+
     # Pull Docker image
-    if not pull_docker_image(args.image):
+    if not pull_docker_image(args.image, platform=docker_platform):
         return 1
 
     # Extract from Docker
     extract_dir = work_dir / "extracted"
-    if not extract_from_docker(args.image, extract_dir):
+    if not extract_from_docker(args.image, extract_dir, platform=docker_platform):
         return 1
 
     # Detect version
