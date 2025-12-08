@@ -1,10 +1,10 @@
 {
-  "latest": "releases-8b01e2ec3f33e6b94842096d7312ce4ef5f33f6c",
+  "latest": "releases-d70a5da89b3e673bf6a482724478fc17e81e575e",
   "versions": {
-    "releases-8b01e2ec3f33e6b94842096d7312ce4ef5f33f6c": {
-      "version": "releases-8b01e2ec3f33e6b94842096d7312ce4ef5f33f6c",
-      "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/emscripten/darwin/arm64/emscripten-releases-8b01e2ec3f33e6b94842096d7312ce4ef5f33f6c-darwin-arm64.tar.zst",
-      "sha256": "c34e431172af712e491824224dfea1a75039fa0521deba851761715552f2f994"
+    "releases-d70a5da89b3e673bf6a482724478fc17e81e575e": {
+      "version": "releases-d70a5da89b3e673bf6a482724478fc17e81e575e",
+      "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/emscripten/darwin/arm64/emscripten-releases-d70a5da89b3e673bf6a482724478fc17e81e575e-darwin-arm64.tar.zst",
+      "sha256": "6af749f0d44927c7d4c93c9e407e195257ed690b8e3bd3a43d7a3f4badc52082"
     }
   }
 }
