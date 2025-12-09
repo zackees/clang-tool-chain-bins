@@ -2,6 +2,6 @@
   "latest": "0.25",
   "0.25": {
     "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/iwyu/linux/x86_64/iwyu-0.25-linux-x86_64.tar.zst",
-    "sha256": "ebca230c1b866b487f26823576ab76e320a4bd889ef99171ebbe0a49c23e1d4a"
+    "sha256": "3427987a8cac051553cb6974bd20979997104c158296ed0203cd5b1d239b2c52"
   }
 }

@@ -51,6 +51,12 @@ def create_tar_archive(source_dir: Path, output_tar: Path) -> Path:
             # Mapping files and other share/ content should be readable
             elif "/share/" in tarinfo.name or tarinfo.name.startswith("share/"):
                 tarinfo.mode = 0o644  # rw-r--r--
+            # Shared libraries in lib/ should be readable and executable
+            elif "/lib/" in tarinfo.name or tarinfo.name.startswith("lib/"):
+                if tarinfo.name.endswith(".so") or ".so." in tarinfo.name:
+                    tarinfo.mode = 0o755  # rwxr-xr-x (shared libraries need execute permission)
+                else:
+                    tarinfo.mode = 0o644  # rw-r--r--
             # Other files (LICENSE, README, etc.)
             else:
                 tarinfo.mode = 0o644  # rw-r--r--
@@ -60,12 +66,17 @@ def create_tar_archive(source_dir: Path, output_tar: Path) -> Path:
     print("Setting permissions...")
 
     # Get the architecture directory name (x86_64, arm64)
-    # We want the archive structure to be flat: bin/, share/, etc.
+    # We want the archive structure to be flat: bin/, lib/, share/, etc.
     with tarfile.open(output_tar, "w") as tar:
         # Add bin/ directory
         bin_dir = source_dir / "bin"
         if bin_dir.exists():
             tar.add(bin_dir, arcname="bin", filter=tar_filter)
+
+        # Add lib/ directory (for shared libraries on Linux)
+        lib_dir = source_dir / "lib"
+        if lib_dir.exists():
+            tar.add(lib_dir, arcname="lib", filter=tar_filter)
 
         # Add share/ directory
         share_dir = source_dir / "share"
