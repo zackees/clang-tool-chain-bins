@@ -88,22 +88,40 @@ def build_iwyu(source_dir: Path, llvm_path: Path, arch: str) -> Path:
     print(f"\n{'='*70}")
     print(f"BUILDING IWYU FOR {arch}")
     print(f"{'='*70}\n")
-    
+
     build_dir = source_dir / "build"
     build_dir.mkdir(exist_ok=True)
-    
-    print(f"LLVM Path: {llvm_path}")
+
+    # Determine LLVM version for this architecture
+    llvm_version = LLVM_VERSIONS[arch]
+
+    # Install LLVM via Homebrew for CMake config files
+    print(f"Installing LLVM {llvm_version} via Homebrew (for CMake configs)...")
+    # Install specific LLVM version - Homebrew LLVM 19 for x86_64, LLVM 21 for ARM64
+    llvm_formula = "llvm@19" if arch == "x86_64" else "llvm"
+    subprocess.run(["brew", "install", llvm_formula], check=True)
+
+    # Find Homebrew LLVM path
+    result = subprocess.run(
+        ["brew", "--prefix", llvm_formula],
+        capture_output=True,
+        text=True,
+        check=True
+    )
+    homebrew_llvm_path = result.stdout.strip()
+
+    print(f"Homebrew LLVM Path: {homebrew_llvm_path}")
     print(f"Build Dir: {build_dir}")
-    
-    # CMake configuration
+
+    # CMake configuration using Homebrew LLVM
     cmake_cmd = [
         "cmake",
         "-G", "Unix Makefiles",
-        f"-DCMAKE_PREFIX_PATH={llvm_path}",
+        f"-DCMAKE_PREFIX_PATH={homebrew_llvm_path}",
         "-DCMAKE_BUILD_TYPE=Release",
         ".."
     ]
-    
+
     print("\n" + " ".join(cmake_cmd))
     subprocess.run(cmake_cmd, cwd=build_dir, check=True)
     
