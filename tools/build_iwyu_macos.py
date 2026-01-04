@@ -214,17 +214,13 @@ def main():
     print(f"IWYU Version: {iwyu_version}")
     print(f"Architecture: {target_arch}")
     
-    # Determine LLVM path
+    # Determine LLVM path (not used anymore - Homebrew LLVM will be installed during build)
     if args.llvm_path:
         llvm_path = args.llvm_path
     else:
         llvm_path = Path.home() / ".clang-tool-chain" / "clang" / "darwin" / target_arch
-    
-    if not llvm_path.exists():
-        print(f"\nError: LLVM not found at {llvm_path}")
-        print("\nPlease install LLVM first:")
-        print(f"  clang-tool-chain-c --version")
-        sys.exit(1)
+
+    # Note: LLVM path check removed - Homebrew LLVM will be installed during build_iwyu()
     
     # Create work directory
     work_dir = args.work_dir
