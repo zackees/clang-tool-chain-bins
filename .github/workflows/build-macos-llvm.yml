@@ -1,0 +1,201 @@
+name: Build macOS LLVM Archive
+
+on:
+  workflow_dispatch:
+    inputs:
+      arch:
+        description: 'Architecture (x86_64 or arm64)'
+        required: true
+        default: 'arm64'
+        type: choice
+        options:
+          - arm64
+          - x86_64
+      llvm_version:
+        description: 'LLVM version (e.g., 21.1.6)'
+        required: true
+        default: '21.1.6'
+        type: string
+
+jobs:
+  build:
+    # Use macos-14 for ARM64 (M1), macos-13 for x86_64 (Intel)
+    runs-on: ${{ inputs.arch == 'arm64' && 'macos-14' || 'macos-13' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Install dependencies
+        run: |
+          uv sync
+
+      - name: Check for pre-built binary
+        id: check_binary
+        run: |
+          ARCH="${{ inputs.arch }}"
+          VERSION="${{ inputs.llvm_version }}"
+
+          if [ "$ARCH" = "arm64" ]; then
+            URL="https://github.com/llvm/llvm-project/releases/download/llvmorg-${VERSION}/LLVM-${VERSION}-macOS-ARM64.tar.xz"
+          else
+            URL="https://github.com/llvm/llvm-project/releases/download/llvmorg-${VERSION}/LLVM-${VERSION}-macOS-X64.tar.xz"
+          fi
+
+          echo "Checking for pre-built binary at: $URL"
+
+          if curl --output /dev/null --silent --head --fail "$URL"; then
+            echo "binary_available=true" >> $GITHUB_OUTPUT
+            echo "download_url=$URL" >> $GITHUB_OUTPUT
+            echo "✅ Pre-built binary available"
+          else
+            echo "binary_available=false" >> $GITHUB_OUTPUT
+            echo "❌ Pre-built binary NOT available"
+            echo "   Will need to build from source or use alternative approach"
+          fi
+
+      - name: Download pre-built binary (if available)
+        if: steps.check_binary.outputs.binary_available == 'true'
+        run: |
+          URL="${{ steps.check_binary.outputs.download_url }}"
+          FILENAME=$(basename "$URL")
+
+          echo "Downloading: $URL"
+          curl -L -o "$FILENAME" "$URL"
+
+          echo "Download complete:"
+          ls -lh "$FILENAME"
+
+      - name: Build from source (if no pre-built binary)
+        if: steps.check_binary.outputs.binary_available == 'false'
+        run: |
+          echo "=========================================="
+          echo "ERROR: No pre-built binary available"
+          echo "=========================================="
+          echo ""
+          echo "Building LLVM from source is not yet implemented in this workflow."
+          echo "Options:"
+          echo "  1. Use a different LLVM version that has pre-built macOS binaries"
+          echo "  2. Implement source build (requires 2-4 hours)"
+          echo "  3. Cross-compile from another architecture"
+          echo ""
+          echo "For LLVM ${{ inputs.llvm_version }} on ${{ inputs.arch }}:"
+          echo "  - Check: https://github.com/llvm/llvm-project/releases/tag/llvmorg-${{ inputs.llvm_version }}"
+          echo ""
+          exit 1
+
+      - name: Extract and process archive
+        if: steps.check_binary.outputs.binary_available == 'true'
+        run: |
+          VERSION="${{ inputs.llvm_version }}"
+          ARCH="${{ inputs.arch }}"
+
+          if [ "$ARCH" = "arm64" ]; then
+            FILENAME="LLVM-${VERSION}-macOS-ARM64.tar.xz"
+          else
+            FILENAME="LLVM-${VERSION}-macOS-X64.tar.xz"
+          fi
+
+          echo "Extracting $FILENAME..."
+          tar -xf "$FILENAME"
+
+          # Find the extracted directory
+          EXTRACTED_DIR=$(find . -maxdepth 1 -type d -name "*LLVM*" -o -name "*clang*" | head -1)
+
+          if [ -z "$EXTRACTED_DIR" ]; then
+            echo "ERROR: Could not find extracted directory"
+            ls -la
+            exit 1
+          fi
+
+          echo "Found extracted directory: $EXTRACTED_DIR"
+          echo "Contents:"
+          ls -la "$EXTRACTED_DIR"
+
+          # Run the fetch_and_archive tool with custom version and source directory
+          echo ""
+          echo "Running fetch_and_archive tool..."
+          uv run python tools/fetch_and_archive.py \
+            --platform darwin \
+            --arch "$ARCH" \
+            --version "$VERSION" \
+            --source-dir "$EXTRACTED_DIR"
+
+          echo ""
+          echo "✅ Archive processing complete"
+
+      - name: Verify archive structure
+        if: steps.check_binary.outputs.binary_available == 'true'
+        run: |
+          ARCH="${{ inputs.arch }}"
+          VERSION="${{ inputs.llvm_version }}"
+          ARCHIVE_PATH="assets/clang/darwin/${ARCH}/llvm-${VERSION}-darwin-${ARCH}.tar.zst"
+
+          if [ ! -f "$ARCHIVE_PATH" ]; then
+            echo "ERROR: Archive not found at: $ARCHIVE_PATH"
+            echo "Available files:"
+            ls -la "assets/clang/darwin/${ARCH}/" || echo "Directory does not exist"
+            exit 1
+          fi
+
+          echo "Archive found: $ARCHIVE_PATH"
+          ls -lh "$ARCHIVE_PATH"
+
+          # Verify clang binary exists in archive
+          echo ""
+          echo "Verifying archive contents..."
+          zstd -d "$ARCHIVE_PATH" -c | tar -t | head -30
+
+      - name: List generated files
+        run: |
+          echo "Generated files:"
+          ls -lh "assets/clang/darwin/${{ inputs.arch }}/" || echo "Directory does not exist"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: llvm-darwin-${{ inputs.arch }}-${{ inputs.llvm_version }}
+          path: |
+            assets/clang/darwin/${{ inputs.arch }}/llvm-*.tar.zst
+            assets/clang/darwin/${{ inputs.arch }}/llvm-*.tar.zst.sha256
+            assets/clang/darwin/${{ inputs.arch }}/llvm-*.tar.zst.md5
+            assets/clang/darwin/${{ inputs.arch }}/manifest.json
+          retention-days: 7
+
+      - name: Display next steps
+        run: |
+          cat << 'EOF'
+
+          ========================================
+          Next Steps:
+          ========================================
+
+          1. Download the artifact from this workflow run
+          2. Extract the files to your local clang-tool-chain-bins repo
+          3. Verify the archive structure locally:
+             - Test extraction
+             - Run clang++ --version
+             - Check for lld binary
+          4. Commit and push to Git LFS:
+             git add assets/clang/darwin/${{ inputs.arch }}/
+             git commit -m "feat(macos): add LLVM ${{ inputs.llvm_version }} binaries for ${{ inputs.arch }}"
+             git lfs push origin main
+             git push origin main
+          5. Verify GitHub Pages deployment (wait 1-2 minutes)
+          6. Test installation in clang-tool-chain repo:
+             clang-tool-chain purge --yes
+             clang-tool-chain install clang
+             clang-tool-chain-cpp --version
+
+          ========================================
+          EOF
