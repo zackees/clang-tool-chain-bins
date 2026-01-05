@@ -268,52 +268,120 @@ def copy_llvm_dylibs(iwyu_path: Path, output_dir: Path) -> int:
         print("\n⚠️  No LLVM dylibs found to copy")
         print("    This may cause runtime errors!")
 
+    # Also copy Z3 dylibs (LLVM dependency)
+    print("\n" + "="*70)
+    print("COPYING Z3 DYLIBS (LLVM DEPENDENCY)")
+    print("="*70 + "\n")
+
+    try:
+        result = subprocess.run(
+            ["brew", "--prefix", "z3"],
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        z3_path = Path(result.stdout.strip())
+        print(f"Z3 Homebrew path: {z3_path}")
+
+        z3_lib_dir = z3_path / "lib"
+        if z3_lib_dir.exists():
+            z3_dylibs = list(z3_lib_dir.glob("libz3*.dylib"))
+            print(f"Found {len(z3_dylibs)} Z3 dylib(s)")
+
+            for dylib in z3_dylibs:
+                if dylib.is_symlink():
+                    target = dylib.resolve()
+                    target_name = target.name
+                    if target_name not in copied_targets:
+                        print(f"Copying Z3 target: {target_name}")
+                        dest = output_lib_dir / target_name
+                        shutil.copy2(target, dest)
+                        copied_targets.add(target_name)
+                        copied_count += 1
+
+                    symlink_dest = output_lib_dir / dylib.name
+                    if symlink_dest.exists() or symlink_dest.is_symlink():
+                        symlink_dest.unlink()
+                    symlink_dest.symlink_to(target_name)
+                    print(f"Created Z3 symlink: {dylib.name} -> {target_name}")
+                else:
+                    if dylib.name not in copied_targets:
+                        print(f"Copying Z3: {dylib.name}")
+                        dest = output_lib_dir / dylib.name
+                        shutil.copy2(dylib, dest)
+                        copied_targets.add(dylib.name)
+                        copied_count += 1
+
+            print(f"\n✓ Copied Z3 dylibs to {output_lib_dir}")
+        else:
+            print(f"⚠️  Z3 lib directory not found: {z3_lib_dir}")
+    except subprocess.CalledProcessError as e:
+        print(f"⚠️  Failed to get Z3 path from Homebrew: {e}")
+        print("    Continuing without Z3 (may cause runtime errors)")
+
     return copied_count
 
 
 def fix_install_names(output_dir: Path) -> None:
     """
-    Fix install names in IWYU binary to use @executable_path for bundled dylibs.
+    Fix install names in IWYU binary and bundled dylibs to use @executable_path.
 
-    This makes the binary use dylibs relative to its location instead of
+    This makes binaries use dylibs relative to their location instead of
     absolute Homebrew paths.
     """
     print("\n" + "="*70)
     print("FIXING INSTALL NAMES")
     print("="*70 + "\n")
 
-    binary = output_dir / "bin" / "include-what-you-use"
+    def fix_binary_dependencies(binary_path: Path, is_dylib: bool = False):
+        """Fix install names for a single binary or dylib."""
+        # Get current dependencies
+        result = subprocess.run(
+            ["otool", "-L", str(binary_path)],
+            capture_output=True,
+            text=True,
+            check=True
+        )
 
-    # Get current dependencies
-    result = subprocess.run(
-        ["otool", "-L", str(binary)],
-        capture_output=True,
-        text=True,
-        check=True
-    )
+        # Find Homebrew dependencies and fix them
+        for line in result.stdout.split('\n'):
+            line = line.strip()
 
-    # Find LLVM dependencies and fix them
-    for line in result.stdout.split('\n'):
-        line = line.strip()
-
-        # Look for Homebrew LLVM paths
-        if '/opt/homebrew/' in line or '/usr/local/opt/' in line or '/usr/local/cellar/' in line:
-            if 'llvm' in line.lower() or 'clang' in line.lower():
+            # Look for Homebrew paths (LLVM, Z3, etc.)
+            if '/opt/homebrew/' in line or '/usr/local/opt/' in line or '/usr/local/Cellar/' in line:
                 # Extract the path (first part before compatibility version)
                 old_path = line.split()[0]
                 dylib_name = Path(old_path).name
 
-                # New path: @executable_path/../lib/dylib_name
-                new_path = f"@executable_path/../lib/{dylib_name}"
+                # For dylibs, use @loader_path; for binaries, use @executable_path
+                if is_dylib:
+                    new_path = f"@loader_path/{dylib_name}"
+                else:
+                    new_path = f"@executable_path/../lib/{dylib_name}"
 
-                print(f"Fixing: {dylib_name}")
+                print(f"Fixing: {binary_path.name}")
                 print(f"  Old: {old_path}")
                 print(f"  New: {new_path}")
 
                 subprocess.run(
-                    ["install_name_tool", "-change", old_path, new_path, str(binary)],
+                    ["install_name_tool", "-change", old_path, new_path, str(binary_path)],
                     check=True
                 )
+
+    # Fix IWYU binary
+    binary = output_dir / "bin" / "include-what-you-use"
+    if binary.exists():
+        print("Fixing IWYU binary:")
+        fix_binary_dependencies(binary, is_dylib=False)
+
+    # Fix all bundled dylibs
+    lib_dir = output_dir / "lib"
+    if lib_dir.exists():
+        print("\nFixing bundled dylibs:")
+        for dylib in lib_dir.glob("*.dylib"):
+            # Skip symlinks, only process actual files
+            if not dylib.is_symlink():
+                fix_binary_dependencies(dylib, is_dylib=True)
 
     print("\n✓ Install names fixed")
 
