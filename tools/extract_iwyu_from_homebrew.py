@@ -140,54 +140,107 @@ def verify_binary_dependencies(binary_path: Path) -> bool:
     return True
 
 
-def copy_llvm_dylibs(iwyu_path: Path, output_dir: Path) -> None:
+def copy_llvm_dylibs(iwyu_path: Path, output_dir: Path) -> int:
     """
     Copy required LLVM dylibs from Homebrew to output directory.
 
     Args:
         iwyu_path: Path to Homebrew IWYU installation
         output_dir: Destination directory for binaries
+
+    Returns:
+        Number of dylibs copied
     """
     print("\n" + "="*70)
     print("COPYING LLVM DYLIBS")
     print("="*70 + "\n")
 
     # Get LLVM path from Homebrew
-    result = subprocess.run(
-        ["brew", "--prefix", "llvm"],
-        capture_output=True,
-        text=True,
-        check=True
-    )
-    llvm_path = Path(result.stdout.strip())
+    try:
+        result = subprocess.run(
+            ["brew", "--prefix", "llvm"],
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        llvm_path = Path(result.stdout.strip())
+    except subprocess.CalledProcessError as e:
+        print(f"⚠️  Failed to get LLVM path from Homebrew: {e}")
+        return 0
+
+    print(f"LLVM Homebrew path: {llvm_path}")
+
     llvm_lib_dir = llvm_path / "lib"
+    print(f"Looking for dylibs in: {llvm_lib_dir}")
 
     if not llvm_lib_dir.exists():
         print(f"⚠️  LLVM lib directory not found: {llvm_lib_dir}")
-        return
+        print("    Attempting to find LLVM libraries anyway...")
+        # Try alternate path
+        llvm_lib_dir = llvm_path / "Cellar" / "llvm"
+        if llvm_lib_dir.exists():
+            # Find the version directory
+            versions = list(llvm_lib_dir.iterdir())
+            if versions:
+                llvm_lib_dir = versions[0] / "lib"
+                print(f"    Found alternate path: {llvm_lib_dir}")
+
+    if not llvm_lib_dir.exists():
+        print(f"⚠️  Could not find LLVM lib directory")
+        return 0
 
     # Create lib directory in output
     output_lib_dir = output_dir / "lib"
     output_lib_dir.mkdir(parents=True, exist_ok=True)
+    print(f"Output lib directory: {output_lib_dir}")
 
-    # Find and copy LLVM dylibs
+    # Find and copy LLVM dylibs - be more aggressive in finding them
     dylib_patterns = [
         "libLLVM*.dylib",
         "libclang*.dylib",
+        "libLLVM.dylib",
+        "libclang.dylib",
+        "libclang-cpp.dylib",
     ]
 
-    copied_count = 0
+    # Also check for symlinks and resolve them
+    print("\nSearching for LLVM dylibs...")
+    all_dylibs = set()
     for pattern in dylib_patterns:
-        for dylib in llvm_lib_dir.glob(pattern):
-            dest = output_lib_dir / dylib.name
+        found = list(llvm_lib_dir.glob(pattern))
+        print(f"  Pattern '{pattern}': found {len(found)} files")
+        all_dylibs.update(found)
+
+    copied_count = 0
+    copied_files = []
+    for dylib in sorted(all_dylibs):
+        # Resolve symlinks to get the actual file
+        if dylib.is_symlink():
+            target = dylib.resolve()
+            print(f"Copying: {dylib.name} -> {target.name}")
+            dest = output_lib_dir / target.name
+            shutil.copy2(target, dest)
+            # Also create the symlink
+            symlink_dest = output_lib_dir / dylib.name
+            if not symlink_dest.exists():
+                symlink_dest.symlink_to(target.name)
+            copied_files.append(f"{dylib.name} ({target.name})")
+        else:
             print(f"Copying: {dylib.name}")
+            dest = output_lib_dir / dylib.name
             shutil.copy2(dylib, dest)
-            copied_count += 1
+            copied_files.append(dylib.name)
+        copied_count += 1
 
     if copied_count > 0:
         print(f"\n✓ Copied {copied_count} LLVM dylib(s) to {output_lib_dir}")
+        for f in copied_files:
+            print(f"  - {f}")
     else:
         print("\n⚠️  No LLVM dylibs found to copy")
+        print("    This may cause runtime errors!")
+
+    return copied_count
 
 
 def fix_install_names(output_dir: Path) -> None:
@@ -349,8 +402,13 @@ def main():
         copy_iwyu_files(iwyu_path, output_dir)
 
         # Step 5: Copy LLVM dylibs if needed
+        dylibs_copied = 0
         if not args.skip_llvm_dylibs:
-            copy_llvm_dylibs(iwyu_path, output_dir)
+            dylibs_copied = copy_llvm_dylibs(iwyu_path, output_dir)
+            if dylibs_copied == 0:
+                print("\n⚠️  WARNING: No LLVM dylibs were copied!")
+                print("    The binary may crash with 'Symbol not found' errors")
+                print("    Consider using --skip-llvm-dylibs if the binary is statically linked")
 
         # Step 6: Fix install names if requested
         if args.fix_rpaths and not args.skip_llvm_dylibs:
