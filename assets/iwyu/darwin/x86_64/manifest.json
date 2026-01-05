@@ -2,6 +2,6 @@
   "latest": "0.25",
   "0.25": {
     "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/iwyu/darwin/x86_64/iwyu-0.25-darwin-x86_64.tar.zst",
-    "sha256": "ba55202f00cfbe57fe86292a099ee0ce4c8badacbf39e53e3a5356f9bf67b728"
+    "sha256": "679ac3e6852697d9733178fe6ab31be0f5a8df8622d47947c367adf16d958f76"
   }
 }
