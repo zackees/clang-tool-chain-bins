@@ -384,8 +384,8 @@ def main():
     parser.add_argument(
         "--output-dir",
         type=Path,
-        default=Path("downloads-bins/assets/iwyu/darwin"),
-        help="Output directory for binaries"
+        default=Path("../assets/iwyu/darwin"),
+        help="Output directory for binaries (relative to downloads-bins/tools)"
     )
     parser.add_argument(
         "--skip-llvm-dylibs",
