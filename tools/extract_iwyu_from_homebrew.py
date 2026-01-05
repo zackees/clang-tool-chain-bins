@@ -217,24 +217,48 @@ def copy_llvm_dylibs(iwyu_path: Path, output_dir: Path) -> int:
 
     copied_count = 0
     copied_files = []
+    copied_targets = set()  # Track which actual files we've copied
+
     for dylib in sorted(all_dylibs):
         # Resolve symlinks to get the actual file
         if dylib.is_symlink():
             target = dylib.resolve()
-            print(f"Copying: {dylib.name} -> {target.name}")
-            dest = output_lib_dir / target.name
-            shutil.copy2(target, dest)
-            # Also create the symlink
+            target_name = target.name
+
+            # Copy the target file if we haven't already
+            if target_name not in copied_targets:
+                print(f"Copying target: {target_name}")
+                dest = output_lib_dir / target_name
+                try:
+                    shutil.copy2(target, dest)
+                    copied_targets.add(target_name)
+                    copied_count += 1
+                except Exception as e:
+                    print(f"⚠️  Failed to copy {target_name}: {e}")
+                    continue
+
+            # Create the symlink
             symlink_dest = output_lib_dir / dylib.name
-            if not symlink_dest.exists():
-                symlink_dest.symlink_to(target.name)
-            copied_files.append(f"{dylib.name} ({target.name})")
+            print(f"Creating symlink: {dylib.name} -> {target_name}")
+            try:
+                if symlink_dest.exists() or symlink_dest.is_symlink():
+                    symlink_dest.unlink()
+                symlink_dest.symlink_to(target_name)
+                copied_files.append(f"{dylib.name} -> {target_name}")
+            except Exception as e:
+                print(f"⚠️  Failed to create symlink {dylib.name}: {e}")
         else:
-            print(f"Copying: {dylib.name}")
-            dest = output_lib_dir / dylib.name
-            shutil.copy2(dylib, dest)
-            copied_files.append(dylib.name)
-        copied_count += 1
+            # Regular file (not a symlink)
+            if dylib.name not in copied_targets:
+                print(f"Copying: {dylib.name}")
+                dest = output_lib_dir / dylib.name
+                try:
+                    shutil.copy2(dylib, dest)
+                    copied_targets.add(dylib.name)
+                    copied_files.append(dylib.name)
+                    copied_count += 1
+                except Exception as e:
+                    print(f"⚠️  Failed to copy {dylib.name}: {e}")
 
     if copied_count > 0:
         print(f"\n✓ Copied {copied_count} LLVM dylib(s) to {output_lib_dir}")
