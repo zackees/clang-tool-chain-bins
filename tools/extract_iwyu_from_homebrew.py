@@ -189,8 +189,12 @@ def copy_llvm_dylibs(iwyu_path: Path, output_dir: Path) -> int:
         print(f"⚠️  Could not find LLVM lib directory")
         return 0
 
-    # Create lib directory in output
+    # Create lib directory in output (remove old one if exists)
     output_lib_dir = output_dir / "lib"
+    if output_lib_dir.exists():
+        print(f"Removing existing lib directory: {output_lib_dir}")
+        import shutil as shutil_module
+        shutil_module.rmtree(output_lib_dir)
     output_lib_dir.mkdir(parents=True, exist_ok=True)
     print(f"Output lib directory: {output_lib_dir}")
 
