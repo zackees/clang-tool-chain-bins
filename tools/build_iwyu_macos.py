@@ -83,10 +83,17 @@ def extract_source(tarball: Path, work_dir: Path) -> Path:
     return source_dir
 
 
-def build_iwyu(source_dir: Path, llvm_path: Path, arch: str) -> Path:
-    """Build IWYU with CMake."""
+def build_iwyu(source_dir: Path, llvm_path: Path, arch: str, static_linking: bool = True) -> Path:
+    """Build IWYU with CMake.
+
+    Args:
+        source_dir: IWYU source directory
+        llvm_path: Path to LLVM installation (not used, kept for compatibility)
+        arch: Target architecture (x86_64 or arm64)
+        static_linking: If True, link LLVM libraries statically (default: True)
+    """
     print(f"\n{'='*70}")
-    print(f"BUILDING IWYU FOR {arch}")
+    print(f"BUILDING IWYU FOR {arch} ({'STATIC' if static_linking else 'DYNAMIC'} linking)")
     print(f"{'='*70}\n")
 
     build_dir = source_dir / "build"
@@ -113,28 +120,89 @@ def build_iwyu(source_dir: Path, llvm_path: Path, arch: str) -> Path:
     print(f"Homebrew LLVM Path: {homebrew_llvm_path}")
     print(f"Build Dir: {build_dir}")
 
+    # Check for static libraries
+    if static_linking:
+        print("\nChecking for LLVM static libraries...")
+        lib_dir = Path(homebrew_llvm_path) / "lib"
+        static_libs = list(lib_dir.glob("*.a"))
+        if static_libs:
+            print(f"✓ Found {len(static_libs)} static library files (.a)")
+            print(f"  Example: {static_libs[0].name}")
+        else:
+            print("⚠️  WARNING: No static libraries (.a) found!")
+            print("   Static linking may not work. Consider building LLVM from source.")
+
     # CMake configuration using Homebrew LLVM
     cmake_cmd = [
         "cmake",
         "-G", "Unix Makefiles",
         f"-DCMAKE_PREFIX_PATH={homebrew_llvm_path}",
         "-DCMAKE_BUILD_TYPE=Release",
-        ".."
     ]
 
-    print("\n" + " ".join(cmake_cmd))
+    # Add static linking flags
+    if static_linking:
+        print("\n🔗 Configuring for STATIC linking...")
+        cmake_cmd.extend([
+            # Prefer static libraries over dynamic
+            "-DCMAKE_FIND_LIBRARY_SUFFIXES=.a;.dylib",
+            # Don't link against monolithic libLLVM.dylib - use component libs
+            "-DLLVM_LINK_LLVM_DYLIB=OFF",
+            # Don't build shared libraries
+            "-DBUILD_SHARED_LIBS=OFF",
+        ])
+
+    cmake_cmd.append("..")
+
+    print("\nCMake command:")
+    print(" ".join(cmake_cmd))
     subprocess.run(cmake_cmd, cwd=build_dir, check=True)
-    
+
     # Build
     import os
     cpu_count = os.cpu_count() or 4
     make_cmd = ["make", f"-j{cpu_count}"]
-    
+
     print(f"\n{' '.join(make_cmd)}")
     subprocess.run(make_cmd, cwd=build_dir, check=True)
-    
+
+    # Verify linking and strip if static
+    binary_path = build_dir / "bin" / "include-what-you-use"
+    if binary_path.exists():
+        print("\n" + "="*70)
+        print("VERIFYING BINARY")
+        print("="*70)
+
+        # Check dependencies
+        print("\nChecking dynamic library dependencies...")
+        result = subprocess.run(
+            ["otool", "-L", str(binary_path)],
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        print(result.stdout)
+
+        # Check for LLVM dependencies
+        if "LLVM" in result.stdout or "clang" in result.stdout.lower():
+            print("\n⚠️  WARNING: Binary has LLVM/Clang dynamic dependencies!")
+            print("   Static linking may have failed.")
+            if static_linking:
+                print("   This could cause runtime errors on systems without LLVM installed.")
+        else:
+            print("\n✓ No LLVM dependencies found - binary is self-contained!")
+
+        # Strip debug symbols to reduce size
+        if static_linking:
+            print("\nStripping debug symbols to reduce binary size...")
+            original_size = binary_path.stat().st_size
+            subprocess.run(["strip", "-S", str(binary_path)], check=True)
+            new_size = binary_path.stat().st_size
+            savings = (1 - new_size/original_size) * 100
+            print(f"✓ Stripped: {original_size/(1024*1024):.1f} MB -> {new_size/(1024*1024):.1f} MB ({savings:.1f}% reduction)")
+
     print("\n✓ Build completed successfully")
-    
+
     return build_dir
 
 
@@ -179,19 +247,26 @@ def install_iwyu(build_dir: Path, output_dir: Path) -> None:
 def main():
     """Main entry point."""
     import argparse
-    
+
     parser = argparse.ArgumentParser(description="Build IWYU from source for macOS")
-    parser.add_argument("--arch", choices=["x86_64", "arm64"], 
+    parser.add_argument("--arch", choices=["x86_64", "arm64"],
                        help="Target architecture (default: current)")
     parser.add_argument("--work-dir", type=Path, default=Path("work_iwyu"),
                        help="Working directory for build")
-    parser.add_argument("--output-dir", type=Path, 
+    parser.add_argument("--output-dir", type=Path,
                        default=Path("downloads-bins/assets/iwyu/darwin"),
                        help="Output directory for binaries")
     parser.add_argument("--llvm-path", type=Path,
                        help="Path to LLVM installation (default: ~/.clang-tool-chain/clang/darwin/<arch>)")
-    
+    parser.add_argument("--static", action="store_true", default=True,
+                       help="Use static linking (default: True, recommended)")
+    parser.add_argument("--dynamic", action="store_true",
+                       help="Use dynamic linking (not recommended, for debugging)")
+
     args = parser.parse_args()
+
+    # Determine linking mode
+    static_linking = args.static and not args.dynamic
     
     # Determine architecture
     current_arch = get_current_arch()
@@ -205,14 +280,15 @@ def main():
     print(f"\n{'='*70}")
     print(f"IWYU BUILD SCRIPT FOR macOS {target_arch}")
     print(f"{'='*70}\n")
-    
+
     # Get LLVM version for this arch
     llvm_version = LLVM_VERSIONS[target_arch]
     iwyu_version = IWYU_VERSION_MAP[llvm_version]
-    
+
     print(f"LLVM Version: {llvm_version}")
     print(f"IWYU Version: {iwyu_version}")
     print(f"Architecture: {target_arch}")
+    print(f"Linking Mode: {'STATIC' if static_linking else 'DYNAMIC'}")
     
     # Determine LLVM path (not used anymore - Homebrew LLVM will be installed during build)
     if args.llvm_path:
@@ -235,7 +311,7 @@ def main():
         source_dir = extract_source(tarball, work_dir)
         
         # Step 3: Build
-        build_dir = build_iwyu(source_dir, llvm_path, target_arch)
+        build_dir = build_iwyu(source_dir, llvm_path, target_arch, static_linking)
         
         # Step 4: Install to output directory
         output_dir = args.output_dir / target_arch
