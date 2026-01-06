@@ -268,56 +268,92 @@ def copy_llvm_dylibs(iwyu_path: Path, output_dir: Path) -> int:
         print("\n⚠️  No LLVM dylibs found to copy")
         print("    This may cause runtime errors!")
 
-    # Also copy Z3 dylibs (LLVM dependency)
+    # Recursively copy ALL Homebrew dependencies
     print("\n" + "="*70)
-    print("COPYING Z3 DYLIBS (LLVM DEPENDENCY)")
+    print("RECURSIVELY COPYING ALL HOMEBREW DEPENDENCIES")
     print("="*70 + "\n")
 
-    try:
-        result = subprocess.run(
-            ["brew", "--prefix", "z3"],
-            capture_output=True,
-            text=True,
-            check=True
-        )
-        z3_path = Path(result.stdout.strip())
-        print(f"Z3 Homebrew path: {z3_path}")
+    def get_homebrew_dependencies(dylib_path: Path) -> set[Path]:
+        """Get all Homebrew dylib dependencies of a given dylib."""
+        try:
+            result = subprocess.run(
+                ["otool", "-L", str(dylib_path)],
+                capture_output=True,
+                text=True,
+                check=True
+            )
 
-        z3_lib_dir = z3_path / "lib"
-        if z3_lib_dir.exists():
-            z3_dylibs = list(z3_lib_dir.glob("libz3*.dylib"))
-            print(f"Found {len(z3_dylibs)} Z3 dylib(s)")
+            homebrew_deps = set()
+            for line in result.stdout.split('\n'):
+                line = line.strip()
+                # Look for Homebrew paths
+                if '/opt/homebrew/' in line or '/usr/local/opt/' in line or '/usr/local/Cellar/' in line:
+                    # Extract the path (first part before compatibility version)
+                    dep_path = line.split()[0]
+                    homebrew_deps.add(Path(dep_path))
 
-            for dylib in z3_dylibs:
-                if dylib.is_symlink():
-                    target = dylib.resolve()
-                    target_name = target.name
-                    if target_name not in copied_targets:
-                        print(f"Copying Z3 target: {target_name}")
-                        dest = output_lib_dir / target_name
-                        shutil.copy2(target, dest)
-                        copied_targets.add(target_name)
-                        copied_count += 1
+            return homebrew_deps
+        except subprocess.CalledProcessError:
+            return set()
 
-                    symlink_dest = output_lib_dir / dylib.name
-                    if symlink_dest.exists() or symlink_dest.is_symlink():
-                        symlink_dest.unlink()
-                    symlink_dest.symlink_to(target_name)
-                    print(f"Created Z3 symlink: {dylib.name} -> {target_name}")
-                else:
-                    if dylib.name not in copied_targets:
-                        print(f"Copying Z3: {dylib.name}")
-                        dest = output_lib_dir / dylib.name
-                        shutil.copy2(dylib, dest)
-                        copied_targets.add(dylib.name)
-                        copied_count += 1
+    def copy_dylib_with_deps(dylib_path: Path, visited: set[str]) -> int:
+        """Recursively copy a dylib and all its Homebrew dependencies."""
+        count = 0
+        dylib_name = dylib_path.name
 
-            print(f"\n✓ Copied Z3 dylibs to {output_lib_dir}")
+        # Skip if already processed
+        if dylib_name in visited:
+            return 0
+
+        visited.add(dylib_name)
+
+        # Resolve symlinks
+        if dylib_path.is_symlink():
+            target = dylib_path.resolve()
+            target_name = target.name
+
+            # Copy target if not already copied
+            if target_name not in copied_targets:
+                print(f"Copying: {target_name}")
+                dest = output_lib_dir / target_name
+                shutil.copy2(target, dest)
+                copied_targets.add(target_name)
+                count += 1
+
+                # Recursively copy dependencies of this dylib
+                deps = get_homebrew_dependencies(target)
+                for dep in deps:
+                    count += copy_dylib_with_deps(dep, visited)
+
+            # Create symlink
+            symlink_dest = output_lib_dir / dylib_name
+            if symlink_dest.exists() or symlink_dest.is_symlink():
+                symlink_dest.unlink()
+            symlink_dest.symlink_to(target_name)
+            print(f"  Symlink: {dylib_name} -> {target_name}")
         else:
-            print(f"⚠️  Z3 lib directory not found: {z3_lib_dir}")
-    except subprocess.CalledProcessError as e:
-        print(f"⚠️  Failed to get Z3 path from Homebrew: {e}")
-        print("    Continuing without Z3 (may cause runtime errors)")
+            # Regular file
+            if dylib_name not in copied_targets:
+                print(f"Copying: {dylib_name}")
+                dest = output_lib_dir / dylib_name
+                shutil.copy2(dylib_path, dest)
+                copied_targets.add(dylib_name)
+                count += 1
+
+                # Recursively copy dependencies of this dylib
+                deps = get_homebrew_dependencies(dylib_path)
+                for dep in deps:
+                    count += copy_dylib_with_deps(dep, visited)
+
+        return count
+
+    # Start with LLVM dylibs and recursively get all dependencies
+    visited_dylibs = set()
+    for dylib in sorted(all_dylibs):
+        copied_count += copy_dylib_with_deps(dylib, visited_dylibs)
+
+    print(f"\n✓ Recursively copied {copied_count} total dylib(s) (including all dependencies)")
+    print(f"  Total dylibs in lib/: {len(copied_targets)}")
 
     return copied_count
 
