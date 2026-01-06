@@ -249,7 +249,8 @@ def copy_llvm_dylibs(iwyu_path: Path, output_dir: Path) -> int:
                 # Look for Homebrew paths
                 if '/opt/homebrew/' in line or '/usr/local/opt/' in line or '/usr/local/Cellar/' in line:
                     # Extract the path (first part before compatibility version)
-                    dep_path = line.split()[0]
+                    # Strip trailing colon from otool -L output format
+                    dep_path = line.split()[0].rstrip(':')
                     print(f"    ✓ Found Homebrew dep: {dep_path}")
                     homebrew_deps.add(Path(dep_path))
 
