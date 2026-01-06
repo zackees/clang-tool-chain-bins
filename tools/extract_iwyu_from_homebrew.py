@@ -315,6 +315,7 @@ def copy_llvm_dylibs(iwyu_path: Path, output_dir: Path) -> int:
         return count
 
     # Start with LLVM dylibs and recursively get all dependencies
+    copied_count = 0
     visited_dylibs = set()
     for dylib in sorted(all_dylibs):
         copied_count += copy_dylib_with_deps(dylib, visited_dylibs)
