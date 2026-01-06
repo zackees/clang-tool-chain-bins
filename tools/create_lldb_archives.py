@@ -34,6 +34,13 @@ LLDB_BINARIES = {
     "lldb-argdumper",  # Argument processing helper
 }
 
+# Additional LLDB support files (DLLs, shared libraries)
+LLDB_SUPPORT_FILES = {
+    "liblldb.dll",  # Windows: LLDB shared library
+    "liblldb.so",   # Linux: LLDB shared library
+    "liblldb.dylib",  # macOS: LLDB shared library
+}
+
 # LLVM versions for each platform (from CLAUDE.md)
 LLVM_VERSIONS = {
     "win": "21.1.5",
@@ -216,10 +223,25 @@ def extract_lldb_binaries(llvm_root: Path, output_dir: Path, platform: str) -> i
         else:
             print(f"  ✗ {binary_name}{ext:4s} (not found - may be optional)")
 
+    # Also copy support files (DLLs, shared libraries)
+    print("\nLooking for LLDB support files:")
+    for support_file in sorted(LLDB_SUPPORT_FILES):
+        support_path = bin_dir / support_file
+
+        if support_path.exists():
+            dest = output_bin / support_path.name
+            shutil.copy2(support_path, dest)
+            size_mb = dest.stat().st_size / (1024 * 1024)
+            print(f"  ✓ {support_path.name:20s} ({size_mb:6.1f} MB)")
+            extracted_count += 1
+        else:
+            # Support files are optional (platform-specific)
+            print(f"  - {support_file:20s} (not found - platform-specific)")
+
     if extracted_count == 0:
         raise RuntimeError(f"No LLDB binaries found in {bin_dir}")
 
-    print(f"\n✓ Extracted {extracted_count} LLDB binaries")
+    print(f"\n✓ Extracted {extracted_count} LLDB files (binaries + support)")
     return extracted_count
 
 

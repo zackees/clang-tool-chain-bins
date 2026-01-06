@@ -2,7 +2,7 @@
   "latest": "21.1.5",
   "21.1.5": {
     "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/lldb/win/x86_64/lldb-21.1.5-win-x86_64.tar.zst",
-    "sha256": "21112ef34c71d8b14af54049ef70179ec6f55500c6bc10bd39af2671e611b547",
+    "sha256": "15385f11b672fbe50e371a0fc08495cabbe2c1c49ff069d9bdade45b98c71079",
     "notes": "LLDB 21.1.5 debugger for Windows x64"
   }
 }
