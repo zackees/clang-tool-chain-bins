@@ -3,6 +3,9 @@
   "21.1.5": {
     "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/lldb/linux/x86_64/lldb-21.1.5-linux-x86_64.tar.zst",
     "sha256": "TO_BE_GENERATED_DURING_BUILD",
-    "notes": "LLDB 21.1.5 debugger for Linux x64"
+    "size": 0,
+    "notes": "LLDB 21.1.5 debugger for Linux x64 (includes Python 3.10 site-packages for full 'bt all' support)",
+    "python_included": true,
+    "python_version": "3.10"
   }
 }

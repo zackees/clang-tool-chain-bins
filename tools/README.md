@@ -141,6 +141,45 @@ Compare compression methods and levels.
 ### `create_iwyu_archives.py`
 Create include-what-you-use toolchain archives.
 
+### `integrate_lldb_linux_archives.py`
+**NEW in Iteration 15** - Automate integration of Linux LLDB archives built by GitHub Actions.
+
+**Usage:**
+```bash
+# Auto-download from latest workflow run and integrate
+python tools/integrate_lldb_linux_archives.py
+
+# Download from specific run ID
+python tools/integrate_lldb_linux_archives.py --run-id 12345678
+
+# Use pre-downloaded artifacts
+python tools/integrate_lldb_linux_archives.py --skip-download --artifacts-dir ./my-artifacts
+
+# Dry-run (test without making changes)
+python tools/integrate_lldb_linux_archives.py --dry-run
+
+# Integrate only one architecture
+python tools/integrate_lldb_linux_archives.py --arch x86_64
+```
+
+**What it does:**
+1. Checks GitHub CLI is installed and authenticated
+2. Finds latest workflow run (or uses specified run ID)
+3. Downloads artifacts from GitHub Actions
+4. Verifies SHA256 checksums
+5. Tests archive extraction
+6. Moves archives to distribution directories (`assets/lldb/linux/x86_64/` and `assets/lldb/linux/arm64/`)
+7. Updates manifest files with metadata (sha256, size, python_bundled)
+8. Validates manifest structure
+
+**Requirements:**
+```bash
+pip install zstandard
+gh auth login  # GitHub CLI authentication
+```
+
+**See also:** `.agent_task/ARCHIVE_INTEGRATION_CHECKLIST.md` for comprehensive manual integration instructions.
+
 ## Output Structure
 
 Archives are placed in:
