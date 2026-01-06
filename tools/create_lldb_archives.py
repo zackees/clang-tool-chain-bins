@@ -39,6 +39,7 @@ LLDB_SUPPORT_FILES = {
     "liblldb.dll",  # Windows: LLDB shared library
     "liblldb.so",   # Linux: LLDB shared library
     "liblldb.dylib",  # macOS: LLDB shared library
+    "python310.dll",  # Python 3.10 runtime (required by liblldb for scripting support)
 }
 
 # LLVM versions for each platform (from CLAUDE.md)
