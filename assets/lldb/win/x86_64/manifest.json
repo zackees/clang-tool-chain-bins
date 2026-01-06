@@ -2,7 +2,10 @@
   "latest": "21.1.5",
   "21.1.5": {
     "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/lldb/win/x86_64/lldb-21.1.5-win-x86_64.tar.zst",
-    "sha256": "edc1b6dd493110352a5adfa016b4c71f6046fa59745d87d3c7a3cac080bc91c8",
-    "notes": "LLDB 21.1.5 debugger for Windows x64 (includes python310.dll for scripting support)"
+    "sha256": "f4aa6a4aad922dbb7866dabb50bc974a500a9e390590d294652d07d2e8979fc2",
+    "size": 31781329,
+    "notes": "LLDB 21.1.5 debugger for Windows x64 (includes Python 3.10 site-packages for full 'bt all' support)",
+    "python_included": true,
+    "python_version": "3.10"
   }
 }

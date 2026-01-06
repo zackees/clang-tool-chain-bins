@@ -184,6 +184,60 @@ def extract_llvm_archive(archive_path: Path, extract_dir: Path, platform: str) -
     return llvm_root
 
 
+def copy_python_modules(python_dir: Path, output_dir: Path) -> int:
+    """
+    Copy Python modules to LLDB archive.
+
+    Args:
+        python_dir: Directory containing python/ structure (with Lib/ and python310.zip)
+        output_dir: Output directory for LLDB archive (will create python/ subdirectory)
+
+    Returns:
+        Number of files copied
+    """
+    print("\n" + "=" * 70)
+    print("COPYING PYTHON MODULES")
+    print("=" * 70)
+    print(f"Source: {python_dir}")
+    print(f"Output: {output_dir / 'python'}")
+    print()
+
+    if not python_dir.exists():
+        raise RuntimeError(f"Python directory not found: {python_dir}")
+
+    # Verify required structure
+    python_zip = python_dir / "python310.zip"
+    lldb_module = python_dir / "Lib" / "site-packages" / "lldb"
+
+    if not python_zip.exists():
+        raise RuntimeError(f"python310.zip not found in {python_dir}")
+
+    if not lldb_module.exists():
+        raise RuntimeError(f"LLDB Python module not found at {lldb_module}")
+
+    # Copy entire python/ directory
+    dest_python = output_dir / "python"
+    if dest_python.exists():
+        shutil.rmtree(dest_python)
+
+    print(f"Copying python/ directory...")
+    shutil.copytree(python_dir, dest_python)
+
+    # Count files
+    file_count = sum(1 for _ in dest_python.rglob("*") if _.is_file())
+
+    # Report sizes
+    python_zip_size = (dest_python / "python310.zip").stat().st_size / (1024 * 1024)
+    lldb_pyd = dest_python / "Lib" / "site-packages" / "lldb" / "_lldb.cp310-win_amd64.pyd"
+    lldb_pyd_size = lldb_pyd.stat().st_size / (1024 * 1024) if lldb_pyd.exists() else 0
+
+    print(f"\n✓ Copied {file_count} Python files")
+    print(f"  - python310.zip: {python_zip_size:.2f} MB")
+    print(f"  - LLDB Python module: {lldb_pyd_size:.2f} MB")
+
+    return file_count
+
+
 def extract_lldb_binaries(llvm_root: Path, output_dir: Path, platform: str) -> int:
     """
     Extract LLDB binaries from LLVM installation.
@@ -284,6 +338,19 @@ def create_tar_archive(source_dir: Path, output_tar: Path) -> Path:
         bin_dir = source_dir / "bin"
         if bin_dir.exists():
             tar.add(bin_dir, arcname="bin", filter=tar_filter)
+
+        # Add python/ directory (if exists - for LLDB with Python support)
+        python_dir = source_dir / "python"
+        if python_dir.exists():
+            print(f"  Adding python/ directory...")
+            tar.add(python_dir, arcname="python", filter=tar_filter)
+
+            # Also copy python310.zip to bin/ directory for sys.path compatibility
+            # LLDB's Python looks for python310.zip in bin/ directory (where lldb.exe is)
+            python_zip = python_dir / "python310.zip"
+            if python_zip.exists():
+                print(f"  Also adding python310.zip to bin/ directory for Python sys.path...")
+                tar.add(python_zip, arcname="bin/python310.zip", filter=tar_filter)
 
         # Add any other top-level files (LICENSE, README, etc.)
         for item in source_dir.iterdir():
@@ -397,7 +464,12 @@ def generate_checksum(file_path: Path) -> str:
 
 
 def process_platform_arch(
-    lldb_root: Path, platform: str, arch: str, version: str, source_dir: Path | None = None
+    lldb_root: Path,
+    platform: str,
+    arch: str,
+    version: str,
+    source_dir: Path | None = None,
+    python_dir: Path | None = None,
 ) -> dict[str, str | int] | None:
     """
     Process a single platform/arch combination.
@@ -408,6 +480,7 @@ def process_platform_arch(
         arch: Architecture (x86_64, arm64)
         version: LLDB version (e.g., "21.1.5")
         source_dir: Optional existing LLVM extraction directory
+        python_dir: Optional Python modules directory (for --with-python)
 
     Returns:
         Dict with archive info, or None if skipped
@@ -446,6 +519,11 @@ def process_platform_arch(
         print(f"⚠️  No LLDB binaries found for {platform}/{arch}")
         return None
 
+    # Step 2.5: Copy Python modules if requested
+    if python_dir:
+        python_count = copy_python_modules(python_dir, lldb_extracted)
+        print(f"✓ Added {python_count} Python files to archive")
+
     # Step 3: Create archive name
     archive_base = f"lldb-{version}-{platform}-{arch}"
     tar_file = work_dir / f"{archive_base}.tar"
@@ -469,7 +547,7 @@ def process_platform_arch(
     print(f"SHA256: {sha256}")
 
     # Write checksum file
-    checksum_file = zst_file.with_suffix(".tar.zst.sha256")
+    checksum_file = Path(str(zst_file) + ".sha256")
     with open(checksum_file, "w") as f:
         f.write(f"{sha256}  {zst_file.name}\n")
 
@@ -514,9 +592,28 @@ def main() -> None:
         type=Path,
         help="Use existing LLVM extraction directory (skip download/extract)",
     )
+    parser.add_argument(
+        "--with-python",
+        action="store_true",
+        help="Include Python 3.10 modules in LLDB archives (requires --python-dir)",
+    )
+    parser.add_argument(
+        "--python-dir",
+        type=Path,
+        help="Python modules directory (output from extract_python_for_lldb.py)",
+    )
     parser.add_argument("--zstd-level", type=int, default=22, help="Zstd compression level (default: 22)")
 
     args = parser.parse_args()
+
+    # Validate --with-python requires --python-dir
+    if args.with_python and not args.python_dir:
+        print("Error: --with-python requires --python-dir")
+        sys.exit(1)
+
+    if args.python_dir and not args.python_dir.exists():
+        print(f"Error: Python directory not found: {args.python_dir}")
+        sys.exit(1)
 
     lldb_root = args.lldb_root.resolve()
 
@@ -540,7 +637,9 @@ def main() -> None:
         results[platform] = {}
         for arch in architectures:
             try:
-                result = process_platform_arch(lldb_root, platform, arch, version, args.source_dir)
+                # Pass python_dir only if --with-python is specified
+                python_dir = args.python_dir if args.with_python else None
+                result = process_platform_arch(lldb_root, platform, arch, version, args.source_dir, python_dir)
                 if result:
                     results[platform][arch] = result
             except Exception as e:
