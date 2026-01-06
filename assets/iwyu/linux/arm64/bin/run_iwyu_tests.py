@@ -15,14 +15,16 @@ __author__ = 'dsturtevant@google.com (Dean Sturtevant)'
 
 import argparse
 import glob
+import logging
 import os
 import re
 import sys
 import unittest
-import logging
+
 logging.basicConfig(level=logging.INFO)
 import posixpath
 from fnmatch import fnmatch
+
 import iwyu_test_util
 
 
@@ -98,7 +100,7 @@ def AddTestMethods(cls, rootdir, patterns):
 
     test_files[test_name] = filename
 
-  setattr(cls, 'test_files', test_files)
+  cls.test_files = test_files
 
 
 def EnumerateLoadedTests():
@@ -134,7 +136,7 @@ def RunTestFile(cc_file):
     # https://mesonbuild.com/Unit-tests.html#skipped-tests-and-hard-errors
     print('Skipped %s: %s' % (cc_file, e))
     return 77
-  except AssertionError as e:
+  except AssertionError:
     if xfail:
       print('%s: Expected failure' % cc_file)
       return 0

@@ -9,12 +9,10 @@
 #
 ##===----------------------------------------------------------------------===##
 
-from __future__ import print_function
-import sys
+import argparse
 import os
 import re
-import argparse
-
+import sys
 
 # This is used in selected functions to calculate the maximum length of filename
 # and filler dashes. Not otherwise useful.
@@ -97,7 +95,7 @@ def find_license_header(lines, two):
     return i
 
 
-class File(object):
+class File:
     """ Base class for a source file with a license header
 
     Do not use directly, instead use File.parse to instantiate a more derived
@@ -110,7 +108,7 @@ class File(object):
     * pattern - a regex matching the first line in a license header
     """
     def __init__(self, filename):
-        with open(filename, 'r') as fd:
+        with open(filename) as fd:
             content = fd.read()
 
         self.lines = list(content.splitlines())

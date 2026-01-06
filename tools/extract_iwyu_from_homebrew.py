@@ -11,11 +11,11 @@ This script:
 This is MUCH faster than building from source (~2 min vs ~10 min).
 """
 
+import platform
 import shutil
 import subprocess
 import sys
 from pathlib import Path
-import platform
 
 
 def get_current_arch():
@@ -186,7 +186,7 @@ def copy_llvm_dylibs(iwyu_path: Path, output_dir: Path) -> int:
                 print(f"    Found alternate path: {llvm_lib_dir}")
 
     if not llvm_lib_dir.exists():
-        print(f"⚠️  Could not find LLVM lib directory")
+        print("⚠️  Could not find LLVM lib directory")
         return 0
 
     # Create lib directory in output (remove old one if exists)
@@ -237,7 +237,7 @@ def copy_llvm_dylibs(iwyu_path: Path, output_dir: Path) -> int:
 
             print(f"\n--- Analyzing dependencies for: {dylib_path.name} ---")
             print(f"Full source path: {dylib_path}")
-            print(f"otool -L output:")
+            print("otool -L output:")
 
             homebrew_deps = set()
             all_lines = result.stdout.split('\n')
@@ -257,7 +257,7 @@ def copy_llvm_dylibs(iwyu_path: Path, output_dir: Path) -> int:
             if homebrew_deps:
                 print(f"  → Total Homebrew dependencies found: {len(homebrew_deps)}")
             else:
-                print(f"  → No Homebrew dependencies found in this dylib")
+                print("  → No Homebrew dependencies found in this dylib")
 
             return homebrew_deps
         except subprocess.CalledProcessError as e:
@@ -414,7 +414,7 @@ def copy_iwyu_files(iwyu_path: Path, output_dir: Path) -> None:
     iwyu_binary = iwyu_path / "bin" / "include-what-you-use"
     if iwyu_binary.exists():
         shutil.copy2(iwyu_binary, bin_dir / "include-what-you-use")
-        print(f"✓ Copied: include-what-you-use")
+        print("✓ Copied: include-what-you-use")
     else:
         raise RuntimeError(f"IWYU binary not found: {iwyu_binary}")
 
@@ -422,13 +422,13 @@ def copy_iwyu_files(iwyu_path: Path, output_dir: Path) -> None:
     iwyu_tool = iwyu_path / "bin" / "iwyu_tool.py"
     if iwyu_tool.exists():
         shutil.copy2(iwyu_tool, bin_dir / "iwyu_tool.py")
-        print(f"✓ Copied: iwyu_tool.py")
+        print("✓ Copied: iwyu_tool.py")
 
     # Copy fix_includes.py if it exists
     fix_includes = iwyu_path / "bin" / "fix_includes.py"
     if fix_includes.exists():
         shutil.copy2(fix_includes, bin_dir / "fix_includes.py")
-        print(f"✓ Copied: fix_includes.py")
+        print("✓ Copied: fix_includes.py")
 
     # Copy mapping files from share directory
     iwyu_share = iwyu_path / "share" / "include-what-you-use"
@@ -479,7 +479,7 @@ def main():
     target_arch = args.arch or current_arch
 
     if target_arch != current_arch:
-        print(f"ERROR: Cross-extraction not supported")
+        print("ERROR: Cross-extraction not supported")
         print(f"Current: {current_arch}, Target: {target_arch}")
         sys.exit(1)
 
@@ -542,10 +542,10 @@ def main():
         print("="*70 + "\n")
         print(f"IWYU {version} extracted for macOS {target_arch}")
         print(f"Output directory: {output_dir}")
-        print(f"\nNext steps:")
-        print(f"1. Run create_iwyu_archives.py to compress binaries")
-        print(f"2. Upload archives to downloads-bins repository")
-        print(f"3. Update manifest.json")
+        print("\nNext steps:")
+        print("1. Run create_iwyu_archives.py to compress binaries")
+        print("2. Upload archives to downloads-bins repository")
+        print("3. Update manifest.json")
 
     except subprocess.CalledProcessError as e:
         print(f"\n❌ Command failed: {e}")

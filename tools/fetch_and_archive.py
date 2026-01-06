@@ -823,7 +823,7 @@ def integrate_mingw_into_hardlinked(mingw_root: Path, hardlinked_dir: Path, arch
     generic_src = mingw_root / "generic-w64-mingw32"
     if generic_src.exists():
         generic_dst = hardlinked_dir / "generic-w64-mingw32"
-        print(f"Copying generic headers: generic-w64-mingw32/")
+        print("Copying generic headers: generic-w64-mingw32/")
         if generic_dst.exists():
             shutil.rmtree(generic_dst)
         shutil.copytree(generic_src, generic_dst, symlinks=True)
@@ -832,7 +832,7 @@ def integrate_mingw_into_hardlinked(mingw_root: Path, hardlinked_dir: Path, arch
     clang_lib_src = mingw_root / "lib" / "clang"
     if clang_lib_src.exists():
         clang_lib_dst = hardlinked_dir / "lib" / "clang"
-        print(f"Copying clang resources: lib/clang/")
+        print("Copying clang resources: lib/clang/")
         clang_lib_dst.parent.mkdir(parents=True, exist_ok=True)
 
         if clang_lib_dst.exists():
@@ -844,7 +844,7 @@ def integrate_mingw_into_hardlinked(mingw_root: Path, hardlinked_dir: Path, arch
         resource_libs = len(list(clang_lib_dst.rglob("*.a")))
         print(f"  Copied {resource_headers} resource headers and {resource_libs} libraries")
 
-    print(f"✓ MinGW integration complete\n")
+    print("✓ MinGW integration complete\n")
 
 
 # ============================================================================

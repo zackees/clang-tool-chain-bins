@@ -16,7 +16,6 @@ Usage:
 """
 
 import argparse
-import json
 import shutil
 import subprocess
 import sys
@@ -73,7 +72,7 @@ def extract_from_docker(image: str, output_dir: Path, platform: str = None) -> b
 
     The official emscripten/emsdk image has Emscripten installed at /emsdk/upstream/
     """
-    print(f"\nExtracting Emscripten from Docker image...")
+    print("\nExtracting Emscripten from Docker image...")
 
     container_name = "emsdk-temp-extract"
 
@@ -251,7 +250,7 @@ def main():
     if args.no_package:
         print(f"\n✓ Extraction complete: {archive_structure}")
         print("\nTo create archive, run:")
-        print(f"python3 fetch_and_archive_emscripten.py \\")
+        print("python3 fetch_and_archive_emscripten.py \\")
         print(f"  --platform {args.platform} --arch {args.arch} \\")
         print(f"  --skip-install --work-dir {archive_structure.parent}")
         return 0

@@ -9,14 +9,11 @@ This script downloads Emscripten via emsdk and creates a portable
 import argparse
 import hashlib
 import json
-import os
 import shutil
 import subprocess
 import sys
 import tarfile
-import urllib.request
 from pathlib import Path
-
 
 # Emscripten version to package
 EMSCRIPTEN_VERSION = "latest"  # Can be specific version like "3.1.50"
@@ -41,7 +38,7 @@ def clone_emsdk(work_dir: Path) -> Path:
             capture_output=True,
             text=True
         )
-        print(f"✓ Cloned emsdk")
+        print("✓ Cloned emsdk")
     except subprocess.CalledProcessError as e:
         print(f"Error cloning emsdk: {e}")
         print(f"stdout: {e.stdout}")
@@ -432,7 +429,7 @@ def main() -> None:
     version_file = upstream_dir / "emscripten" / "emscripten-version.txt"
     if version_file.exists():
         dst_version = staging_dir / "emscripten-version.txt"
-        print(f"  Copying emscripten-version.txt to root...")
+        print("  Copying emscripten-version.txt to root...")
         shutil.copy2(version_file, dst_version)
     else:
         print(f"  Warning: emscripten-version.txt not found at {version_file}")
@@ -441,7 +438,7 @@ def main() -> None:
     config_file = emsdk_dir / ".emscripten"
     if config_file.exists():
         dst_config = staging_dir / ".emscripten"
-        print(f"  Copying .emscripten config to root...")
+        print("  Copying .emscripten config to root...")
         shutil.copy2(config_file, dst_config)
     else:
         print(f"  Warning: .emscripten config file not found at {config_file}")
@@ -464,11 +461,11 @@ def main() -> None:
     print(f"Archive: {final_archive}")
     print(f"Size: {final_archive.stat().st_size / (1024*1024):.2f} MB")
     print(f"SHA256: {checksums['sha256']}")
-    print(f"\nNext steps:")
-    print(f"1. Test archive extraction")
-    print(f"2. Test compilation with emcc")
-    print(f"3. Upload to clang-tool-chain-bins repository")
-    print(f"4. Update manifest URL to GitHub raw URL")
+    print("\nNext steps:")
+    print("1. Test archive extraction")
+    print("2. Test compilation with emcc")
+    print("3. Upload to clang-tool-chain-bins repository")
+    print("4. Update manifest URL to GitHub raw URL")
 
 
 if __name__ == "__main__":

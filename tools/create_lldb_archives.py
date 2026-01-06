@@ -184,13 +184,14 @@ def extract_llvm_archive(archive_path: Path, extract_dir: Path, platform: str) -
     return llvm_root
 
 
-def copy_python_modules(python_dir: Path, output_dir: Path) -> int:
+def copy_python_modules(python_dir: Path, output_dir: Path, platform: str = "win") -> int:
     """
     Copy Python modules to LLDB archive.
 
     Args:
-        python_dir: Directory containing python/ structure (with Lib/ and python310.zip)
+        python_dir: Directory containing python/ structure (with Lib/ and optionally python310.zip)
         output_dir: Output directory for LLDB archive (will create python/ subdirectory)
+        platform: Platform name (win, linux, darwin) to determine structure
 
     Returns:
         Number of files copied
@@ -200,6 +201,7 @@ def copy_python_modules(python_dir: Path, output_dir: Path) -> int:
     print("=" * 70)
     print(f"Source: {python_dir}")
     print(f"Output: {output_dir / 'python'}")
+    print(f"Platform: {platform}")
     print()
 
     if not python_dir.exists():
@@ -209,8 +211,15 @@ def copy_python_modules(python_dir: Path, output_dir: Path) -> int:
     python_zip = python_dir / "python310.zip"
     lldb_module = python_dir / "Lib" / "site-packages" / "lldb"
 
-    if not python_zip.exists():
-        raise RuntimeError(f"python310.zip not found in {python_dir}")
+    # Windows requires python310.zip, Linux/macOS use extracted Lib/
+    if platform == "win":
+        if not python_zip.exists():
+            raise RuntimeError(f"python310.zip not found in {python_dir} (required for Windows)")
+    else:
+        # Linux/macOS: Lib/ directory must exist
+        lib_dir = python_dir / "Lib"
+        if not lib_dir.exists():
+            raise RuntimeError(f"Lib/ directory not found in {python_dir} (required for Linux/macOS)")
 
     if not lldb_module.exists():
         raise RuntimeError(f"LLDB Python module not found at {lldb_module}")
@@ -220,20 +229,39 @@ def copy_python_modules(python_dir: Path, output_dir: Path) -> int:
     if dest_python.exists():
         shutil.rmtree(dest_python)
 
-    print(f"Copying python/ directory...")
-    shutil.copytree(python_dir, dest_python)
+    print("Copying python/ directory...")
+    shutil.copytree(python_dir, dest_python, symlinks=True)  # Preserve symlinks for Linux
 
     # Count files
     file_count = sum(1 for _ in dest_python.rglob("*") if _.is_file())
 
-    # Report sizes
-    python_zip_size = (dest_python / "python310.zip").stat().st_size / (1024 * 1024)
-    lldb_pyd = dest_python / "Lib" / "site-packages" / "lldb" / "_lldb.cp310-win_amd64.pyd"
-    lldb_pyd_size = lldb_pyd.stat().st_size / (1024 * 1024) if lldb_pyd.exists() else 0
+    # Report sizes (platform-specific)
+    if platform == "win":
+        python_zip_size = (dest_python / "python310.zip").stat().st_size / (1024 * 1024)
+        lldb_pyd = dest_python / "Lib" / "site-packages" / "lldb" / "_lldb.cp310-win_amd64.pyd"
+        lldb_pyd_size = lldb_pyd.stat().st_size / (1024 * 1024) if lldb_pyd.exists() else 0
+        print(f"\n✓ Copied {file_count} Python files")
+        print(f"  - python310.zip: {python_zip_size:.2f} MB")
+        print(f"  - LLDB Python module: {lldb_pyd_size:.2f} MB")
+    else:
+        # Linux/macOS: Report Lib/ directory size
+        lib_dir = dest_python / "Lib"
+        lib_size = sum(f.stat().st_size for f in lib_dir.rglob("*") if f.is_file()) / (1024 * 1024)
 
-    print(f"\n✓ Copied {file_count} Python files")
-    print(f"  - python310.zip: {python_zip_size:.2f} MB")
-    print(f"  - LLDB Python module: {lldb_pyd_size:.2f} MB")
+        # Find LLDB .so file (arch-specific naming)
+        lldb_so_files = list((dest_python / "Lib" / "site-packages" / "lldb").glob("_lldb.*.so"))
+        lldb_so_size = 0
+        if lldb_so_files:
+            # Note: symlinks don't have size, report target size if available
+            lldb_so = lldb_so_files[0]
+            if lldb_so.is_symlink():
+                print(f"  - LLDB Python module: symlink → {lldb_so.readlink()}")
+            else:
+                lldb_so_size = lldb_so.stat().st_size / (1024 * 1024)
+                print(f"  - LLDB Python module: {lldb_so_size:.2f} MB")
+
+        print(f"\n✓ Copied {file_count} Python files")
+        print(f"  - Lib/ directory: {lib_size:.2f} MB")
 
     return file_count
 
@@ -342,14 +370,14 @@ def create_tar_archive(source_dir: Path, output_tar: Path) -> Path:
         # Add python/ directory (if exists - for LLDB with Python support)
         python_dir = source_dir / "python"
         if python_dir.exists():
-            print(f"  Adding python/ directory...")
+            print("  Adding python/ directory...")
             tar.add(python_dir, arcname="python", filter=tar_filter)
 
-            # Also copy python310.zip to bin/ directory for sys.path compatibility
+            # Windows only: Also copy python310.zip to bin/ directory for sys.path compatibility
             # LLDB's Python looks for python310.zip in bin/ directory (where lldb.exe is)
             python_zip = python_dir / "python310.zip"
             if python_zip.exists():
-                print(f"  Also adding python310.zip to bin/ directory for Python sys.path...")
+                print("  Also adding python310.zip to bin/ directory for Python sys.path...")
                 tar.add(python_zip, arcname="bin/python310.zip", filter=tar_filter)
 
         # Add any other top-level files (LICENSE, README, etc.)
@@ -521,7 +549,7 @@ def process_platform_arch(
 
     # Step 2.5: Copy Python modules if requested
     if python_dir:
-        python_count = copy_python_modules(python_dir, lldb_extracted)
+        python_count = copy_python_modules(python_dir, lldb_extracted, platform)
         print(f"✓ Added {python_count} Python files to archive")
 
     # Step 3: Create archive name

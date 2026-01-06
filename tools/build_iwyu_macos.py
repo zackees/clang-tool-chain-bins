@@ -13,11 +13,11 @@ LLVM Version Requirements:
 - macOS ARM64: LLVM 21.1.6 -> IWYU 0.25
 """
 
+import platform
+import shutil
 import subprocess
 import sys
 from pathlib import Path
-import shutil
-import platform
 
 # IWYU version mapping based on LLVM versions
 IWYU_VERSION_MAP = {
@@ -49,17 +49,17 @@ def download_iwyu_source(version: str, work_dir: Path) -> Path:
     print(f"\n{'='*70}")
     print(f"DOWNLOADING IWYU {version} SOURCE")
     print(f"{'='*70}\n")
-    
+
     url = f"https://github.com/include-what-you-use/include-what-you-use/archive/refs/tags/{version}.tar.gz"
     tarball = work_dir / f"iwyu-{version}.tar.gz"
-    
+
     print(f"URL: {url}")
     print(f"Output: {tarball}")
-    
+
     subprocess.run(["curl", "-L", url, "-o", str(tarball)], check=True)
-    
+
     print(f"✓ Downloaded {tarball.stat().st_size / (1024*1024):.2f} MB")
-    
+
     return tarball
 
 
@@ -68,18 +68,18 @@ def extract_source(tarball: Path, work_dir: Path) -> Path:
     print(f"\n{'='*70}")
     print("EXTRACTING SOURCE")
     print(f"{'='*70}\n")
-    
+
     subprocess.run(["tar", "-xzf", str(tarball), "-C", str(work_dir)], check=True)
-    
+
     # Find extracted directory
     version = tarball.stem.replace("iwyu-", "").replace(".tar", "")
     source_dir = work_dir / f"include-what-you-use-{version}"
-    
+
     if not source_dir.exists():
         raise RuntimeError(f"Source directory not found: {source_dir}")
-    
+
     print(f"✓ Extracted to {source_dir}")
-    
+
     return source_dir
 
 
@@ -211,36 +211,36 @@ def install_iwyu(build_dir: Path, output_dir: Path) -> None:
     print(f"\n{'='*70}")
     print("INSTALLING IWYU")
     print(f"{'='*70}\n")
-    
+
     output_dir.mkdir(parents=True, exist_ok=True)
-    
+
     # Create bin/ and share/ directories
     bin_dir = output_dir / "bin"
     share_dir = output_dir / "share" / "include-what-you-use"
-    
+
     bin_dir.mkdir(parents=True, exist_ok=True)
     share_dir.mkdir(parents=True, exist_ok=True)
-    
+
     # Copy binary
     binary_src = build_dir / "bin" / "include-what-you-use"
     if not binary_src.exists():
         raise RuntimeError(f"Binary not found: {binary_src}")
-    
+
     shutil.copy2(binary_src, bin_dir / "include-what-you-use")
     print(f"✓ Copied {binary_src} -> {bin_dir}")
-    
+
     # Copy iwyu_tool.py if it exists
     iwyu_tool = build_dir.parent / "iwyu_tool.py"
     if iwyu_tool.exists():
         shutil.copy2(iwyu_tool, bin_dir / "iwyu_tool.py")
         print(f"✓ Copied {iwyu_tool} -> {bin_dir}")
-    
+
     # Copy mapping files
     mappings_src = build_dir.parent
     for mapping_file in mappings_src.glob("*.imp"):
         shutil.copy2(mapping_file, share_dir)
         print(f"✓ Copied {mapping_file.name} -> {share_dir}")
-    
+
     print(f"\n✓ IWYU installed to {output_dir}")
 
 
@@ -267,16 +267,16 @@ def main():
 
     # Determine linking mode
     static_linking = args.static and not args.dynamic
-    
+
     # Determine architecture
     current_arch = get_current_arch()
     target_arch = args.arch or current_arch
-    
+
     if target_arch != current_arch:
-        print(f"WARNING: Cross-compilation not supported yet!")
+        print("WARNING: Cross-compilation not supported yet!")
         print(f"Current: {current_arch}, Target: {target_arch}")
         sys.exit(1)
-    
+
     print(f"\n{'='*70}")
     print(f"IWYU BUILD SCRIPT FOR macOS {target_arch}")
     print(f"{'='*70}\n")
@@ -289,7 +289,7 @@ def main():
     print(f"IWYU Version: {iwyu_version}")
     print(f"Architecture: {target_arch}")
     print(f"Linking Mode: {'STATIC' if static_linking else 'DYNAMIC'}")
-    
+
     # Determine LLVM path (not used anymore - Homebrew LLVM will be installed during build)
     if args.llvm_path:
         llvm_path = args.llvm_path
@@ -297,36 +297,36 @@ def main():
         llvm_path = Path.home() / ".clang-tool-chain" / "clang" / "darwin" / target_arch
 
     # Note: LLVM path check removed - Homebrew LLVM will be installed during build_iwyu()
-    
+
     # Create work directory
     work_dir = args.work_dir
     work_dir.mkdir(parents=True, exist_ok=True)
-    
+
     # Build pipeline
     try:
         # Step 1: Download source
         tarball = download_iwyu_source(iwyu_version, work_dir)
-        
+
         # Step 2: Extract source
         source_dir = extract_source(tarball, work_dir)
-        
+
         # Step 3: Build
         build_dir = build_iwyu(source_dir, llvm_path, target_arch, static_linking)
-        
+
         # Step 4: Install to output directory
         output_dir = args.output_dir / target_arch
         install_iwyu(build_dir, output_dir)
-        
+
         print(f"\n{'='*70}")
         print("SUCCESS!")
         print(f"{'='*70}\n")
         print(f"IWYU {iwyu_version} built for macOS {target_arch}")
         print(f"Binaries: {output_dir}")
-        print(f"\nNext steps:")
-        print(f"1. Run create_iwyu_archives.py to compress binaries")
-        print(f"2. Upload archives to downloads-bins repository")
-        print(f"3. Update manifest.json")
-        
+        print("\nNext steps:")
+        print("1. Run create_iwyu_archives.py to compress binaries")
+        print("2. Upload archives to downloads-bins repository")
+        print("3. Update manifest.json")
+
     except subprocess.CalledProcessError as e:
         print(f"\n❌ Build failed: {e}")
         sys.exit(1)

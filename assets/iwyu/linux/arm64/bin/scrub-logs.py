@@ -16,9 +16,9 @@ explain the new behavior. This script makes that easier by scrubbing pointer
 values and path prefixes from ast-dump output, so they can be diffed directly.
 """
 
+import fileinput
 import re
 import sys
-import fileinput
 
 
 def strip_path_prefix(line):

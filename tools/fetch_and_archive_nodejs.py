@@ -31,14 +31,12 @@ Size estimates:
 import argparse
 import hashlib
 import json
-import os
 import shutil
 import sys
 import tarfile
 import urllib.request
 import zipfile
 from pathlib import Path
-from typing import Dict, Optional
 
 # ============================================================================
 # Configuration
@@ -201,7 +199,7 @@ def verify_checksum(archive_path: Path, platform: str, arch: str, work_dir: Path
 
     # Parse checksums file
     checksums = {}
-    with open(checksums_path, "r") as f:
+    with open(checksums_path) as f:
         for line in f:
             line = line.strip()
             if not line:
@@ -442,7 +440,7 @@ def compress_with_zstd(tar_path: Path) -> Path:
 # ============================================================================
 
 
-def generate_checksums(archive_path: Path) -> Dict[str, str]:
+def generate_checksums(archive_path: Path) -> dict[str, str]:
     """Generate SHA256 and MD5 checksums."""
     print_section("STEP 7: GENERATE CHECKSUMS")
 
@@ -488,7 +486,7 @@ def generate_checksums(archive_path: Path) -> Dict[str, str]:
 
 
 def create_manifest(
-    archive_path: Path, checksums: Dict[str, str], platform: str, arch: str, output_dir: Path
+    archive_path: Path, checksums: dict[str, str], platform: str, arch: str, output_dir: Path
 ) -> Path:
     """Create manifest.json for the archive."""
     print_section("STEP 8: CREATE MANIFEST")
@@ -506,7 +504,7 @@ def create_manifest(
     manifest = {}
     if manifest_path.exists():
         print(f"Loading existing manifest: {manifest_path}")
-        with open(manifest_path, "r") as f:
+        with open(manifest_path) as f:
             manifest = json.load(f)
     else:
         print(f"Creating new manifest: {manifest_path}")
@@ -579,7 +577,7 @@ def verify_archive(archive_path: Path, platform: str) -> None:
             raise RuntimeError(f"Node binary not found: {node_binary}")
 
         print(f"✓ Node binary found: {node_binary}")
-        print(f"✓ Verification PASSED")
+        print("✓ Verification PASSED")
 
     except Exception as e:
         print(f"✗ Verification FAILED: {e}")
@@ -588,7 +586,7 @@ def verify_archive(archive_path: Path, platform: str) -> None:
         # Clean up verification directory
         if verify_dir.exists():
             shutil.rmtree(verify_dir)
-            print(f"Cleaned up verification directory")
+            print("Cleaned up verification directory")
 
 
 # ============================================================================
@@ -643,7 +641,7 @@ Supported platforms:
     if key not in NODEJS_DOWNLOAD_URLS:
         print(f"Error: Unsupported platform/arch combination: {args.platform}/{args.arch}")
         print("\nSupported combinations:")
-        for (platform, arch) in NODEJS_DOWNLOAD_URLS.keys():
+        for (platform, arch) in NODEJS_DOWNLOAD_URLS:
             print(f"  - {platform}/{arch}")
         sys.exit(1)
 
@@ -708,17 +706,17 @@ Supported platforms:
 
         # Print summary
         print_section("SUMMARY")
-        print(f"✓ Archive created successfully!")
+        print("✓ Archive created successfully!")
         print(f"Archive:  {final_archive_path}")
         print(f"Size:     {final_archive_path.stat().st_size / (1024*1024):.2f} MB")
         print(f"Manifest: {manifest_path}")
         print(f"SHA256:   {final_sha256_path}")
         print(f"MD5:      {final_md5_path}")
         print()
-        print(f"Next steps:")
+        print("Next steps:")
         print(f"1. Test extraction: python expand_archive.py {final_archive_path} test/")
-        print(f"2. Test node binary: test/bin/node --version")
-        print(f"3. Commit to downloads-bins repository")
+        print("2. Test node binary: test/bin/node --version")
+        print("3. Commit to downloads-bins repository")
         print("=" * 70)
 
     except Exception as e:

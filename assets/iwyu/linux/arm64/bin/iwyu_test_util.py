@@ -16,7 +16,6 @@ __author__ = 'wan@google.com (Zhanyong Wan)'
 
 import difflib
 import functools
-import operator
 import os
 import re
 import shlex
@@ -204,7 +203,7 @@ def SetIwyuPath(iwyu_path):
 def _GetIwyuPath():
   """Returns the path to IWYU or raises IOError if it cannot be found."""
   if not _IWYU_PATH:
-    raise IOError('\'include-what-you-use\' not found in PATH')
+    raise OSError('\'include-what-you-use\' not found in PATH')
   return _IWYU_PATH
 
 
@@ -291,7 +290,7 @@ def _GetActualDiagnostics(actual_output):
 def _GetExpectedNoLocDiagnosticRegexes(filename):
   """Returns a list of regexes for the file."""
   expected = []
-  with open(filename, 'r') as fileobj:
+  with open(filename) as fileobj:
     for line in fileobj:
       m = _EXPECTED_NOLOC_DIAGS_RE.match(line.strip())
       if m:
@@ -407,7 +406,7 @@ def _GetExpectedSummaries(files):
 
 
 def _GetExpectedExitCode(main_file):
-  with open(main_file, 'r') as fh:
+  with open(main_file) as fh:
     for line in fh:
       m = _EXPECTED_SUMMARY_EXIT_CODE_RE.match(line)
       if m:

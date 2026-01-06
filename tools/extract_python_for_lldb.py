@@ -31,7 +31,6 @@ Size Impact:
 - Final LLDB archive: ~61.5 MB compressed (from 29 MB)
 """
 
-import hashlib
 import shutil
 import subprocess
 import sys
@@ -215,10 +214,7 @@ def extract_llvm_archive(archive_path: Path, extract_dir: Path, platform: str) -
     for item in extract_dir.iterdir():
         if item.is_dir():
             # Check if it has lib/site-packages/lldb/ (or bin/ for fallback)
-            if (item / "lib" / "site-packages" / "lldb").exists():
-                llvm_root = item
-                break
-            elif (item / "bin").exists():
+            if (item / "lib" / "site-packages" / "lldb").exists() or (item / "bin").exists():
                 llvm_root = item
                 break
 

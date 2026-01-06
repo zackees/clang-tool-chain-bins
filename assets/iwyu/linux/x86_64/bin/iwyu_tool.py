@@ -28,18 +28,16 @@ Example usage with CMake:
 
 See iwyu_tool.py -h for more details on command-line arguments.
 """
-from __future__ import print_function
+import argparse
+import json
 import os
 import re
-import sys
-import json
-import time
 import shlex
 import shutil
-import argparse
-import tempfile
 import subprocess
-
+import sys
+import tempfile
+import time
 
 CORRECT_RE = re.compile(r'^\((.*?) has correct #includes/fwd-decls\)$')
 SHOULD_ADD_RE = re.compile(r'^(.*?) should add these lines:$')
@@ -239,7 +237,7 @@ def find_include_what_you_use():
 IWYU_EXECUTABLE = find_include_what_you_use()
 
 
-class Process(object):
+class Process:
     """ Manages an IWYU process in flight """
     def __init__(self, proc, outfile):
         self.proc = proc
@@ -285,7 +283,7 @@ KNOWN_COMPILER_WRAPPERS=frozenset([
 ])
 
 
-class Invocation(object):
+class Invocation:
     """ Holds arguments of an IWYU invocation. """
     def __init__(self, command, cwd):
         self.command = command
@@ -460,9 +458,9 @@ def main(compilation_db_path, source_files, exclude, verbose, formatter, jobs,
 
         # Read compilation db from disk.
         compilation_db_path = os.path.realpath(compilation_db_path)
-        with open(compilation_db_path, 'r') as fileobj:
+        with open(compilation_db_path) as fileobj:
             compilation_db = json.load(fileobj)
-    except IOError as why:
+    except OSError as why:
         print('error: failed to parse compilation database: %s' % why,
               file=sys.stderr)
         return 1

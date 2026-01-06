@@ -8,12 +8,13 @@
 # License. See LICENSE.TXT for details.
 #
 ##===----------------------------------------------------------------------===##
+import inspect
 import os
+import random
 import sys
 import time
-import random
-import inspect
 import unittest
+
 import iwyu_tool
 
 try:
@@ -22,7 +23,7 @@ except ImportError:
     from io import StringIO
 
 
-class MockProcess(object):
+class MockProcess:
     def __init__(self, block, content, returncode):
         self.content = content
         self.complete_ts = time.time() + block
@@ -61,7 +62,7 @@ class MockInvocation(iwyu_tool.Invocation):
                            self._will_returncode)
 
 
-class MockIwyuToolMain(object):
+class MockIwyuToolMain:
     """ Replacement for iwyu_tool.main to capture parsed arguments. """
     def __init__(self):
         if hasattr(inspect, 'getfullargspec'):

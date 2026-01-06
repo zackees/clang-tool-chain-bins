@@ -11,7 +11,6 @@ import hashlib
 import json
 import sys
 from pathlib import Path
-from typing import Any
 
 
 def calculate_sha256(file_path: Path) -> str:
@@ -104,11 +103,11 @@ def update_manifest_with_parts(
         print("You'll need to manually update the manifest with part information.")
         return
 
-    with open(manifest_path, "r") as f:
+    with open(manifest_path) as f:
         manifest = json.load(f)
 
     # Calculate full archive checksum
-    print(f"Calculating full archive checksum...")
+    print("Calculating full archive checksum...")
     full_archive_sha256 = calculate_sha256(parts[0][0].parent / archive_name)
     print(f"Full archive SHA256: {full_archive_sha256}")
 

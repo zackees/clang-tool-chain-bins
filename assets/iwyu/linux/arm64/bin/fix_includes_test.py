@@ -9,7 +9,6 @@
 #
 ##===----------------------------------------------------------------------===##
 
-from __future__ import print_function
 
 """Test for fix_includes.py
 
@@ -25,12 +24,14 @@ except ImportError:
 
 import re
 import sys
+
 # I use unittest instead of googletest to ease opensourcing.
 import unittest
+
 import fix_includes
 
 
-class FakeFlags(object):
+class FakeFlags:
   def __init__(self):
     self.blank_lines = False
     self.comments = True

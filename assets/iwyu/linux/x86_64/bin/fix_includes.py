@@ -9,7 +9,6 @@
 #
 ##===----------------------------------------------------------------------===##
 
-from __future__ import print_function
 
 """Update files with the 'correct' #include and forward-declare lines.
 
@@ -59,8 +58,8 @@ up.  Then we're done!
 
 __author__ = 'csilvers@google.com (Craig Silverstein)'
 
-import difflib
 import argparse
+import difflib
 import os
 import re
 import sys
@@ -163,7 +162,7 @@ if sys.version_info[0] < 3:
     return i.next()
 
 
-class OrderedSet(object):
+class OrderedSet:
   """ Sometimes sets affect order of outputs, which hinders testing. This
   (naive) set implementation preserves order to avoid that problem. """
   def __init__(self, iterable=None):
@@ -207,7 +206,7 @@ class FixIncludesError(Exception):
   pass
 
 
-class IWYUOutputRecord(object):
+class IWYUOutputRecord:
   """Information that the iwyu output file has about one source file."""
 
   def __init__(self, filename):
@@ -281,7 +280,7 @@ class IWYUOutputRecord(object):
                self.full_include_lines))
 
 
-class IWYUOutputParser(object):
+class IWYUOutputParser:
   """Parses the lines in iwyu output corresponding to one source file."""
 
   # iwyu adds this comment to some lines to map them to the source file.
@@ -468,7 +467,7 @@ class IWYUOutputParser(object):
     return retval
 
 
-class LineInfo(object):
+class LineInfo:
   """Information about a single line of a source file."""
 
   def __init__(self, line):
@@ -523,7 +522,7 @@ class LineInfo(object):
             % (line, type_id, self.key, self.move_span, self.reorder_span))
 
 
-class FileInfo(object):
+class FileInfo:
   """ Details about a file's storage encoding  """
   DEFAULT_LINESEP = os.linesep
   DEFAULT_ENCODING = 'utf-8'
@@ -594,7 +593,7 @@ def _ReadFile(filename, fileinfo):
       # The lines we add will have the linesep determined by
       # FileInfo.
       return content.decode(fileinfo.encoding).splitlines(True)
-  except (IOError, OSError) as why:
+  except OSError as why:
     print("Skipping '%s': %s" % (filename, why))
   return None
 
@@ -607,7 +606,7 @@ def _WriteFile(filename, fileinfo, file_lines):
       content = ''.join(file_lines)
       content = content.encode(fileinfo.encoding)
       f.write(content)
-  except (IOError, OSError) as why:
+  except OSError as why:
     print("Error writing '%s': %s" % (filename, why))
 
 
