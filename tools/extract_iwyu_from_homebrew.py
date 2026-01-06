@@ -283,17 +283,32 @@ def copy_llvm_dylibs(iwyu_path: Path, output_dir: Path) -> int:
                 check=True
             )
 
+            print(f"\n--- Analyzing dependencies for: {dylib_path.name} ---")
+            print(f"Full source path: {dylib_path}")
+            print(f"otool -L output:")
+
             homebrew_deps = set()
-            for line in result.stdout.split('\n'):
-                line = line.strip()
+            all_lines = result.stdout.split('\n')
+            for line in all_lines:
+                stripped = line.strip()
+                if stripped:
+                    print(f"  {stripped}")
+
                 # Look for Homebrew paths
                 if '/opt/homebrew/' in line or '/usr/local/opt/' in line or '/usr/local/Cellar/' in line:
                     # Extract the path (first part before compatibility version)
                     dep_path = line.split()[0]
+                    print(f"    ✓ Found Homebrew dep: {dep_path}")
                     homebrew_deps.add(Path(dep_path))
 
+            if homebrew_deps:
+                print(f"  → Total Homebrew dependencies found: {len(homebrew_deps)}")
+            else:
+                print(f"  → No Homebrew dependencies found in this dylib")
+
             return homebrew_deps
-        except subprocess.CalledProcessError:
+        except subprocess.CalledProcessError as e:
+            print(f"  ✗ Error running otool on {dylib_path}: {e}")
             return set()
 
     def copy_dylib_with_deps(dylib_path: Path, visited: set[str]) -> int:
