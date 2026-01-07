@@ -21,14 +21,14 @@ from pathlib import Path
 
 # IWYU version mapping based on LLVM versions
 IWYU_VERSION_MAP = {
-    "19.1.7": "0.22",  # macOS x86_64 (legacy)
-    "21.1.6": "0.25",  # macOS x86_64 and ARM64 (current)
+    "19.1.7": "0.22",  # macOS x86_64 (current)
+    "21.1.6": "0.25",  # macOS ARM64 (current)
     "21.1.5": "0.25",  # Linux/Windows (not used here but for reference)
 }
 
 # LLVM versions by architecture
 LLVM_VERSIONS = {
-    "x86_64": "21.1.6",  # Upgraded from 19.1.7 for IWYU compatibility
+    "x86_64": "19.1.7",  # Current version (pending upgrade to 21.x for IWYU 0.25 compatibility)
     "arm64": "21.1.6",
 }
 
