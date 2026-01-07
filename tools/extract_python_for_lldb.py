@@ -15,6 +15,7 @@ The extracted Python environment enables full LLDB functionality including:
 Output structure:
     python/
     ├── python310.zip                    # Standard library (2.52 MB compressed)
+    ├── python310.dll                    # Python 3.10 runtime (4.3 MB) [Windows only]
     └── Lib/
         └── site-packages/
             └── lldb/                     # LLDB Python module (101 MB → 30 MB compressed)
@@ -26,9 +27,10 @@ Output structure:
 
 Size Impact:
 - Python standard library: 2.52 MB compressed
+- Python runtime DLL: 4.3 MB [Windows only]
 - LLDB Python module: ~30 MB compressed (101 MB uncompressed)
-- Total additional: ~32.5 MB compressed
-- Final LLDB archive: ~61.5 MB compressed (from 29 MB)
+- Total additional: ~36.8 MB compressed (was ~32.5 MB)
+- Final LLDB archive: ~65.8 MB compressed (was ~61.5 MB, +4.3 MB)
 """
 
 import shutil
@@ -131,6 +133,16 @@ def extract_python_embeddable(zip_path: Path, output_dir: Path) -> Path:
 
     size_mb = dest_python_zip.stat().st_size / (1024 * 1024)
     print(f"✓ Extracted python310.zip ({size_mb:.2f} MB)")
+
+    # NEW: Also extract python310.dll (Windows only)
+    python310_dll = extract_temp / "python310.dll"
+    if python310_dll.exists():
+        dest_python_dll = output_dir / "python310.dll"
+        shutil.copy2(python310_dll, dest_python_dll)
+        size_mb = dest_python_dll.stat().st_size / (1024 * 1024)
+        print(f"✓ Extracted python310.dll ({size_mb:.2f} MB)")
+    else:
+        print("  - python310.dll not found (may be platform-specific)")
 
     # Clean up temp directory
     shutil.rmtree(extract_temp)

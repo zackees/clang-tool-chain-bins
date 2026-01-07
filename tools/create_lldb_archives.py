@@ -373,12 +373,18 @@ def create_tar_archive(source_dir: Path, output_tar: Path) -> Path:
             print("  Adding python/ directory...")
             tar.add(python_dir, arcname="python", filter=tar_filter)
 
-            # Windows only: Also copy python310.zip to bin/ directory for sys.path compatibility
+            # Windows only: Also copy Python files to bin/ directory for runtime access
             # LLDB's Python looks for python310.zip in bin/ directory (where lldb.exe is)
             python_zip = python_dir / "python310.zip"
             if python_zip.exists():
                 print("  Also adding python310.zip to bin/ directory for Python sys.path...")
                 tar.add(python_zip, arcname="bin/python310.zip", filter=tar_filter)
+
+            # NEW: Also copy python310.dll to bin/ directory (required by liblldb.dll)
+            python_dll = python_dir / "python310.dll"
+            if python_dll.exists():
+                print("  Also adding python310.dll to bin/ directory for liblldb.dll...")
+                tar.add(python_dll, arcname="bin/python310.dll", filter=tar_filter)
 
         # Add any other top-level files (LICENSE, README, etc.)
         for item in source_dir.iterdir():
