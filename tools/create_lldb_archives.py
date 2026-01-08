@@ -82,7 +82,7 @@ def download_llvm_if_needed(platform: str, arch: str, version: str, work_dir: Pa
     download_path = work_dir / filename
 
     if download_path.exists():
-        print(f"✓ LLVM archive already exists: {download_path}")
+        print(f"[OK] LLVM archive already exists: {download_path}")
         return download_path
 
     print(f"Downloading LLVM {version} for {platform}/{arch}...")
@@ -103,7 +103,7 @@ def download_llvm_if_needed(platform: str, arch: str, version: str, work_dir: Pa
     try:
         urllib.request.urlretrieve(url, download_path, reporthook=show_progress)
         print()  # New line after progress
-        print(f"✓ Downloaded: {download_path.stat().st_size / (1024*1024):.2f} MB")
+        print(f"[OK] Downloaded: {download_path.stat().st_size / (1024*1024):.2f} MB")
         return download_path
     except Exception as e:
         if download_path.exists():
@@ -166,7 +166,7 @@ def extract_llvm_archive(archive_path: Path, extract_dir: Path, platform: str) -
     else:
         raise ValueError(f"Unsupported archive format: {archive_path.suffix}")
 
-    print(f"✓ Extracted to: {extract_dir}")
+    print(f"[OK] Extracted to: {extract_dir}")
 
     # Find the LLVM root directory
     llvm_root = None
@@ -180,7 +180,7 @@ def extract_llvm_archive(archive_path: Path, extract_dir: Path, platform: str) -
     if not llvm_root:
         raise RuntimeError(f"Could not find LLVM root with bin/ directory in {extract_dir}")
 
-    print(f"✓ Found LLVM root: {llvm_root}")
+    print(f"[OK] Found LLVM root: {llvm_root}")
     return llvm_root
 
 
@@ -240,7 +240,7 @@ def copy_python_modules(python_dir: Path, output_dir: Path, platform: str = "win
         python_zip_size = (dest_python / "python310.zip").stat().st_size / (1024 * 1024)
         lldb_pyd = dest_python / "Lib" / "site-packages" / "lldb" / "_lldb.cp310-win_amd64.pyd"
         lldb_pyd_size = lldb_pyd.stat().st_size / (1024 * 1024) if lldb_pyd.exists() else 0
-        print(f"\n✓ Copied {file_count} Python files")
+        print(f"\n[OK] Copied {file_count} Python files")
         print(f"  - python310.zip: {python_zip_size:.2f} MB")
         print(f"  - LLDB Python module: {lldb_pyd_size:.2f} MB")
     else:
@@ -260,7 +260,7 @@ def copy_python_modules(python_dir: Path, output_dir: Path, platform: str = "win
                 lldb_so_size = lldb_so.stat().st_size / (1024 * 1024)
                 print(f"  - LLDB Python module: {lldb_so_size:.2f} MB")
 
-        print(f"\n✓ Copied {file_count} Python files")
+        print(f"\n[OK] Copied {file_count} Python files")
         print(f"  - Lib/ directory: {lib_size:.2f} MB")
 
     return file_count
@@ -301,10 +301,10 @@ def extract_lldb_binaries(llvm_root: Path, output_dir: Path, platform: str) -> i
             dest = output_bin / binary_file.name
             shutil.copy2(binary_file, dest)
             size_mb = dest.stat().st_size / (1024 * 1024)
-            print(f"  ✓ {binary_file.name:20s} ({size_mb:6.1f} MB)")
+            print(f"  [OK] {binary_file.name:20s} ({size_mb:6.1f} MB)")
             extracted_count += 1
         else:
-            print(f"  ✗ {binary_name}{ext:4s} (not found - may be optional)")
+            print(f"  [SKIP] {binary_name}{ext:4s} (not found - may be optional)")
 
     # Also copy support files (DLLs, shared libraries)
     print("\nLooking for LLDB support files:")
@@ -315,7 +315,7 @@ def extract_lldb_binaries(llvm_root: Path, output_dir: Path, platform: str) -> i
             dest = output_bin / support_path.name
             shutil.copy2(support_path, dest)
             size_mb = dest.stat().st_size / (1024 * 1024)
-            print(f"  ✓ {support_path.name:20s} ({size_mb:6.1f} MB)")
+            print(f"  [OK] {support_path.name:20s} ({size_mb:6.1f} MB)")
             extracted_count += 1
         else:
             # Support files are optional (platform-specific)
@@ -324,7 +324,7 @@ def extract_lldb_binaries(llvm_root: Path, output_dir: Path, platform: str) -> i
     if extracted_count == 0:
         raise RuntimeError(f"No LLDB binaries found in {bin_dir}")
 
-    print(f"\n✓ Extracted {extracted_count} LLDB files (binaries + support)")
+    print(f"\n[OK] Extracted {extracted_count} LLDB files (binaries + support)")
     return extracted_count
 
 
@@ -392,7 +392,7 @@ def create_tar_archive(source_dir: Path, output_tar: Path) -> Path:
                 tar.add(item, arcname=item.name, filter=tar_filter)
 
     size = output_tar.stat().st_size
-    print(f"✓ Created: {output_tar} ({size / (1024*1024):.2f} MB)")
+    print(f"[OK] Created: {output_tar} ({size / (1024*1024):.2f} MB)")
 
     return output_tar
 
@@ -419,9 +419,9 @@ def verify_tar_permissions(tar_file: Path) -> int:
                 # Check if executable bit is set
                 if not (member.mode & 0o100):
                     issues_found.append((member.name, oct(member.mode), "executable missing +x"))
-                    print(f"  ✗ Missing executable permission: {member.name} (mode: {oct(member.mode)})")
+                    print(f"  [WARN] Missing executable permission: {member.name} (mode: {oct(member.mode)})")
                 else:
-                    print(f"  ✓ {member.name} (mode: {oct(member.mode)})")
+                    print(f"  [OK] {member.name} (mode: {oct(member.mode)})")
 
     print()
     print(f"Total executables checked: {executables_checked}")
@@ -476,7 +476,7 @@ def compress_with_zstd(tar_file: Path, output_zst: Path, level: int = 22) -> Pat
     compressed_size = output_zst.stat().st_size
     ratio = original_size / compressed_size if compressed_size > 0 else 0
 
-    print(f"✓ Compressed in {elapsed:.1f}s")
+    print(f"[OK] Compressed in {elapsed:.1f}s")
     print(f"  Original:   {original_size / (1024*1024):.2f} MB")
     print(f"  Compressed: {compressed_size / (1024*1024):.2f} MB")
     print(f"  Ratio:      {ratio:.2f}:1")
@@ -531,7 +531,7 @@ def process_platform_arch(
 
     # Step 1: Get LLVM source
     if source_dir and source_dir.exists():
-        print(f"\n✓ Using provided LLVM source: {source_dir}")
+        print(f"\n[OK] Using provided LLVM source: {source_dir}")
         llvm_root = source_dir
     else:
         # Download LLVM if needed
@@ -556,7 +556,7 @@ def process_platform_arch(
     # Step 2.5: Copy Python modules if requested
     if python_dir:
         python_count = copy_python_modules(python_dir, lldb_extracted, platform)
-        print(f"✓ Added {python_count} Python files to archive")
+        print(f"[OK] Added {python_count} Python files to archive")
 
     # Step 3: Create archive name
     archive_base = f"lldb-{version}-{platform}-{arch}"
@@ -677,7 +677,7 @@ def main() -> None:
                 if result:
                     results[platform][arch] = result
             except Exception as e:
-                print(f"\n❌ Error processing {platform}/{arch}: {e}")
+                print(f"\n[ERROR] Error processing {platform}/{arch}: {e}")
                 import traceback
 
                 traceback.print_exc()
@@ -689,10 +689,10 @@ def main() -> None:
     print("=" * 70)
 
     total_archives = sum(len(arches) for arches in results.values())
-    print(f"\n✓ Created {total_archives} archives")
+    print(f"\n[OK] Created {total_archives} archives")
 
     if total_archives == 0:
-        print("\n⚠️  No archives were created")
+        print("\n[WARN] No archives were created")
         sys.exit(1)
 
     for platform, arches in results.items():
@@ -707,7 +707,7 @@ def main() -> None:
     with open(results_file, "w") as f:
         json.dump(results, f, indent=2)
 
-    print(f"\n✓ Archive info saved to: {results_file}")
+    print(f"\n[OK] Archive info saved to: {results_file}")
     print("\nNext steps:")
     print("1. Update manifests with these SHA256 hashes")
     print("2. Upload archives to GitHub (if not already in downloads-bins repo)")
