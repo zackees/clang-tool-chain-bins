@@ -427,13 +427,13 @@ def verify_tar_permissions(tar_file: Path) -> int:
     print(f"Total executables checked: {executables_checked}")
 
     if issues_found:
-        print(f"\n⚠️  WARNING: Found {len(issues_found)} files with incorrect permissions!")
+        print(f"\n[WARN] WARNING: Found {len(issues_found)} files with incorrect permissions!")
         print("\nFiles with issues:")
         for name, mode, issue in issues_found:
             print(f"  - {name} (mode: {mode}) - {issue}")
         raise RuntimeError(f"Tar archive has {len(issues_found)} files with incorrect permissions")
     else:
-        print("✅ All files have correct permissions")
+        print("[OK] All files have correct permissions")
 
     return executables_checked
 
@@ -550,7 +550,7 @@ def process_platform_arch(
     binary_count = extract_lldb_binaries(llvm_root, lldb_extracted, platform)
 
     if binary_count == 0:
-        print(f"⚠️  No LLDB binaries found for {platform}/{arch}")
+        print(f"[WARN] No LLDB binaries found for {platform}/{arch}")
         return None
 
     # Step 2.5: Copy Python modules if requested
@@ -589,7 +589,7 @@ def process_platform_arch(
     print(f"\nRemoving uncompressed tar: {tar_file}")
     tar_file.unlink()
 
-    print("\n✅ SUCCESS!")
+    print("\n[SUCCESS] Archive created successfully!")
     print(f"Archive: {zst_file}")
     print(f"Size: {zst_file.stat().st_size / (1024*1024):.2f} MB")
     print(f"SHA256: {sha256}")
@@ -712,7 +712,7 @@ def main() -> None:
     print("1. Update manifests with these SHA256 hashes")
     print("2. Upload archives to GitHub (if not already in downloads-bins repo)")
     print("3. Test download and extraction")
-    print("\n✅ Done!")
+    print("\n[OK] Done!")
 
 
 if __name__ == "__main__":
