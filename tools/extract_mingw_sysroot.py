@@ -27,6 +27,15 @@ LLVM_MINGW_URLS = {
     f"{LLVM_MINGW_VERSION}/llvm-mingw-{LLVM_MINGW_VERSION}-ucrt-aarch64.zip",
 }
 
+# MinGW-w64 GCC runtime DLLs source (for libgcc_s_seh-1.dll and libstdc++-6.dll)
+# These are needed for GNU ABI compatibility but not included in LLVM-MinGW
+MINGW_GCC_VERSION = "14.2.0"
+MINGW_GCC_URLS = {
+    "x86_64": f"https://github.com/niXman/mingw-builds-binaries/releases/download/{MINGW_GCC_VERSION}-rt_v12-rev0/x86_64-{MINGW_GCC_VERSION}-release-posix-seh-msvcrt-rt_v12-rev0.7z",
+    # ARM64 MinGW-w64 GCC binaries (if needed in future)
+    "arm64": None,  # Not available yet
+}
+
 # Expected SHA256 checksums (to be updated after first download)
 CHECKSUMS = {
     "x86_64": "TBD",  # Update after first download
@@ -63,7 +72,113 @@ def download_llvm_mingw(arch: str, output_dir: Path) -> Path:
     return output_path
 
 
-def extract_sysroot(archive_path: Path, extract_dir: Path, arch: str) -> Path:
+def download_mingw_gcc_dlls(arch: str, output_dir: Path) -> Path:
+    """Download MinGW-w64 GCC runtime DLLs (libgcc and libstdc++)."""
+    url = MINGW_GCC_URLS.get(arch)
+    if not url:
+        print(f"Warning: No MinGW-w64 GCC DLLs available for {arch}, skipping...")
+        return None
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    filename = Path(url).name
+    output_path = output_dir / filename
+
+    if output_path.exists():
+        print(f"Already downloaded: {output_path}")
+        return output_path
+
+    print(f"Downloading MinGW-w64 GCC runtime: {url}")
+    print(f"To: {output_path}")
+
+    try:
+        urllib.request.urlretrieve(url, output_path)
+        print(f"Downloaded: {output_path.stat().st_size / (1024*1024):.2f} MB")
+    except Exception as e:
+        print(f"Error downloading: {e}")
+        if output_path.exists():
+            output_path.unlink()
+        raise
+
+    return output_path
+
+
+def extract_gcc_dlls(archive_path: Path, extract_dir: Path, arch: str) -> list[Path]:
+    """Extract libgcc_s_seh-1.dll and libstdc++-6.dll from MinGW-w64 GCC."""
+    if not archive_path or not archive_path.exists():
+        return []
+
+    print(f"\nExtracting GCC runtime DLLs from: {archive_path}")
+
+    # Extract to temp directory
+    temp_extract = extract_dir / "mingw_gcc_temp"
+    temp_extract.mkdir(parents=True, exist_ok=True)
+
+    print("Extracting archive...")
+    try:
+        # Use 7z to extract .7z archive
+        import subprocess
+        result = subprocess.run(
+            ["7z", "x", "-y", f"-o{temp_extract}", str(archive_path)],
+            capture_output=True,
+            text=True,
+            check=False
+        )
+        if result.returncode != 0:
+            raise RuntimeError(f"7z extraction failed: {result.stderr}")
+    except FileNotFoundError:
+        print("Error: 7z command not found. Please install 7-Zip.")
+        raise
+
+    # Find the mingw64 directory
+    mingw_root = None
+    for item in temp_extract.iterdir():
+        if item.is_dir() and "mingw" in item.name.lower():
+            mingw_root = item
+            break
+
+    if not mingw_root:
+        raise RuntimeError(f"Could not find MinGW root directory in {temp_extract}")
+
+    print(f"Found MinGW-w64 root: {mingw_root}")
+
+    # Find and copy DLLs to a safe location before cleanup
+    dll_names = ["libgcc_s_seh-1.dll", "libstdc++-6.dll"]
+    found_dlls = []
+    dll_temp_dir = extract_dir / "gcc_dlls"
+    dll_temp_dir.mkdir(parents=True, exist_ok=True)
+
+    for dll_name in dll_names:
+        # Look in bin directory first
+        dll_path = mingw_root / "bin" / dll_name
+        if dll_path.exists():
+            # Copy to safe location before cleanup
+            dll_safe_copy = dll_temp_dir / dll_name
+            shutil.copy2(dll_path, dll_safe_copy)
+            found_dlls.append(dll_safe_copy)
+            print(f"Found {dll_name}: {dll_path.stat().st_size / 1024:.1f} KB")
+        else:
+            print(f"Warning: {dll_name} not found in {mingw_root / 'bin'}")
+
+    # Clean up temp directory (with retry for Windows permission issues)
+    print("Cleaning up temporary files...")
+    max_retries = 3
+    for attempt in range(max_retries):
+        try:
+            shutil.rmtree(temp_extract)
+            break
+        except (PermissionError, OSError) as e:
+            if attempt < max_retries - 1:
+                print(f"Warning: Cleanup failed (attempt {attempt+1}/{max_retries}): {e}")
+                import time
+                time.sleep(1)
+            else:
+                print(f"Warning: Could not clean up {temp_extract}: {e}")
+                print("This is not critical - the DLLs were copied successfully.")
+
+    return found_dlls
+
+
+def extract_sysroot(archive_path: Path, extract_dir: Path, arch: str, gcc_dlls: list[Path] = None) -> Path:
     """Extract only the sysroot directory from LLVM-MinGW."""
     print(f"\nExtracting sysroot from: {archive_path}")
 
@@ -116,6 +231,18 @@ def extract_sysroot(archive_path: Path, extract_dir: Path, arch: str) -> Path:
         shutil.rmtree(sysroot_dst)
 
     shutil.copytree(sysroot_src, sysroot_dst, symlinks=True)
+
+    # Copy GCC runtime DLLs to sysroot bin directory (for GNU ABI support)
+    if gcc_dlls:
+        sysroot_bin = sysroot_dst / "bin"
+        sysroot_bin.mkdir(parents=True, exist_ok=True)
+
+        print(f"\nCopying GCC runtime DLLs to sysroot:")
+        for dll_path in gcc_dlls:
+            dll_dst = sysroot_bin / dll_path.name
+            print(f"  {dll_path.name} -> {dll_dst}")
+            shutil.copy2(dll_path, dll_dst)
+        print(f"✓ Copied {len(gcc_dlls)} GCC runtime DLLs")
 
     # Copy top-level include directory (contains C/C++ headers)
     include_src = llvm_mingw_root / "include"
@@ -308,19 +435,27 @@ def main() -> None:
     print(f"Output directory: {output_dir}")
     print()
 
-    # Step 1: Download
+    # Step 1: Download LLVM-MinGW
     archive_path = download_llvm_mingw(args.arch, work_dir)
 
-    # Step 2: Extract sysroot
-    sysroot_dir = extract_sysroot(archive_path, work_dir / "extracted", args.arch)
+    # Step 1b: Download MinGW-w64 GCC runtime DLLs
+    gcc_archive_path = download_mingw_gcc_dlls(args.arch, work_dir)
 
-    # Step 3: Create compressed archive
+    # Step 2: Extract GCC runtime DLLs
+    gcc_dlls = []
+    if gcc_archive_path:
+        gcc_dlls = extract_gcc_dlls(gcc_archive_path, work_dir, args.arch)
+
+    # Step 3: Extract sysroot and include GCC DLLs
+    sysroot_dir = extract_sysroot(archive_path, work_dir / "extracted", args.arch, gcc_dlls)
+
+    # Step 4: Create compressed archive
     final_archive = create_archive(sysroot_dir, output_dir, args.arch)
 
-    # Step 4: Generate checksums
+    # Step 5: Generate checksums
     checksums = generate_checksums(final_archive)
 
-    # Step 5: Update manifest
+    # Step 6: Update manifest
     manifest_path = output_dir / "manifest.json"
     manifest_data = {
         "latest": LLVM_VERSION,

@@ -4,7 +4,7 @@
     "21.1.5": {
       "version": "21.1.5",
       "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/mingw/win/x86_64/mingw-sysroot-21.1.5-win-x86_64.tar.zst",
-      "sha256": "b7fa99f6fa07364a73b8b745e0c694598948a6ef8082c4479bbad5edcf1cf6c4"
+      "sha256": "60cc8b10b293b41005ccea5d809c66e4d0e4538135c9072e445da7ed0df61e42"
     }
   }
 }
