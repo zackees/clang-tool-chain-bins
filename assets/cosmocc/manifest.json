@@ -1,0 +1,13 @@
+{
+  "platforms": [
+    {
+      "platform": "universal",
+      "architectures": [
+        {
+          "arch": "universal",
+          "manifest_path": "manifest-universal.json"
+        }
+      ]
+    }
+  ]
+}
