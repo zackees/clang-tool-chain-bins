@@ -40,6 +40,10 @@ from typing import Any
 
 LLVM_VERSION = "19.1.7"
 LLVM_MINGW_VERSION = "20251104"  # Match current MinGW version
+# macOS LLD download URL (from keith/ld64.lld releases)
+# The official LLVM macOS packages don't include lld, so we download it separately
+MACOS_LLD_URL = "https://github.com/keith/ld64.lld/releases/download/09-16-25/ld64.tar.xz"
+
 
 # Official LLVM download URLs
 LLVM_DOWNLOAD_URLS = {
@@ -96,6 +100,82 @@ ESSENTIAL_BINARIES = {
     # NOTE: Removed clang-format and clang-tidy to reduce archive size
     # These are code quality tools, not needed for compilation
 }
+
+
+
+# ============================================================================
+# macOS LLD Download Functions
+# ============================================================================
+
+
+def download_macos_lld(output_bin_dir: Path) -> bool:
+    """
+    Download and install lld for macOS from keith/ld64.lld releases.
+
+    The official LLVM macOS packages (LLVM-*.tar.xz) don't include lld.
+    We download universal macOS binaries from https://github.com/keith/ld64.lld
+    which provides prebuilt lld with Mach-O support.
+
+    Args:
+        output_bin_dir: The bin directory to install lld into
+
+    Returns:
+        True if successful, False otherwise
+    """
+    import tempfile
+
+    print_section("DOWNLOADING MACOS LLD (from keith/ld64.lld)")
+    print("The official LLVM macOS packages don't include lld.")
+    print(f"Downloading from: {MACOS_LLD_URL}")
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        tmpdir_path = Path(tmpdir)
+        archive_path = tmpdir_path / "ld64.tar.xz"
+
+        # Download the archive
+        download_file(MACOS_LLD_URL, archive_path)
+
+        # Extract it
+        print("Extracting lld archive...")
+        with tarfile.open(archive_path, "r:xz") as tar:
+            tar.extractall(tmpdir_path)
+
+        # Find the lld binary (it may be named ld64.lld directly or just lld)
+        lld_binary = None
+        for name in ["ld64.lld", "lld"]:
+            candidate = tmpdir_path / name
+            if candidate.exists():
+                lld_binary = candidate
+                break
+            # Check subdirectories too
+            for f in tmpdir_path.rglob(name):
+                if f.is_file():
+                    lld_binary = f
+                    break
+            if lld_binary:
+                break
+
+        if lld_binary and lld_binary.exists():
+            # Copy as lld and create ld64.lld symlink
+            dest_lld = output_bin_dir / "lld"
+            dest_ld64_lld = output_bin_dir / "ld64.lld"
+
+            shutil.copy2(lld_binary, dest_lld)
+            print(f"  ✓ Copied lld to {dest_lld}")
+
+            # Make it executable
+            os.chmod(dest_lld, 0o755)
+
+            # Create ld64.lld symlink pointing to lld
+            if dest_ld64_lld.exists() or dest_ld64_lld.is_symlink():
+                dest_ld64_lld.unlink()
+            os.symlink("lld", dest_ld64_lld)
+            print("  ✓ Created symlink ld64.lld -> lld")
+
+            return True
+        else:
+            print("  ✗ Could not find lld binary in downloaded archive")
+            return False
 
 
 # ============================================================================
@@ -512,6 +592,18 @@ def strip_extras(extracted_dir: Path, output_dir: Path, platform: str) -> Path:
             shutil.copytree(lib_clang_dir, lib_dst, dirs_exist_ok=True, ignore=make_ignore_function(lib_clang_dir))
             lib_clang_copied = True
             break
+
+    # For macOS, download lld separately since official packages don't include it
+    if platform == "darwin":
+        lld_path = output_bin / "lld"
+        if not lld_path.exists():
+            print("\n[macOS] lld not found in official package, downloading separately...")
+            if download_macos_lld(output_bin):
+                kept_count += 2  # lld and ld64.lld
+                skipped_count = max(0, skipped_count - 2)  # Adjust skipped count
+            else:
+                print("WARNING: Failed to download lld for macOS. Linking may fail.")
+
 
     print("\nSummary:")
     print(f"  Kept: {kept_count} binaries")
