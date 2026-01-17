@@ -83,7 +83,74 @@ def extract_zip(zip_path: Path, dest_dir: Path) -> None:
     print(f"  Extracted to: {dest_dir}")
 
 
-def create_tar_zst(source_dir: Path, output_file: Path, compression_level: int = 19) -> None:
+def get_directory_size(path: Path) -> int:
+    """Calculate total size of a directory in bytes."""
+    total = 0
+    try:
+        for entry in path.rglob("*"):
+            if entry.is_file():
+                total += entry.stat().st_size
+    except (PermissionError, FileNotFoundError):
+        pass
+    return total
+
+
+def strip_unnecessary_files(source_dir: Path) -> dict:
+    """
+    Remove unnecessary files from cosmocc to reduce archive size.
+
+    Removes:
+    - */lib/dbg (debug libraries, ~391 MB)
+    - */lib/optlinux (Linux-specific optimizations that defeat APE portability, ~150 MB)
+    - */lib/tiny (tiny variants, nice-to-have but not essential, ~41 MB)
+
+    Returns:
+        dict: Statistics about removed files and bytes saved
+    """
+    patterns_to_remove = [
+        "*/lib/dbg",
+        "*/lib/optlinux",
+        "*/lib/tiny",
+    ]
+
+    total_bytes_removed = 0
+    total_files_removed = 0
+    removed_dirs = []
+
+    print("Scanning for unnecessary files to remove...")
+
+    for pattern in patterns_to_remove:
+        # Find all matching directories
+        matching_paths = list(source_dir.glob(pattern))
+
+        for path in matching_paths:
+            if path.exists() and path.is_dir():
+                # Calculate size before removal
+                dir_size = get_directory_size(path)
+
+                # Count files
+                file_count = sum(1 for _ in path.rglob("*") if _.is_file())
+
+                # Remove directory
+                shutil.rmtree(path)
+
+                total_bytes_removed += dir_size
+                total_files_removed += file_count
+                removed_dirs.append(str(path.relative_to(source_dir)))
+
+                mb_removed = dir_size / (1024 * 1024)
+                print(f"  Removed: {path.relative_to(source_dir)} ({mb_removed:.1f} MB, {file_count} files)")
+
+    stats = {
+        "bytes_removed": total_bytes_removed,
+        "files_removed": total_files_removed,
+        "directories_removed": removed_dirs,
+    }
+
+    return stats
+
+
+def create_tar_zst(source_dir: Path, output_file: Path, compression_level: int = 22) -> None:
     """Create a .tar.zst archive from a directory."""
     print(f"Creating archive: {output_file}")
     print(f"  Source: {source_dir}")
@@ -157,7 +224,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Fetch and archive Cosmopolitan (cosmocc) toolchain")
     parser.add_argument("--version", default=DEFAULT_VERSION, help=f"Cosmocc version (default: {DEFAULT_VERSION})")
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR, help="Output directory")
-    parser.add_argument("--compression-level", type=int, default=19, help="Zstd compression level (default: 19)")
+    parser.add_argument("--compression-level", type=int, default=22, help="Zstd compression level (default: 22)")
     parser.add_argument("--keep-temp", action="store_true", help="Keep temporary files")
 
     args = parser.parse_args()
@@ -201,6 +268,13 @@ def main() -> int:
             source_dir = content_dirs[0]
         else:
             source_dir = extract_dir
+
+        # Strip unnecessary files
+        print("\nStep 2.5: Removing unnecessary files to reduce archive size...")
+        strip_stats = strip_unnecessary_files(source_dir)
+        mb_removed = strip_stats["bytes_removed"] / (1024 * 1024)
+        print(f"  Total removed: {mb_removed:.1f} MB ({strip_stats['files_removed']} files)")
+        print(f"  Directories removed: {len(strip_stats['directories_removed'])}")
 
         # Create archive
         print("\nStep 3: Creating .tar.zst archive...")
