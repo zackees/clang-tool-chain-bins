@@ -1,0 +1,3 @@
+# DLLs are packed into the .tar.zst archive, not committed directly
+# They're only placed here temporarily during archive creation
+*.dll

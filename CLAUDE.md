@@ -56,6 +56,38 @@ uv run fetch-and-archive --platform win --arch x86_64 --source-dir ./extracted
 uv run create-iwyu-archives
 ```
 
+**Windows IWYU DLL Dependencies:**
+
+Before creating the Windows IWYU archive, you must copy the required runtime DLLs to `assets/iwyu/win/x86_64/bin/`. The IWYU executable depends on these DLLs to run:
+
+```bash
+# Required DLLs for Windows IWYU (copy to assets/iwyu/win/x86_64/bin/)
+# From tools/work/x86_64/llvm-mingw-*/bin/ (LLVM runtime):
+#   - libclang-cpp.dll     (~45-57 MB, Clang C++ library)
+#   - libLLVM-21.dll       (~73-136 MB, LLVM core library)
+#   - libffi-8.dll         (~34-87 KB, Foreign function interface)
+#   - libwinpthread-1.dll  (~65-376 KB, POSIX threads)
+#
+# From tools/work/x86_64/mingw64/bin/ (GCC runtime):
+#   - libgcc_s_seh-1.dll   (~143-150 KB, GCC support library)
+#   - libstdc++-6.dll      (~2.3-2.5 MB, C++ standard library)
+#
+# From MSYS2/mingw64 packages (additional dependencies):
+#   - libiconv-2.dll       (~1.1 MB, character encoding)
+#   - liblzma-5.dll        (~189 KB, LZMA compression)
+#   - libxml2-16.dll       (~1.3 MB, XML parsing)
+#   - libzstd.dll          (~1.2 MB, Zstd compression)
+#   - zlib1.dll            (~121 KB, zlib compression)
+
+# After copying DLLs, recreate the archive:
+uv run create-iwyu-archives --platform win --arch x86_64
+```
+
+**DLL Source Locations:**
+- `tools/work/x86_64/llvm-mingw-20251104-ucrt-x86_64/bin/` - LLVM DLLs
+- `tools/work/x86_64/mingw64/bin/` - MinGW GCC runtime DLLs
+- MSYS2 packages: `pacman -S mingw-w64-x86_64-libiconv mingw-w64-x86_64-xz mingw-w64-x86_64-libxml2 mingw-w64-x86_64-zstd mingw-w64-x86_64-zlib`
+
 **MinGW sysroot:**
 ```bash
 uv run extract-mingw-sysroot --arch x86_64 --work-dir work --output-dir assets/mingw/win
