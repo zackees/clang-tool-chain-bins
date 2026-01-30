@@ -3,8 +3,8 @@
     "x86_64": {
       "filename": "iwyu-0.25-win-x86_64.tar.zst",
       "path": "win\\x86_64\\iwyu-0.25-win-x86_64.tar.zst",
-      "sha256": "abd291a3a8bbb1bfc9764198681eec513bb01540085d30a3eb030048fe4d5715",
-      "size": 46241004
+      "sha256": "3e960a0cd2b1ca3182659965c1ec36b9430d3280a06b49ddf54de71704b0c736",
+      "size": 45536933
     }
   }
 }
