@@ -3,9 +3,5 @@
   "21.1.6": {
     "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang/darwin/x86_64/llvm-21.1.6-darwin-x86_64.tar.zst",
     "sha256": "2f010a75d4b4f238b132ec22f3b9df5d341be9be60b73a5790436642f85fba71"
-  },
-  "19.1.7": {
-    "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang/darwin/x86_64/llvm-19.1.7-darwin-x86_64.tar.zst",
-    "sha256": "68bbf608f97182180fdc19f804fefeb2f3ed1a5d90d4d80c884d10ce4cf3aa5f"
   }
 }

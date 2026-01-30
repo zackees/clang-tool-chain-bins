@@ -1,22 +1,22 @@
 {
   "platform": "darwin",
-  "clang_version": "19.1.7",
+  "clang_version": "21.1.6",
   "assets": [
     {
-      "filename": "llvm-19.1.7-darwin-arm64.tar.zst",
-      "clang_version": "19.1.7",
+      "filename": "llvm-21.1.6-darwin-arm64.tar.zst",
+      "clang_version": "21.1.6",
       "host_platform": "darwin",
       "arch": "arm64",
-      "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/clang/darwin/llvm-19.1.7-darwin-arm64.tar.zst",
-      "sha256": "88f7a28456ed0318dbd96b951a0a5fb93444d309d3eb3cda59143bf92826e60f"
+      "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang/darwin/arm64/llvm-21.1.6-darwin-arm64.tar.zst",
+      "sha256": "f7631c8b96d76dadd9aa69be681e164a5b5fbbb0dd95ecf99764d9d2222ca65a"
     },
     {
-      "filename": "llvm-19.1.7-darwin-x86_64.tar.zst",
-      "clang_version": "19.1.7",
+      "filename": "llvm-21.1.6-darwin-x86_64.tar.zst",
+      "clang_version": "21.1.6",
       "host_platform": "darwin",
       "arch": "x86_64",
-      "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/clang/darwin/llvm-19.1.7-darwin-x86_64.tar.zst",
-      "sha256": "1e4c1636ca93bb7ec680c0d5c9f0ac9522b8f95248bc0a51cf54e2de882fa48b"
+      "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang/darwin/x86_64/llvm-21.1.6-darwin-x86_64.tar.zst",
+      "sha256": "2f010a75d4b4f238b132ec22f3b9df5d341be9be60b73a5790436642f85fba71"
     }
   ]
 }
