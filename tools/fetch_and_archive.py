@@ -1015,15 +1015,21 @@ echo "Creating output directories..."
 mkdir -p /output/include /output/lib
 
 echo "Copying headers..."
-echo "Listing /usr/include/libunwind* :"
-ls -la /usr/include/libunwind* 2>/dev/null || echo "No libunwind headers in /usr/include"
-echo "Checking dpkg -L libunwind-dev | grep include :"
-dpkg -L libunwind-dev | grep include || echo "No includes from dpkg"
+# Ubuntu uses multiarch layout: headers are in /usr/include/{arch}-linux-gnu/
+# Check both locations
+INCLUDE_DIR="/usr/include"
+MULTIARCH_INCLUDE_DIR="/usr/include/{lib_arch}"
+if [ -f "$MULTIARCH_INCLUDE_DIR/libunwind.h" ]; then
+    INCLUDE_DIR="$MULTIARCH_INCLUDE_DIR"
+    echo "Using multiarch include directory: $INCLUDE_DIR"
+else
+    echo "Using standard include directory: $INCLUDE_DIR"
+fi
 for header in libunwind.h libunwind-common.h libunwind-{header_arch}.h libunwind-dynamic.h libunwind-ptrace.h unwind.h; do
-    if [ -f "/usr/include/$header" ]; then
-        cp -v "/usr/include/$header" /output/include/
+    if [ -f "$INCLUDE_DIR/$header" ]; then
+        cp -v "$INCLUDE_DIR/$header" /output/include/
     else
-        echo "Header not found: /usr/include/$header"
+        echo "Header not found: $INCLUDE_DIR/$header"
     fi
 done
 
