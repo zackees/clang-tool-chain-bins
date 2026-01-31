@@ -1015,9 +1015,15 @@ echo "Creating output directories..."
 mkdir -p /output/include /output/lib
 
 echo "Copying headers..."
+echo "Listing /usr/include/libunwind* :"
+ls -la /usr/include/libunwind* 2>/dev/null || echo "No libunwind headers in /usr/include"
+echo "Checking dpkg -L libunwind-dev | grep include :"
+dpkg -L libunwind-dev | grep include || echo "No includes from dpkg"
 for header in libunwind.h libunwind-common.h libunwind-{header_arch}.h libunwind-dynamic.h libunwind-ptrace.h unwind.h; do
     if [ -f "/usr/include/$header" ]; then
         cp -v "/usr/include/$header" /output/include/
+    else
+        echo "Header not found: /usr/include/$header"
     fi
 done
 
