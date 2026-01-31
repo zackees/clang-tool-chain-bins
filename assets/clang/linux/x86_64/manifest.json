@@ -1,7 +1,17 @@
 {
   "latest": "21.1.5",
   "21.1.5": {
-    "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang/linux/x86_64/llvm-21.1.5-linux-x86_64.tar.zst",
-    "sha256": "0c30d9a678412a45db35aaf094d8a6843ff9b94f448105b0a5cde3480303d3d7"
+    "href": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang/linux/x86_64/llvm-21.1.5-linux-x86_64.tar.zst",
+    "sha256": "0c30d9a678412a45db35aaf094d8a6843ff9b94f448105b0a5cde3480303d3d7",
+    "parts": [
+      {
+        "href": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang/linux/x86_64/llvm-21.1.5-linux-x86_64.tar.zst.part1",
+        "sha256": "967ea2bcf0389ce744c0a59cc4241e592728990185383fcaa8505a8fd68aff76"
+      },
+      {
+        "href": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang/linux/x86_64/llvm-21.1.5-linux-x86_64.tar.zst.part2",
+        "sha256": "7e03be2d5a6bd28169f92d8f39069dd2f87b93990326f655f4ef74e99a68873b"
+      }
+    ]
   }
 }
