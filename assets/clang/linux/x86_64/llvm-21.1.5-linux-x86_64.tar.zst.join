@@ -1,0 +1,13 @@
+#!/bin/bash
+# Join script for llvm-21.1.5-linux-x86_64.tar.zst
+# This script joins the split parts back into the original archive
+
+echo "Joining 2 parts into llvm-21.1.5-linux-x86_64.tar.zst..."
+
+cat llvm-21.1.5-linux-x86_64.tar.zst.part1 llvm-21.1.5-linux-x86_64.tar.zst.part2 > llvm-21.1.5-linux-x86_64.tar.zst
+
+echo "Done! Created llvm-21.1.5-linux-x86_64.tar.zst"
+echo "Size: $(du -h llvm-21.1.5-linux-x86_64.tar.zst | cut -f1)"
+echo ""
+echo "To extract:"
+echo "  tar --zstd -xf llvm-21.1.5-linux-x86_64.tar.zst"
