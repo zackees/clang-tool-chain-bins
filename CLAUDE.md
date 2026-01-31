@@ -25,6 +25,7 @@ clang-tool-chain-bins/
 │   ├── fetch_and_archive_emscripten_docker.py  # Emscripten via Docker
 │   ├── create_iwyu_archives.py           # IWYU packaging
 │   ├── extract_mingw_sysroot.py          # MinGW sysroot extraction
+│   ├── extract_libunwind_docker.py       # libunwind extraction via Docker (Linux)
 │   └── [component scripts]               # Individual pipeline steps
 ├── index.html                 # GitHub Pages main page
 ├── index.css                  # Styling
@@ -153,6 +154,8 @@ The `fetch_and_archive.py` script orchestrates a multi-step pipeline:
    - See `ESSENTIAL_BINARIES` set in `fetch_and_archive.py:72-97`
 4. **Deduplicate**: Find identical binaries by MD5 hash (~571 MB savings)
 5. **Hard-link**: Create hard-linked directory structure
+5a. **Integrate libunwind** (Linux only): Extract headers and libraries via Docker
+5b. **Integrate MinGW** (Windows only): Copy MinGW headers and sysroot
 6. **Archive**: TAR with native hard-link support (stores links as metadata)
 7. **Compress**: zstd level 22 (ultra-compression, ~17:1 ratio)
 8. **Checksum**: Generate SHA256 and MD5 files
@@ -160,6 +163,8 @@ The `fetch_and_archive.py` script orchestrates a multi-step pipeline:
 10. **Place**: Move to `assets/{tool}/{platform}/{arch}/`
 
 **Result**: ~52 MB archive from ~900 MB original (Windows x86_64 example)
+
+**Docker requirement**: Building Linux archives now requires Docker for libunwind extraction.
 
 ## Manifest System
 
@@ -242,6 +247,69 @@ This structure enables GNU ABI compilation on Windows without additional downloa
 
 The separate MinGW archive (`assets/mingw/win/`) is deprecated as of November 2025.
 It remains available for backward compatibility with older versions of clang-tool-chain.
+
+## Linux libunwind Bundling
+
+For Linux platforms, the Clang archives include bundled libunwind headers and shared libraries. This eliminates the need to install `libunwind-dev` on the system.
+
+**What's bundled:**
+- **Headers**: `libunwind.h`, `libunwind-common.h`, `libunwind-x86_64.h` (or `aarch64`), `libunwind-dynamic.h`, `libunwind-ptrace.h`, `unwind.h`
+- **Libraries**: `libunwind.so.*`, `libunwind-x86_64.so.*` (or `aarch64`)
+
+**Archive structure (Linux):**
+```
+linux_hardlinked/
+├── bin/                              # LLVM/Clang binaries
+│   ├── clang
+│   ├── clang++
+│   └── ...
+├── include/                          # libunwind headers
+│   ├── libunwind.h
+│   ├── libunwind-common.h
+│   ├── libunwind-x86_64.h            # or libunwind-aarch64.h
+│   ├── libunwind-dynamic.h
+│   ├── libunwind-ptrace.h
+│   └── unwind.h
+└── lib/
+    ├── clang/21/                     # Clang resource headers
+    │   └── include/
+    ├── libunwind.so -> libunwind.so.8
+    ├── libunwind.so.8 -> libunwind.so.8.0.1
+    ├── libunwind.so.8.0.1            # Actual library
+    ├── libunwind-x86_64.so -> libunwind-x86_64.so.8
+    ├── libunwind-x86_64.so.8 -> libunwind-x86_64.so.8.0.1
+    └── libunwind-x86_64.so.8.0.1     # Platform library
+```
+
+**Size impact:** ~300-500 KB total (headers ~20 KB + libraries ~300 KB)
+
+### Docker-Based Extraction
+
+The libunwind extraction uses Docker to run an Ubuntu 22.04 container:
+
+```bash
+# The fetch_and_archive.py script automatically runs this for Linux builds:
+docker run --rm --platform linux/amd64 \
+    -v /path/to/output:/output \
+    ubuntu:22.04 \
+    bash -c "apt-get update && apt-get install -y libunwind-dev && ..."
+```
+
+**Requirements:**
+- Docker installed and running
+- Internet connection (to pull Ubuntu image if not cached)
+
+**Standalone extraction script:**
+```bash
+# Extract libunwind headers/libraries separately
+uv run python tools/extract_libunwind_docker.py --arch x86_64 --output-dir ./libunwind_output
+uv run python tools/extract_libunwind_docker.py --arch arm64 --output-dir ./libunwind_output
+```
+
+**Why Docker?**
+- Consistent, reproducible extraction across any host OS
+- No need to install libunwind-dev on the build machine
+- Uses Ubuntu 22.04 (Jammy) packages for well-tested, stable libunwind version
 
 ## Key Architecture Decisions
 

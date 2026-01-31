@@ -940,6 +940,211 @@ def integrate_mingw_into_hardlinked(mingw_root: Path, hardlinked_dir: Path, arch
 
 
 # ============================================================================
+# Linux libunwind Integration
+# ============================================================================
+
+
+def extract_libunwind_from_docker(work_dir: Path, arch: str) -> Path | None:
+    """
+    Extract libunwind headers and libraries from Ubuntu Docker container.
+
+    This function uses Docker to run an Ubuntu container and extract the
+    libunwind development files (headers + shared libraries) for bundling
+    with the Linux clang-tool-chain archives.
+
+    Args:
+        work_dir: Working directory for temporary files
+        arch: Architecture ("x86_64" or "arm64")
+
+    Returns:
+        Path to directory containing extracted include/ and lib/, or None if failed
+    """
+    print_section("EXTRACTING LIBUNWIND FROM DOCKER")
+
+    output_dir = work_dir / "libunwind_extract"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    # Validate architecture
+    if arch == "x86_64":
+        lib_arch = "x86_64-linux-gnu"
+        header_arch = "x86_64"
+        docker_platform = "linux/amd64"
+    elif arch in ("arm64", "aarch64"):
+        lib_arch = "aarch64-linux-gnu"
+        header_arch = "aarch64"
+        docker_platform = "linux/arm64"
+    else:
+        print(f"ERROR: Unsupported architecture: {arch}")
+        return None
+
+    # Check if Docker is available
+    try:
+        result = subprocess.run(["docker", "version"], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            print("WARNING: Docker is not available. Skipping libunwind extraction.")
+            print("         Install Docker to bundle libunwind headers and libraries.")
+            return None
+    except (subprocess.TimeoutExpired, FileNotFoundError):
+        print("WARNING: Docker is not available. Skipping libunwind extraction.")
+        print("         Install Docker to bundle libunwind headers and libraries.")
+        return None
+
+    docker_image = "ubuntu:22.04"
+    print(f"Docker image: {docker_image}")
+    print(f"Platform: {docker_platform}")
+    print(f"Library architecture: {lib_arch}")
+    print()
+
+    # Create include and lib directories
+    include_dir = output_dir / "include"
+    lib_dir = output_dir / "lib"
+    include_dir.mkdir(parents=True, exist_ok=True)
+    lib_dir.mkdir(parents=True, exist_ok=True)
+
+    # Create extraction script to run inside container
+    extract_script = f"""#!/bin/bash
+set -e
+
+echo "Updating package lists..."
+apt-get update -qq
+
+echo "Installing libunwind-dev..."
+apt-get install -y -qq libunwind-dev
+
+echo "Creating output directories..."
+mkdir -p /output/include /output/lib
+
+echo "Copying headers..."
+for header in libunwind.h libunwind-common.h libunwind-{header_arch}.h libunwind-dynamic.h libunwind-ptrace.h unwind.h; do
+    if [ -f "/usr/include/$header" ]; then
+        cp -v "/usr/include/$header" /output/include/
+    fi
+done
+
+echo "Copying libraries..."
+for lib in /usr/lib/{lib_arch}/libunwind*.so*; do
+    if [ -e "$lib" ]; then
+        if [ -L "$lib" ]; then
+            cp -Pv "$lib" /output/lib/
+        else
+            cp -v "$lib" /output/lib/
+        fi
+    fi
+done
+
+echo "Setting permissions..."
+chmod 644 /output/include/* 2>/dev/null || true
+chmod 755 /output/lib/*.so* 2>/dev/null || true
+
+echo ""
+echo "Headers:"
+ls -la /output/include/
+echo ""
+echo "Libraries:"
+ls -la /output/lib/
+
+echo ""
+echo "Extraction complete!"
+"""
+
+    print("Running Docker container...")
+    try:
+        result = subprocess.run(
+            [
+                "docker",
+                "run",
+                "--rm",
+                "--platform",
+                docker_platform,
+                "-v",
+                f"{output_dir.absolute()}:/output",
+                docker_image,
+                "bash",
+                "-c",
+                extract_script,
+            ],
+            capture_output=True,
+            text=True,
+            timeout=300,
+        )
+
+        print(result.stdout)
+
+        if result.returncode != 0:
+            print("WARNING: Docker extraction failed. Continuing without bundled libunwind.")
+            print(result.stderr)
+            return None
+
+    except subprocess.TimeoutExpired:
+        print("WARNING: Docker extraction timed out. Continuing without bundled libunwind.")
+        return None
+    except Exception as e:
+        print(f"WARNING: Unexpected error during Docker extraction: {e}")
+        return None
+
+    # Verify extraction
+    lib_files = list(lib_dir.glob("libunwind*.so*"))
+    if not lib_files:
+        print("WARNING: No libunwind libraries were extracted.")
+        return None
+
+    print(f"\n✓ Extracted libunwind: {len(list(include_dir.iterdir()))} headers, {len(lib_files)} libraries")
+    return output_dir
+
+
+def integrate_libunwind_into_hardlinked(libunwind_dir: Path, hardlinked_dir: Path) -> None:
+    """
+    Copy libunwind headers and libraries into hardlinked directory structure.
+
+    Args:
+        libunwind_dir: Path to extracted libunwind directory (contains include/ and lib/)
+        hardlinked_dir: Path to hardlinked directory (e.g., linux_hardlinked/)
+    """
+    print(f"\nIntegrating libunwind into {hardlinked_dir.name}")
+
+    # 1. Copy headers to include/ directory
+    src_include = libunwind_dir / "include"
+    if src_include.exists():
+        dst_include = hardlinked_dir / "include"
+        dst_include.mkdir(parents=True, exist_ok=True)
+
+        header_count = 0
+        for header in src_include.iterdir():
+            if header.is_file():
+                shutil.copy2(header, dst_include / header.name)
+                header_count += 1
+                print(f"  Copied: include/{header.name}")
+
+        print(f"  Copied {header_count} libunwind headers")
+
+    # 2. Copy libraries to lib/ directory
+    src_lib = libunwind_dir / "lib"
+    if src_lib.exists():
+        dst_lib = hardlinked_dir / "lib"
+        dst_lib.mkdir(parents=True, exist_ok=True)
+
+        lib_count = 0
+        for lib in src_lib.iterdir():
+            if lib.is_symlink():
+                # Preserve symlinks
+                link_target = lib.readlink()
+                dst_symlink = dst_lib / lib.name
+                if dst_symlink.exists() or dst_symlink.is_symlink():
+                    dst_symlink.unlink()
+                dst_symlink.symlink_to(link_target)
+                lib_count += 1
+                print(f"  Symlink: lib/{lib.name} -> {link_target}")
+            elif lib.is_file():
+                shutil.copy2(lib, dst_lib / lib.name)
+                lib_count += 1
+                print(f"  Copied: lib/{lib.name}")
+
+        print(f"  Copied {lib_count} libunwind library files")
+
+    print("✓ libunwind integration complete\n")
+
+
+# ============================================================================
 # Step 5: Create Hard-Linked Structure
 # ============================================================================
 
@@ -1533,7 +1738,18 @@ Note: Press Ctrl+C at any time to safely interrupt the operation.
             print("\nCopying lib/clang directory (builtin headers)...")
             shutil.copytree(lib_clang_src, lib_dst, dirs_exist_ok=True)
 
-        # Step 5.5: Integrate MinGW components into hardlinked directory (Windows only)
+        # Step 5.5a: Integrate libunwind for Linux (requires Docker)
+        if args.platform == "linux":
+            libunwind_dir = extract_libunwind_from_docker(work_dir, args.arch)
+            if libunwind_dir:
+                integrate_libunwind_into_hardlinked(libunwind_dir, hardlinked_dir)
+
+                # Clean up temporary libunwind extraction
+                if libunwind_dir.exists():
+                    print("Cleaning up temporary libunwind files...")
+                    shutil.rmtree(libunwind_dir)
+
+        # Step 5.5b: Integrate MinGW components into hardlinked directory (Windows only)
         if args.platform == "win" and mingw_root:
             integrate_mingw_into_hardlinked(mingw_root, hardlinked_dir, args.arch)
 
