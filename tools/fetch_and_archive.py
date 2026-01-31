@@ -38,7 +38,7 @@ from typing import Any
 # Configuration
 # ============================================================================
 
-LLVM_VERSION = "19.1.7"
+LLVM_VERSION = "21.1.5"
 LLVM_MINGW_VERSION = "20251104"  # Match current MinGW version
 # macOS LLD download URL (from keith/ld64.lld releases)
 # The official LLVM macOS packages don't include lld, so we download it separately
