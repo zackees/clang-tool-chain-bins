@@ -14,8 +14,8 @@ on:
 
 jobs:
   build:
-    # Use macos-14 for ARM64 (M1), macos-13 for x86_64 (Intel)
-    runs-on: ${{ inputs.arch == 'arm64' && 'macos-14' || 'macos-13' }}
+    # Use macos-14 for ARM64 (M1), macos-15-large for x86_64 (Intel) - macos-13 is retired
+    runs-on: ${{ inputs.arch == 'arm64' && 'macos-14' || 'macos-15-large' }}
 
     steps:
       - name: Checkout repository
