@@ -8,3 +8,7 @@ assets/cosmocc/*.tar.zst filter=lfs diff=lfs merge=lfs -text
 # to avoid LFS bandwidth limits. Parts are kept under 99MB each.
 assets/clang/linux/**/*.tar.zst !filter !diff !merge text=auto
 assets/clang/linux/**/*.tar.zst.part* !filter !diff !merge binary
+
+# Windows clang archives are under 99MB, stored directly in git (not LFS)
+# to avoid LFS bandwidth limits. No splitting needed.
+assets/clang/win/**/*.tar.zst !filter !diff !merge text=auto
