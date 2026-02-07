@@ -10,6 +10,23 @@ The repository serves as both:
 1. **Binary hosting**: GitHub Pages site at https://zackees.github.io/clang-tool-chain-bins/
 2. **Build tools**: Python scripts for maintainers to generate and package toolchain archives
 
+## LFS Policy
+
+**DO NOT use Git LFS** -- it costs money for bandwidth. All archives should be
+stored directly in git. Archives larger than 99 MB must be split into parts (each <99 MB).
+
+Current `.gitattributes` still has some LFS patterns from legacy usage.
+**New archives should NEVER be added to LFS.** Instead, split large archives:
+
+```bash
+# Split an archive >99 MB into parts
+split -b 95M archive.tar.zst archive.tar.zst.part-
+# Creates: archive.tar.zst.part-aa, archive.tar.zst.part-ab, etc.
+
+# Reassemble on download
+cat archive.tar.zst.part-* > archive.tar.zst
+```
+
 ## Project Structure
 
 ```
@@ -113,9 +130,12 @@ uv run expand-archive assets/clang/win/x86_64/llvm-21.1.5-win-x86_64.tar.zst ./t
 sha256sum -c assets/clang/win/x86_64/llvm-21.1.5-win-x86_64.tar.zst.sha256
 ```
 
-### Git LFS Operations
+### Git LFS Operations (LEGACY -- DO NOT USE FOR NEW ARCHIVES)
 
-All binary archives use Git LFS. Important commands:
+> **DEPRECATED**: Git LFS costs money. New archives should be stored directly in git
+> (split into <99 MB parts if needed). See [LFS Policy](#lfs-policy) above.
+
+Some existing archives still use Git LFS. Commands for working with legacy LFS files:
 
 ```bash
 # Verify LFS is tracking files correctly
@@ -128,12 +148,12 @@ git lfs pull
 git lfs push origin main
 ```
 
-**CRITICAL**: Archive URLs in manifests must use the GitHub LFS media server format:
+**NOTE**: Legacy LFS archive URLs in manifests use the GitHub LFS media server format:
 ```
 https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/refs/heads/main/assets/...
 ```
 
-NOT the regular GitHub blob URLs.
+New non-LFS archives use regular GitHub raw URLs instead.
 
 ### Local Development Server
 
@@ -321,8 +341,8 @@ LLVM contains many duplicate binaries (e.g., `clang.exe` == `clang++.exe`). Inst
 
 **Savings**: ~571 MB for Windows x64
 
-### Git LFS for Binaries
-Archives are tracked with Git LFS to avoid bloating the repository. The `.gitattributes` file configures LFS for `.tar.zst` files.
+### Git LFS for Binaries (LEGACY)
+Some existing archives are tracked with Git LFS. **New archives should NOT use LFS** (see [LFS Policy](#lfs-policy)). Split archives >99 MB into parts instead.
 
 ### Zstd Level 22
 We use maximum compression (level 22) because:
@@ -357,12 +377,12 @@ To add a new LLVM version:
 
 3. Each script automatically updates its platform manifest (`manifest.json`)
 
-4. Commit and push (including LFS objects):
+4. Commit and push:
    ```bash
    git add assets/
    git commit -m "feat: Add LLVM 21.1.6 for all platforms"
-   git lfs push origin main  # Push LFS objects first
    git push origin main
+   # NOTE: Do NOT use Git LFS for new archives. Split >99 MB files instead.
    ```
 
 5. Update `index.html` if needed to reflect new versions
