@@ -1,0 +1,9 @@
+{
+  "latest": "3.24.0",
+  "3.24.0": {
+    "href": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/valgrind/linux/x86_64/valgrind-3.24.0-linux-x86_64.tar.zst",
+    "sha256": "b986c447d12709c572e7164a117740222aefa62282cfb18ebb9874b9aef10d03",
+    "size": 24946528,
+    "notes": "Valgrind 3.24.0 memory error detector for Linux x64"
+  }
+}

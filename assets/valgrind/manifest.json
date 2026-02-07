@@ -1,0 +1,17 @@
+{
+  "platforms": [
+    {
+      "platform": "linux",
+      "architectures": [
+        {
+          "arch": "x86_64",
+          "manifest_path": "linux/x86_64/manifest.json"
+        },
+        {
+          "arch": "arm64",
+          "manifest_path": "linux/arm64/manifest.json"
+        }
+      ]
+    }
+  ]
+}
