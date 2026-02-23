@@ -97,10 +97,12 @@ ESSENTIAL_BINARIES = {
     "llvm-readobj",
     "llvm-readelf",
     "llvm-symbolizer",
+    # Import library tools
+    "llvm-dlltool",
+    "llvm-lib",
     # NOTE: Removed clang-format and clang-tidy to reduce archive size
     # These are code quality tools, not needed for compilation
 }
-
 
 
 # ============================================================================
@@ -325,7 +327,7 @@ def download_llvm(platform: str, arch: str, work_dir: Path) -> Path:
         download_file(url, download_path)
 
     print(f"\nDownloaded: {download_path}")
-    print(f"Size: {download_path.stat().st_size / (1024*1024):.2f} MB")
+    print(f"Size: {download_path.stat().st_size / (1024 * 1024):.2f} MB")
 
     return download_path
 
@@ -410,7 +412,7 @@ def extract_archive(archive_path: Path, extract_dir: Path) -> Path:
                 total_members = len(members)
                 total_size = sum(m.size for m in members)
 
-                print(f"Found {total_members} files/directories to extract ({total_size / (1024*1024):.1f} MB)")
+                print(f"Found {total_members} files/directories to extract ({total_size / (1024 * 1024):.1f} MB)")
                 print()
 
                 extracted_count = 0
@@ -448,7 +450,7 @@ def extract_archive(archive_path: Path, extract_dir: Path) -> Path:
 
                 elapsed = time.time() - start
                 print()
-                print(f"Extracted {extracted_count} files ({extracted_size / (1024*1024):.1f} MB) in {elapsed:.1f}s")
+                print(f"Extracted {extracted_count} files ({extracted_size / (1024 * 1024):.1f} MB) in {elapsed:.1f}s")
 
     elif archive_path.suffix == ".gz" or archive_path.name.endswith(".tar.gz"):
         print("Extracting tar.gz archive...")
@@ -464,7 +466,7 @@ def extract_archive(archive_path: Path, extract_dir: Path) -> Path:
             total_members = len(members)
             total_size = sum(m.size for m in members)
 
-            print(f"Found {total_members} files/directories to extract ({total_size / (1024*1024):.1f} MB)")
+            print(f"Found {total_members} files/directories to extract ({total_size / (1024 * 1024):.1f} MB)")
             print()
 
             extracted_count = 0
@@ -502,7 +504,7 @@ def extract_archive(archive_path: Path, extract_dir: Path) -> Path:
 
             elapsed = time.time() - start
             print()
-            print(f"Extracted {extracted_count} files ({extracted_size / (1024*1024):.1f} MB) in {elapsed:.1f}s")
+            print(f"Extracted {extracted_count} files ({extracted_size / (1024 * 1024):.1f} MB) in {elapsed:.1f}s")
 
     else:
         raise ValueError(f"Unsupported archive format: {archive_path.suffix}")
@@ -604,14 +606,13 @@ def strip_extras(extracted_dir: Path, output_dir: Path, platform: str) -> Path:
             else:
                 print("WARNING: Failed to download lld for macOS. Linking may fail.")
 
-
     print("\nSummary:")
     print(f"  Kept: {kept_count} binaries")
     print(f"  Skipped: {skipped_count} binaries (not found)")
     if lib_clang_copied:
         print("  Copied lib/clang directory")
         if excluded_count > 0:
-            print(f"  Excluded {excluded_count} optional files ({excluded_size / (1024*1024):.1f} MB)")
+            print(f"  Excluded {excluded_count} optional files ({excluded_size / (1024 * 1024):.1f} MB)")
             print("    (Fortran runtime removed - not needed for C/C++ compilation)")
 
     return output_dir
@@ -708,9 +709,9 @@ def strip_linux_binaries(bin_dir: Path, platform: str) -> None:
     print()
     print("Summary:")
     print(f"  Stripped: {stripped_count} binaries")
-    print(f"  Total before: {total_before / (1024*1024):.2f} MB")
-    print(f"  Total after:  {total_after / (1024*1024):.2f} MB")
-    print(f"  Total saved:  {total_saved / (1024*1024):.2f} MB ({(total_saved/total_before)*100:.1f}%)")
+    print(f"  Total before: {total_before / (1024 * 1024):.2f} MB")
+    print(f"  Total after:  {total_after / (1024 * 1024):.2f} MB")
+    print(f"  Total saved:  {total_saved / (1024 * 1024):.2f} MB ({(total_saved / total_before) * 100:.1f}%)")
 
 
 # ============================================================================
@@ -770,9 +771,9 @@ def deduplicate_binaries(bin_dir: Path) -> dict[str, Any]:
     print(f"  Total files: {total_files}")
     print(f"  Unique files: {unique_files}")
     print(f"  Duplicates: {duplicate_count}")
-    print(f"  Total size: {total_size / (1024*1024):.1f} MB")
-    print(f"  Deduplicated size: {deduped_size / (1024*1024):.1f} MB")
-    print(f"  Space savings: {savings / (1024*1024):.1f} MB ({(savings/total_size)*100:.1f}%)")
+    print(f"  Total size: {total_size / (1024 * 1024):.1f} MB")
+    print(f"  Deduplicated size: {deduped_size / (1024 * 1024):.1f} MB")
+    print(f"  Space savings: {savings / (1024 * 1024):.1f} MB ({(savings / total_size) * 100:.1f}%)")
 
     # Print duplicate groups
     if duplicate_count > 0:
@@ -831,7 +832,7 @@ def download_llvm_mingw(arch: str, work_dir: Path) -> Path:
 
     print(f"Downloading LLVM-MinGW from: {url}")
     urllib.request.urlretrieve(url, archive_path)
-    print(f"Downloaded: {archive_path.stat().st_size / (1024*1024):.2f} MB")
+    print(f"Downloaded: {archive_path.stat().st_size / (1024 * 1024):.2f} MB")
 
     return archive_path
 
@@ -1255,7 +1256,7 @@ def create_tar_archive(source_dir: Path, output_tar: Path) -> Path:
 
     size = output_tar.stat().st_size
     print(f"\nCreated: {output_tar}")
-    print(f"Size: {size / (1024*1024):.2f} MB")
+    print(f"Size: {size / (1024 * 1024):.2f} MB")
 
     return output_tar
 
@@ -1349,18 +1350,18 @@ def compress_with_zstd(tar_file: Path, output_zst: Path, level: int = 22) -> Pat
     try:
         import zstandard as zstd
     except ImportError as e:
-        raise ImportError("zstandard module required!\n" "Install with: pip install zstandard") from e
+        raise ImportError("zstandard module required!\nInstall with: pip install zstandard") from e
 
     tar_file = Path(tar_file)
     output_zst = Path(output_zst)
 
     file_size = tar_file.stat().st_size
-    print(f"Input:  {tar_file} ({file_size / (1024*1024):.2f} MB)")
+    print(f"Input:  {tar_file} ({file_size / (1024 * 1024):.2f} MB)")
     print(f"Output: {output_zst}")
     print(f"Level:  {level}")
     print()
 
-    print(f"Compressing {file_size / (1024*1024):.1f} MB (streaming mode - press Ctrl+C to cancel)...")
+    print(f"Compressing {file_size / (1024 * 1024):.1f} MB (streaming mode - press Ctrl+C to cancel)...")
     print()
 
     # Compress using streaming for better interrupt handling
@@ -1439,10 +1440,10 @@ def compress_with_zstd(tar_file: Path, output_zst: Path, level: int = 22) -> Pat
         print(f"  Total time:   {elapsed:.1f}s")
         print(f"  Reading:      {elapsed - finalize_elapsed:.1f}s")
         print(f"  Finalizing:   {finalize_elapsed:.1f}s")
-        print(f"  Original:     {original_size / (1024*1024):.2f} MB")
-        print(f"  Compressed:   {compressed_size / (1024*1024):.2f} MB")
+        print(f"  Original:     {original_size / (1024 * 1024):.2f} MB")
+        print(f"  Compressed:   {compressed_size / (1024 * 1024):.2f} MB")
         print(f"  Ratio:        {ratio:.2f}:1")
-        print(f"  Reduction:    {(1 - compressed_size/original_size) * 100:.1f}%")
+        print(f"  Reduction:    {(1 - compressed_size / original_size) * 100:.1f}%")
 
         return output_zst
 
@@ -1562,7 +1563,7 @@ def split_archive(archive_path: Path, max_size_mb: int = 99) -> list[Path] | Non
 
 echo "Joining {len(parts)} parts into {archive_path.name}..."
 
-cat {' '.join(p.name for p in parts)} > {archive_path.name}
+cat {" ".join(p.name for p in parts)} > {archive_path.name}
 
 echo "Done! Created {archive_path.name}"
 echo "Size: $(du -h {archive_path.name} | cut -f1)"
@@ -1822,7 +1823,7 @@ Note: Press Ctrl+C at any time to safely interrupt the operation.
         else:
             # Single archive
             print(f"Archive created: {final_archive}")
-            print(f"Size: {final_archive.stat().st_size / (1024*1024):.2f} MB")
+            print(f"Size: {final_archive.stat().st_size / (1024 * 1024):.2f} MB")
             print(f"SHA256: {sha256}")
             print(f"MD5: {md5}")
             print()

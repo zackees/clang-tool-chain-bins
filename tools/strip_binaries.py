@@ -35,6 +35,9 @@ ESSENTIAL_BINARIES = {
     "llvm-strip",
     "llvm-readelf",
     "llvm-readobj",
+    # Import library tools
+    "llvm-dlltool",
+    "llvm-lib",
     # Additional utilities
     "llvm-as",
     "llvm-dis",
@@ -283,7 +286,7 @@ class BinaryStripper:
                 saved_pct = (saved / original_size * 100) if original_size > 0 else 0
                 self.log(
                     f"Stripped {binary_path.name}: "
-                    f"{original_size/1024/1024:.1f}MB -> {new_size/1024/1024:.1f}MB "
+                    f"{original_size / 1024 / 1024:.1f}MB -> {new_size / 1024 / 1024:.1f}MB "
                     f"(saved {saved_pct:.1f}%)"
                 )
                 return True
@@ -370,15 +373,15 @@ class BinaryStripper:
         saved = self.original_size - self.final_size
         saved_pct = (saved / self.original_size * 100) if self.original_size > 0 else 0
 
-        print(f"\n{'='*60}")
+        print(f"\n{'=' * 60}")
         print("Statistics")
-        print(f"{'='*60}")
+        print(f"{'=' * 60}")
         print(f"Original size:  {self.original_size / 1024 / 1024:>10.1f} MB")
         print(f"Final size:     {self.final_size / 1024 / 1024:>10.1f} MB")
         print(f"Saved:          {saved / 1024 / 1024:>10.1f} MB ({saved_pct:.1f}%)")
         print(f"Files kept:     {self.files_kept:>10}")
         print(f"Files removed:  {self.files_removed:>10}")
-        print(f"{'='*60}\n")
+        print(f"{'=' * 60}\n")
 
         return True
 
