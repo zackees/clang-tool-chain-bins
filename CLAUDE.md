@@ -175,6 +175,8 @@ The `fetch_and_archive.py` script orchestrates a multi-step pipeline:
 4. **Deduplicate**: Find identical binaries by MD5 hash (~571 MB savings)
 5. **Hard-link**: Create hard-linked directory structure
 5a. **Integrate libunwind** (Linux only): Extract headers and libraries via Docker
+5a2. **Integrate sysroot** (Linux only): Extract libc dev headers via Docker
+5a3. **Integrate sysroot** (macOS only): Extract SDK headers from local Xcode/CLT
 5b. **Integrate MinGW** (Windows only): Copy MinGW headers and sysroot
 6. **Archive**: TAR with native hard-link support (stores links as metadata)
 7. **Compress**: zstd level 22 (ultra-compression, ~17:1 ratio)
@@ -290,6 +292,13 @@ linux_hardlinked/
 │   ├── libunwind-dynamic.h
 │   ├── libunwind-ptrace.h
 │   └── unwind.h
+├── sysroot/                          # Bundled libc development headers
+│   └── usr/include/
+│       ├── stdio.h, stdlib.h, ...    # Common C headers
+│       ├── sys/                      # POSIX system headers (socket.h, etc.)
+│       ├── netinet/                  # Network headers (in.h, tcp.h, etc.)
+│       ├── linux/, asm-generic/      # Kernel headers
+│       └── x86_64-linux-gnu/         # Multiarch (bits/, asm/, gnu/)
 └── lib/
     ├── clang/21/                     # Clang resource headers
     │   └── include/
@@ -330,6 +339,36 @@ uv run python tools/extract_libunwind_docker.py --arch arm64 --output-dir ./libu
 - Consistent, reproducible extraction across any host OS
 - No need to install libunwind-dev on the build machine
 - Uses Ubuntu 22.04 (Jammy) packages for well-tested, stable libunwind version
+
+## macOS Sysroot Header Bundling
+
+For macOS platforms, the Clang archives include bundled SDK headers (from the macOS SDK `usr/include/`). This provides a fallback when Xcode Command Line Tools are not installed.
+
+**What's bundled:**
+- **Headers**: All C/POSIX headers from the macOS SDK (stdio.h, stdlib.h, sys/, netinet/, mach/, etc.)
+
+**Archive structure (macOS):**
+```
+darwin_hardlinked/
+├── bin/                              # LLVM/Clang binaries
+│   ├── clang
+│   ├── clang++
+│   └── ...
+├── sysroot/                          # Bundled macOS SDK headers
+│   └── usr/include/
+│       ├── stdio.h, stdlib.h, ...    # Common C headers
+│       ├── sys/                      # POSIX system headers
+│       ├── netinet/                  # Network headers
+│       ├── mach/                     # Mach kernel headers
+│       └── dispatch/                 # Grand Central Dispatch headers
+└── lib/
+    └── clang/21/                     # Clang resource headers
+        └── include/
+```
+
+**Extraction**: Headers are copied from the locally installed macOS SDK during archive building (requires Xcode or Command Line Tools on the build machine). Unlike Linux, this does not use Docker.
+
+**Fallback behavior**: The `MacOSSysrootTransformer` only activates when `MacOSSDKTransformer` could not find a system SDK (no `-isysroot` in args). If the system SDK is found via `xcrun`, the bundled headers are not used.
 
 ## Key Architecture Decisions
 

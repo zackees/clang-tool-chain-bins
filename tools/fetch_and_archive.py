@@ -1158,6 +1158,295 @@ def integrate_libunwind_into_hardlinked(libunwind_dir: Path, hardlinked_dir: Pat
 
 
 # ============================================================================
+# Linux Sysroot Headers Integration
+# ============================================================================
+
+
+def extract_linux_sysroot_from_docker(work_dir: Path, arch: str) -> Path | None:
+    """
+    Extract libc development headers from Ubuntu Docker container.
+
+    This function uses Docker to run an Ubuntu 22.04 container and extract the
+    C library development headers (from libc6-dev + linux-libc-dev) for bundling
+    with the Linux clang-tool-chain archives. Only headers are extracted -- no
+    libraries -- since users still link against the system libc.so.
+
+    Args:
+        work_dir: Working directory for temporary files
+        arch: Architecture ("x86_64" or "arm64")
+
+    Returns:
+        Path to directory containing extracted sysroot/usr/include/, or None if failed
+    """
+    print_section("EXTRACTING LINUX SYSROOT HEADERS FROM DOCKER")
+
+    output_dir = work_dir / "sysroot_extract"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    # Validate architecture
+    if arch == "x86_64":
+        multiarch = "x86_64-linux-gnu"
+        docker_platform = "linux/amd64"
+    elif arch in ("arm64", "aarch64"):
+        multiarch = "aarch64-linux-gnu"
+        docker_platform = "linux/arm64"
+    else:
+        print(f"ERROR: Unsupported architecture: {arch}")
+        return None
+
+    # Check if Docker is available
+    try:
+        result = subprocess.run(["docker", "version"], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            print("WARNING: Docker is not available. Skipping sysroot header extraction.")
+            print("         Install Docker to bundle libc development headers.")
+            return None
+    except (subprocess.TimeoutExpired, FileNotFoundError):
+        print("WARNING: Docker is not available. Skipping sysroot header extraction.")
+        print("         Install Docker to bundle libc development headers.")
+        return None
+
+    docker_image = "ubuntu:22.04"
+    print(f"Docker image: {docker_image}")
+    print(f"Platform: {docker_platform}")
+    print(f"Multiarch: {multiarch}")
+    print()
+
+    # Create output directory structure
+    include_dir = output_dir / "sysroot" / "usr" / "include"
+    include_dir.mkdir(parents=True, exist_ok=True)
+
+    # Create extraction script to run inside container
+    extract_script = f"""#!/bin/bash
+set -e
+
+echo "Updating package lists..."
+apt-get update -qq
+
+echo "Installing libc6-dev and linux-libc-dev..."
+apt-get install -y -qq libc6-dev linux-libc-dev
+
+echo "Creating output directories..."
+mkdir -p /output/sysroot/usr/include/{multiarch}
+
+SRC="/usr/include"
+DST="/output/sysroot/usr/include"
+
+echo "Copying top-level C headers..."
+# Copy all top-level .h files (stdio.h, stdlib.h, string.h, etc.)
+find "$SRC" -maxdepth 1 -name '*.h' -exec cp -v {{}} "$DST/" \\;
+
+echo "Copying POSIX/system header subdirectories..."
+# Copy standard subdirectories
+for dir in sys net netinet arpa rpc protocols; do
+    if [ -d "$SRC/$dir" ]; then
+        cp -rv "$SRC/$dir" "$DST/"
+    fi
+done
+
+echo "Copying kernel headers..."
+# Copy linux/ and asm-generic/ from kernel headers
+for dir in linux asm-generic; do
+    if [ -d "$SRC/$dir" ]; then
+        cp -rv "$SRC/$dir" "$DST/"
+    fi
+done
+
+echo "Copying multiarch headers ({multiarch})..."
+# Copy the entire multiarch directory (contains bits/, asm/, gnu/, sys/, etc.)
+if [ -d "$SRC/{multiarch}" ]; then
+    cp -rv "$SRC/{multiarch}/." "$DST/{multiarch}/"
+fi
+
+echo "Setting permissions..."
+find "$DST" -type f -exec chmod 644 {{}} \\;
+find "$DST" -type d -exec chmod 755 {{}} \\;
+
+echo ""
+echo "Top-level headers:"
+ls "$DST"/*.h 2>/dev/null | wc -l
+echo ""
+echo "Subdirectories:"
+ls -d "$DST"/*/ 2>/dev/null || echo "(none)"
+echo ""
+echo "Multiarch contents:"
+ls -d "$DST/{multiarch}"/*/ 2>/dev/null || echo "(none)"
+
+echo ""
+echo "Sysroot extraction complete!"
+"""
+
+    print("Running Docker container...")
+    try:
+        result = subprocess.run(
+            [
+                "docker",
+                "run",
+                "--rm",
+                "--platform",
+                docker_platform,
+                "-v",
+                f"{output_dir.absolute()}:/output",
+                docker_image,
+                "bash",
+                "-c",
+                extract_script,
+            ],
+            capture_output=True,
+            text=True,
+            timeout=300,
+        )
+
+        print(result.stdout)
+
+        if result.returncode != 0:
+            print("WARNING: Docker extraction failed. Continuing without bundled sysroot headers.")
+            print(result.stderr)
+            return None
+
+    except subprocess.TimeoutExpired:
+        print("WARNING: Docker extraction timed out. Continuing without bundled sysroot headers.")
+        return None
+    except Exception as e:
+        print(f"WARNING: Unexpected error during Docker extraction: {e}")
+        return None
+
+    # Verify extraction
+    marker = include_dir / "stdio.h"
+    if not marker.exists():
+        print("WARNING: stdio.h was not extracted. Sysroot extraction failed.")
+        return None
+
+    header_count = sum(1 for _ in include_dir.rglob("*.h"))
+    print(f"\n✓ Extracted sysroot: {header_count} header files")
+    return output_dir
+
+
+def integrate_linux_sysroot_into_hardlinked(sysroot_dir: Path, hardlinked_dir: Path) -> None:
+    """
+    Copy sysroot headers into hardlinked directory structure.
+
+    Args:
+        sysroot_dir: Path to extracted sysroot directory (contains sysroot/usr/include/)
+        hardlinked_dir: Path to hardlinked directory (e.g., linux_hardlinked/)
+    """
+    print(f"\nIntegrating Linux sysroot headers into {hardlinked_dir.name}")
+
+    src_sysroot = sysroot_dir / "sysroot"
+    if not src_sysroot.exists():
+        print("  WARNING: sysroot directory not found, skipping integration")
+        return
+
+    dst_sysroot = hardlinked_dir / "sysroot"
+    shutil.copytree(src_sysroot, dst_sysroot, dirs_exist_ok=True)
+
+    header_count = sum(1 for _ in dst_sysroot.rglob("*.h"))
+    print(f"  Copied sysroot tree: {header_count} header files")
+    print("✓ Linux sysroot integration complete\n")
+
+
+# ============================================================================
+# macOS Sysroot Headers Integration
+# ============================================================================
+
+
+def extract_macos_sysroot(work_dir: Path) -> Path | None:
+    """
+    Extract macOS SDK headers from the locally installed SDK.
+
+    This function uses xcrun to locate the macOS SDK and copies the C/POSIX
+    headers (usr/include/) for bundling with the macOS clang-tool-chain archives.
+    Only headers are extracted -- no libraries -- since users still link against
+    system dylibs which are always present on macOS.
+
+    Must be run on a macOS machine with Xcode or Command Line Tools installed.
+
+    Args:
+        work_dir: Working directory for temporary files
+
+    Returns:
+        Path to directory containing extracted sysroot/usr/include/, or None if failed
+    """
+    print_section("EXTRACTING MACOS SYSROOT HEADERS FROM SDK")
+
+    output_dir = work_dir / "macos_sysroot_extract"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    # Find the macOS SDK path via xcrun
+    try:
+        result = subprocess.run(
+            ["xcrun", "--show-sdk-path"],
+            capture_output=True,
+            text=True,
+            check=True,
+            timeout=30,
+        )
+        sdk_path = Path(result.stdout.strip())
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired, FileNotFoundError) as e:
+        print(f"WARNING: Could not find macOS SDK via xcrun: {e}")
+        print("         Install Xcode Command Line Tools: xcode-select --install")
+        return None
+
+    if not sdk_path.exists():
+        print(f"WARNING: macOS SDK path does not exist: {sdk_path}")
+        return None
+
+    sdk_include = sdk_path / "usr" / "include"
+    if not sdk_include.exists():
+        print(f"WARNING: macOS SDK include directory not found: {sdk_include}")
+        return None
+
+    print(f"macOS SDK path: {sdk_path}")
+    print(f"SDK include dir: {sdk_include}")
+    print()
+
+    # Create output directory structure
+    dst_include = output_dir / "sysroot" / "usr" / "include"
+    dst_include.mkdir(parents=True, exist_ok=True)
+
+    # Copy the entire usr/include/ from the SDK
+    print("Copying SDK headers...")
+    try:
+        shutil.copytree(sdk_include, dst_include, dirs_exist_ok=True)
+    except Exception as e:
+        print(f"WARNING: Failed to copy SDK headers: {e}")
+        return None
+
+    # Verify extraction
+    marker = dst_include / "stdio.h"
+    if not marker.exists():
+        print("WARNING: stdio.h was not copied. SDK extraction failed.")
+        return None
+
+    header_count = sum(1 for _ in dst_include.rglob("*.h"))
+    print(f"\n✓ Extracted macOS sysroot: {header_count} header files")
+    return output_dir
+
+
+def integrate_macos_sysroot_into_hardlinked(sysroot_dir: Path, hardlinked_dir: Path) -> None:
+    """
+    Copy macOS sysroot headers into hardlinked directory structure.
+
+    Args:
+        sysroot_dir: Path to extracted sysroot directory (contains sysroot/usr/include/)
+        hardlinked_dir: Path to hardlinked directory (e.g., darwin_hardlinked/)
+    """
+    print(f"\nIntegrating macOS sysroot headers into {hardlinked_dir.name}")
+
+    src_sysroot = sysroot_dir / "sysroot"
+    if not src_sysroot.exists():
+        print("  WARNING: sysroot directory not found, skipping integration")
+        return
+
+    dst_sysroot = hardlinked_dir / "sysroot"
+    shutil.copytree(src_sysroot, dst_sysroot, dirs_exist_ok=True)
+
+    header_count = sum(1 for _ in dst_sysroot.rglob("*.h"))
+    print(f"  Copied sysroot tree: {header_count} header files")
+    print("✓ macOS sysroot integration complete\n")
+
+
+# ============================================================================
 # Step 5: Create Hard-Linked Structure
 # ============================================================================
 
@@ -1761,6 +2050,28 @@ Note: Press Ctrl+C at any time to safely interrupt the operation.
                 if libunwind_dir.exists():
                     print("Cleaning up temporary libunwind files...")
                     shutil.rmtree(libunwind_dir)
+
+        # Step 5.5a2: Integrate sysroot headers for Linux (requires Docker)
+        if args.platform == "linux":
+            sysroot_dir = extract_linux_sysroot_from_docker(work_dir, args.arch)
+            if sysroot_dir:
+                integrate_linux_sysroot_into_hardlinked(sysroot_dir, hardlinked_dir)
+
+                # Clean up temporary sysroot extraction
+                if sysroot_dir.exists():
+                    print("Cleaning up temporary sysroot files...")
+                    shutil.rmtree(sysroot_dir)
+
+        # Step 5.5a3: Integrate sysroot headers for macOS (from local SDK)
+        if args.platform == "darwin":
+            macos_sysroot_dir = extract_macos_sysroot(work_dir)
+            if macos_sysroot_dir:
+                integrate_macos_sysroot_into_hardlinked(macos_sysroot_dir, hardlinked_dir)
+
+                # Clean up temporary sysroot extraction
+                if macos_sysroot_dir.exists():
+                    print("Cleaning up temporary macOS sysroot files...")
+                    shutil.rmtree(macos_sysroot_dir)
 
         # Step 5.5b: Integrate MinGW components into hardlinked directory (Windows only)
         if args.platform == "win" and mingw_root:
