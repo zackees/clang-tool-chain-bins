@@ -12,3 +12,6 @@ assets/clang/linux/**/*.tar.zst.part* !filter !diff !merge binary
 # Windows clang archives are under 99MB, stored directly in git (not LFS)
 # to avoid LFS bandwidth limits. No splitting needed.
 assets/clang/win/**/*.tar.zst !filter !diff !merge text=auto
+
+# Clang-extra archives stored directly in git (not LFS)
+assets/clang-extra/**/*.tar.zst !filter !diff !merge binary
