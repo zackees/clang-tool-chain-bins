@@ -1,0 +1,7 @@
+{
+  "latest": "21.1.5",
+  "21.1.5": {
+    "href": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/x86_64/clang-extra-21.1.5-win-x86_64.tar.zst",
+    "sha256": "aaf5bc0194f440cbba72aa8d41434f3d1f403739a8791c674edae6e3a49d2401"
+  }
+}

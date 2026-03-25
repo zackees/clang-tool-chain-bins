@@ -100,7 +100,7 @@ ESSENTIAL_BINARIES = {
     # Import library tools
     "llvm-dlltool",
     "llvm-lib",
-    # NOTE: Removed clang-format and clang-tidy to reduce archive size
+    # NOTE: Removed clang-format, clang-tidy, and clang-query to reduce archive size
     # These are code quality tools, not needed for compilation
 }
 
@@ -1147,7 +1147,14 @@ def integrate_libunwind_into_hardlinked(libunwind_dir: Path, hardlinked_dir: Pat
                 dst_symlink.symlink_to(link_target)
                 lib_count += 1
                 print(f"  Symlink: lib/{lib.name} -> {link_target}")
-            elif lib.is_file():
+            else:
+                try:
+                    if not lib.is_file():
+                        continue
+                except OSError:
+                    # On Windows, some Docker-created symlinks can't be accessed
+                    print(f"  Skipped: lib/{lib.name} (inaccessible on Windows)")
+                    continue
                 shutil.copy2(lib, dst_lib / lib.name)
                 lib_count += 1
                 print(f"  Copied: lib/{lib.name}")
