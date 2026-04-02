@@ -11,3 +11,8 @@ assets/clang/linux/**/*.tar.zst.part* !filter !diff !merge binary
 assets/clang/win/**/*.tar.zst !filter !diff !merge text=auto
 # Clang-extra archives stored directly in git (not LFS)
 assets/clang-extra/**/*.tar.zst !filter !diff !merge binary
+# IWYU split parts stored directly in git (not LFS)
+assets/iwyu/**/*.tar.zst.part* !filter !diff !merge binary
+# Emscripten split parts stored directly in git (not LFS)
+assets/emscripten/linux/**/*.tar.zst.part* !filter !diff !merge binary
+assets/emscripten/win/**/*.tar.zst.part* !filter !diff !merge binary
