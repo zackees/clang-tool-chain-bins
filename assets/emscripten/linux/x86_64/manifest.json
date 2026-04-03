@@ -4,12 +4,41 @@
     "4.0.15": {
       "version": "4.0.15",
       "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/emscripten/linux/x86_64/emscripten-4.0.15-linux-x86_64.tar.zst",
-      "sha256": "7cc00921f58ddbc835c4fdaef44921040a7d8acaab6431cd5b58415b4bef93de"
+      "sha256": "7cc00921f58ddbc835c4fdaef44921040a7d8acaab6431cd5b58415b4bef93de",
+      "parts": [
+        {
+          "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/emscripten/linux/x86_64/emscripten-4.0.15-linux-x86_64.tar.zst.part-aa",
+          "sha256": "e427aee7d1197f59bcbd7a82a581f8d0bdf484ea24036a3c52903bb26cfd4488",
+          "size": 99614720
+        },
+        {
+          "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/emscripten/linux/x86_64/emscripten-4.0.15-linux-x86_64.tar.zst.part-ab",
+          "sha256": "e3c0fe7ac9d053ca07da6bdd27eab5294289146548438e17a06c25e8c96e20ab",
+          "size": 99614720
+        },
+        {
+          "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/emscripten/linux/x86_64/emscripten-4.0.15-linux-x86_64.tar.zst.part-ac",
+          "sha256": "97fcd1f4bdd3a557c9cd93fffaf285cb87cd7eebd7c88fd436ef3499b1c9bfa5",
+          "size": 4858601
+        }
+      ]
     },
     "4.0.21": {
       "version": "4.0.21",
       "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/emscripten/linux/x86_64/emscripten-4.0.21-linux-x86_64.tar.zst",
-      "sha256": "5cd3cbe0316d37c9b39bdc63691c014f136a5d82a9f08ed29bb7ad62f7a83655"
+      "sha256": "5cd3cbe0316d37c9b39bdc63691c014f136a5d82a9f08ed29bb7ad62f7a83655",
+      "parts": [
+        {
+          "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/emscripten/linux/x86_64/emscripten-4.0.21-linux-x86_64.tar.zst.part-aa",
+          "sha256": "130d0058649b6e792c6de8a1b65685b80f39a4ceb2843aba433cee2bd54a4ddc",
+          "size": 99614720
+        },
+        {
+          "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/emscripten/linux/x86_64/emscripten-4.0.21-linux-x86_64.tar.zst.part-ab",
+          "sha256": "9ba1206f35752e44f6ba8d13cf71357df9f11a539f264713480507e01033c0d4",
+          "size": 95300720
+        }
+      ]
     }
   }
 }
