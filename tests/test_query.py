@@ -29,7 +29,7 @@ class QueryTests(unittest.TestCase):
         if not self.index_path.exists():
             build_aggregate_index(self.assets_root, self.index_path)
 
-    def test_clang_star_query_returns_json_line_with_matches(self) -> None:
+    def test_clang_star_query_returns_json_lines_with_one_match_per_line(self) -> None:
         with TemporaryDirectory() as tmp:
             home_dir = Path(tmp)
             results = query.query_records(["clang*"], home_dir=home_dir, index_path=self.index_path)
@@ -44,16 +44,22 @@ class QueryTests(unittest.TestCase):
 
         for match in payload["matches"]:
             self.assertIn("url", match)
+            self.assertIn("source_urls", match)
             self.assertIn("local_cache_path", match)
+            self.assertIn("install_path", match)
             self.assertIn("installed", match)
             self.assertIn("tool_name", match)
             self.assertTrue(match["url"].startswith("http"))
+            self.assertEqual(match["source_urls"], [match["archive_url"]])
             self.assertTrue(match["local_cache_path"].endswith(".tar.zst"))
             self.assertFalse(match["installed"])
 
         jsonl = query.format_query_results(results)
         parsed = [json.loads(line) for line in jsonl.splitlines()]
-        self.assertEqual(parsed[0]["query"], "clang*")
+        self.assertTrue(parsed)
+        self.assertTrue(all(line["query"] == "clang*" for line in parsed))
+        self.assertTrue(all("tool_name" in line for line in parsed))
+        self.assertEqual(len(parsed), len(payload["matches"]))
 
     def test_exact_clang_query_only_returns_clang_tools(self) -> None:
         with TemporaryDirectory() as tmp:
@@ -133,7 +139,7 @@ class QueryTests(unittest.TestCase):
             second = query.query_records(["clang"], records=records, home_dir=home_dir)
             self.assertTrue(second[0]["matches"][0]["installed"])
 
-    def test_multiple_patterns_return_multiple_json_lines(self) -> None:
+    def test_multiple_patterns_return_one_json_line_per_match(self) -> None:
         with TemporaryDirectory() as tmp:
             home_dir = Path(tmp)
             results = query.query_records(["clang*", "node"], home_dir=home_dir, index_path=self.index_path)
@@ -141,10 +147,12 @@ class QueryTests(unittest.TestCase):
         self.assertEqual([result["query"] for result in results], ["clang*", "node"])
         jsonl = query.format_query_results(results)
         lines = jsonl.splitlines()
-        self.assertEqual(len(lines), 2)
         parsed = [json.loads(line) for line in lines]
-        self.assertEqual(parsed[1]["query"], "node")
-        self.assertTrue(parsed[1]["matches"])
+        self.assertTrue(any(line["query"] == "clang*" for line in parsed))
+        self.assertTrue(any(line["query"] == "node" for line in parsed))
+        self.assertTrue(all("tool_name" in line for line in parsed))
+        expected_line_count = sum(len(result["matches"]) for result in results)
+        self.assertEqual(len(lines), expected_line_count)
 
     def test_pretty_output_contains_compact_summary_columns(self) -> None:
         results = [
@@ -158,6 +166,9 @@ class QueryTests(unittest.TestCase):
                         "size": 16896,
                         "platform": "win",
                         "arch": "x86_64",
+                        "archive_filename": "llvm-21.1.5-win-x86_64.tar.zst",
+                        "archive_url": "https://example.invalid/llvm-21.1.5-win-x86_64.tar.zst",
+                        "path_in_archive": "bin/clang++.exe",
                         "install_path": r"C:\tmp\clang\win\x86_64",
                     }
                 ],
@@ -172,6 +183,8 @@ class QueryTests(unittest.TestCase):
         self.assertIn("Size", pretty)
         self.assertIn("no", pretty)
         self.assertIn("16.5 KiB", pretty)
+        self.assertIn("Source URL: https://example.invalid/llvm-21.1.5-win-x86_64.tar.zst", pretty)
+        self.assertIn(r"Install Path: C:\tmp\clang\win\x86_64", pretty)
 
     def test_pretty_output_groups_installed_matches_by_install_path(self) -> None:
         results = [
@@ -185,6 +198,9 @@ class QueryTests(unittest.TestCase):
                         "size": 16896,
                         "platform": "win",
                         "arch": "x86_64",
+                        "archive_filename": "llvm-21.1.5-win-x86_64.tar.zst",
+                        "archive_url": "https://example.invalid/llvm-21.1.5-win-x86_64.tar.zst",
+                        "path_in_archive": "bin/clang++.exe",
                         "install_path": r"C:\tmp\clang\win\x86_64",
                     },
                     {
@@ -194,6 +210,9 @@ class QueryTests(unittest.TestCase):
                         "size": 1024,
                         "platform": "win",
                         "arch": "x86_64",
+                        "archive_filename": "llvm-21.1.5-win-x86_64.tar.zst",
+                        "archive_url": "https://example.invalid/llvm-21.1.5-win-x86_64.tar.zst",
+                        "path_in_archive": "bin/clang.exe",
                         "install_path": r"C:\tmp\clang\win\x86_64",
                     },
                 ],
@@ -205,6 +224,43 @@ class QueryTests(unittest.TestCase):
         self.assertIn(r"C:\tmp\clang\win\x86_64", pretty)
         self.assertIn("|-- clang (21.1.5, 1.0 KiB)", pretty)
         self.assertIn("|-- clang++ (21.1.5, 16.5 KiB)", pretty)
+        self.assertIn("Match Details", pretty)
+
+    def test_query_records_uses_part_urls_as_source_urls(self) -> None:
+        records = [
+            query.ToolRecord(
+                tool_name="clang",
+                file_name="clang",
+                path_in_archive="bin/clang",
+                tool_sha256="aaa",
+                tool_type="file",
+                size=1,
+                component="clang",
+                version="21.1.5",
+                platform="linux",
+                arch="x86_64",
+                archive_path="clang/linux/x86_64/llvm-21.1.5-linux-x86_64.tar.zst",
+                archive_filename="llvm-21.1.5-linux-x86_64.tar.zst",
+                archive_sha256="0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+                archive_url="https://example.invalid/llvm-21.1.5-linux-x86_64.tar.zst",
+                parts=[
+                    {"href": "https://example.invalid/llvm-21.1.5-linux-x86_64.tar.zst.part-aa"},
+                    {"href": "https://example.invalid/llvm-21.1.5-linux-x86_64.tar.zst.part-ab"},
+                ],
+            )
+        ]
+
+        with TemporaryDirectory() as tmp:
+            home_dir = Path(tmp)
+            results = query.query_records(["clang"], records=records, home_dir=home_dir)
+
+        self.assertEqual(
+            results[0]["matches"][0]["source_urls"],
+            [
+                "https://example.invalid/llvm-21.1.5-linux-x86_64.tar.zst.part-aa",
+                "https://example.invalid/llvm-21.1.5-linux-x86_64.tar.zst.part-ab",
+            ],
+        )
 
     def test_pretty_output_handles_no_matches(self) -> None:
         pretty = query.format_pretty_results([{"query": "missing-tool", "matches": []}])
@@ -246,6 +302,7 @@ class QueryTests(unittest.TestCase):
         pretty = output.getvalue()
         self.assertIn("Query: clang++", pretty)
         self.assertIn("Installed", pretty)
+        self.assertIn("Source URL:", pretty)
         self.assertNotIn('"query"', pretty)
 
     def test_no_matches_returns_empty_matches_array(self) -> None:
@@ -254,6 +311,11 @@ class QueryTests(unittest.TestCase):
             results = query.query_records(["tool-that-does-not-exist"], home_dir=home_dir, index_path=self.index_path)
 
         self.assertEqual(results, [{"query": "tool-that-does-not-exist", "matches": []}])
+
+    def test_format_query_results_emits_no_match_marker(self) -> None:
+        jsonl = query.format_query_results([{"query": "tool-that-does-not-exist", "matches": []}])
+        parsed = [json.loads(line) for line in jsonl.splitlines()]
+        self.assertEqual(parsed, [{"matched": False, "query": "tool-that-does-not-exist"}])
 
     def test_exact_lookup_finds_llvm_pdbutil(self) -> None:
         with TemporaryDirectory() as tmp:

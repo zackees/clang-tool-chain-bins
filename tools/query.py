@@ -163,6 +163,40 @@ def _record_passes_filters(
     return not (component and record.component != component)
 
 
+def _record_source_urls(record: ToolRecord) -> list[str]:
+    part_urls = [part["href"] for part in record.parts if isinstance(part, dict) and isinstance(part.get("href"), str)]
+    if part_urls:
+        return part_urls
+    if record.archive_url:
+        return [record.archive_url]
+    if record.probe_urls:
+        return [url for url in record.probe_urls if isinstance(url, str)]
+    return []
+
+
+def _match_source_urls(match: dict[str, Any]) -> list[str]:
+    source_urls = match.get("source_urls")
+    if isinstance(source_urls, list):
+        urls = [url for url in source_urls if isinstance(url, str)]
+        if urls:
+            return urls
+
+    parts = match.get("parts")
+    if isinstance(parts, list):
+        part_urls = [part["href"] for part in parts if isinstance(part, dict) and isinstance(part.get("href"), str)]
+        if part_urls:
+            return part_urls
+
+    archive_url = match.get("archive_url")
+    if isinstance(archive_url, str) and archive_url:
+        return [archive_url]
+
+    probe_urls = match.get("probe_urls")
+    if isinstance(probe_urls, list):
+        return [url for url in probe_urls if isinstance(url, str)]
+    return []
+
+
 def query_records(
     patterns: Sequence[str],
     *,
@@ -199,6 +233,7 @@ def query_records(
             )
             match["install_path"] = str(install_dir)
             match["installed"] = (install_dir / "done.txt").exists() or install_dir.exists()
+            match["source_urls"] = _record_source_urls(record)
             match["url"] = record.archive_url
             matches.append(match)
 
@@ -208,7 +243,16 @@ def query_records(
 
 
 def format_query_results(results: Iterable[dict[str, Any]]) -> str:
-    return "\n".join(json.dumps(result, sort_keys=True) for result in results)
+    lines: list[str] = []
+    for result in results:
+        query_name = result["query"]
+        matches = list(result["matches"])
+        if not matches:
+            lines.append(json.dumps({"query": query_name, "matched": False}, sort_keys=True))
+            continue
+        for match in matches:
+            lines.append(json.dumps({"query": query_name, **match}, sort_keys=True))
+    return "\n".join(lines)
 
 
 def _format_size(size: int) -> str:
@@ -251,6 +295,26 @@ def format_pretty_results(results: Iterable[dict[str, Any]]) -> str:
             )
 
         section_lines = [header, _format_pretty_table(table_rows)]
+
+        section_lines.append("")
+        section_lines.append("Match Details")
+        for match in matches:
+            source_urls = _match_source_urls(match)
+            section_lines.append(
+                f"{match['tool_name']} ({match.get('version') or '-'}, {match.get('platform') or '-'}, {match.get('arch') or '-'})"
+            )
+            section_lines.append(f"  Archive: {match.get('archive_filename') or '-'}")
+            section_lines.append(f"  Path In Archive: {match.get('path_in_archive') or match.get('file_name') or '-'}")
+            section_lines.append(f"  Install Path: {match.get('install_path') or '-'}")
+            if len(source_urls) <= 1:
+                section_lines.append(f"  Source URL: {source_urls[0] if source_urls else '-'}")
+            else:
+                section_lines.append(f"  Source URLs ({len(source_urls)}):")
+                for url in source_urls:
+                    section_lines.append(f"    {url}")
+            section_lines.append("")
+        if section_lines[-1] == "":
+            section_lines.pop()
 
         installed_matches = [match for match in matches if match["installed"]]
         if installed_matches:

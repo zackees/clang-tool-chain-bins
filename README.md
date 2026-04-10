@@ -17,15 +17,46 @@ pip install clang-tool-chain-bins
 
 The CLI uses `~/.clang-tool-chain` as its default cache and install root. Set `CLANG_TOOL_CHAIN_DOWNLOAD_PATH` or pass `--home-dir` to use a different location.
 
+## Python API
+
+The published package now exposes an importable top-level API at `clang_tool_chain_bins`.
+
+```python
+from clang_tool_chain_bins import ensure, install, is_installed, query, resolve_one
+
+matches = query("clang", platform="win", arch="x86_64")
+selected = resolve_one("clang", platform="win", arch="x86_64", version="21.1.5", component="clang")
+
+if not is_installed("clang", platform="win", arch="x86_64", version="21.1.5", component="clang"):
+    result = ensure("clang", platform="win", arch="x86_64", version="21.1.5", component="clang")[0]
+    print(result.install_path)
+```
+
+Public API types:
+
+- `ToolMatch`
+- `QueryResult`
+- `InstallResult`
+
+Public API functions:
+
+- `query(*patterns, ...)`
+- `resolve(tool, ...)`
+- `resolve_one(tool, ...)`
+- `is_installed(tool, ...)`
+- `install(tool, ...)`
+- `ensure(tool, ...)`
+- `try_install(tool, ...)`
+
 ## Query CLI
 
-`query` is the discovery command. It returns one result object per input pattern.
+`query` is the discovery command. Default JSONL output returns one matched entry per line.
 
 - Patterns without glob characters are exact matches.
 - Patterns containing `*`, `?`, or `[]` use glob matching.
 - Matching is case-insensitive against both normalized `tool_name` and the archived `file_name`.
 - Filters narrow matches by `platform`, `arch`, `version`, and `component`.
-- Output is JSON Lines by default. Use `--pretty` for a human-readable table.
+- Output is JSON Lines by default, one matched entry per line. Use `--pretty` for a human-readable table plus per-match source URL and install path details.
 
 Exact lookup:
 
@@ -54,16 +85,16 @@ clang-tool-chain-bins query clang++ --pretty
 Typical JSONL shape:
 
 ```json
-{"query":"clang","matches":[{"tool_name":"clang","file_name":"clang","component":"clang","version":"21.1.5","platform":"linux","arch":"x86_64","archive_url":"https://...","archive_sha256":"...","local_cache_path":"...","install_path":"...","installed":false}]}
+{"query":"clang","tool_name":"clang","file_name":"clang","component":"clang","version":"21.1.5","platform":"linux","arch":"x86_64","archive_url":"https://...","source_urls":["https://..."],"archive_sha256":"...","local_cache_path":"...","install_path":"...","installed":false}
 ```
 
-Each match includes the aggregate index metadata plus derived local state such as:
+Each JSON line for a match includes the aggregate index metadata plus derived local state such as:
 
 - `query`
-- `matches`
 - `tool_name` and `file_name`
 - `component`, `version`, `platform`, `arch`
 - `archive_filename`, `archive_path`, `archive_sha256`, `archive_url`
+- `source_urls`
 - `path_in_archive`, `tool_type`, `tool_sha256`, `size`
 - `parts`, `download_kind`, `probe_urls`
 - `local_cache_path`
@@ -71,6 +102,10 @@ Each match includes the aggregate index metadata plus derived local state such a
 - `installed`
 
 `installed` is a local state check against the selected home directory. It becomes true when the install directory or its `done.txt` marker already exists there; it is not a remote availability check.
+
+`install_path` is always the resolved destination for that archive candidate, even when `installed` is `false`. `source_urls` resolves to the concrete download URL list for that match; for normal archives it is a one-item list, and for multipart archives it contains the part URLs.
+
+If a query has no matches, the JSONL stream emits a marker line like `{"query":"missing-tool","matched":false}`.
 
 Index selection for `query` works like this:
 

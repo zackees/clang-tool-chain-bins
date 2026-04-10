@@ -166,6 +166,8 @@ class InstallTests(unittest.TestCase):
             tmp_root = Path(tmp)
             binary_path = tmp_root / ("zccache.exe" if os.name == "nt" else "zccache")
             binary_path.write_text("", encoding="utf-8")
+            daemon_name = "zccache-daemon.exe" if os.name == "nt" else "zccache-daemon"
+            (tmp_root / daemon_name).write_text("", encoding="utf-8")
             destination = tmp_root / "cache" / "llvm.tar.zst"
             commands: list[list[str]] = []
 
@@ -208,6 +210,8 @@ class InstallTests(unittest.TestCase):
             tmp_root = Path(tmp)
             binary_path = tmp_root / ("zccache.exe" if os.name == "nt" else "zccache")
             binary_path.write_text("", encoding="utf-8")
+            daemon_name = "zccache-daemon.exe" if os.name == "nt" else "zccache-daemon"
+            (tmp_root / daemon_name).write_text("", encoding="utf-8")
             destination = tmp_root / "cache" / "llvm.tar.zst"
             commands: list[list[str]] = []
             source_urls = [
@@ -252,6 +256,8 @@ class InstallTests(unittest.TestCase):
             tmp_root = Path(tmp)
             binary_path = tmp_root / ("zccache.exe" if os.name == "nt" else "zccache")
             binary_path.write_text("", encoding="utf-8")
+            daemon_name = "zccache-daemon.exe" if os.name == "nt" else "zccache-daemon"
+            (tmp_root / daemon_name).write_text("", encoding="utf-8")
 
             def _fake_run(command: list[str], *, capture_output: bool, text: bool, check: bool) -> subprocess.CompletedProcess[str]:
                 self.assertTrue(capture_output)
@@ -278,12 +284,13 @@ class InstallTests(unittest.TestCase):
             tmp_root = Path(tmp)
             with patch.dict(os.environ, {"ZCCACHE_BIN": str(tmp_root / "missing-zccache.exe")}, clear=False):
                 with patch("tools.install.shutil.which", return_value=None):
-                    with self.assertRaises(RuntimeError) as exc:
-                        install._fetch_with_zccache(
-                            "https://example.invalid/llvm.tar.zst",
-                            tmp_root / "cache" / "llvm.tar.zst",
-                            "d" * 64,
-                        )
+                    with patch("pathlib.Path.is_file", return_value=False):
+                        with self.assertRaises(RuntimeError) as exc:
+                            install._fetch_with_zccache(
+                                "https://example.invalid/llvm.tar.zst",
+                                tmp_root / "cache" / "llvm.tar.zst",
+                                "d" * 64,
+                            )
 
         self.assertIn("require a zccache binary", str(exc.exception))
 
@@ -292,6 +299,8 @@ class InstallTests(unittest.TestCase):
             tmp_root = Path(tmp)
             binary_path = tmp_root / ("zccache.exe" if os.name == "nt" else "zccache")
             binary_path.write_text("", encoding="utf-8")
+            daemon_name = "zccache-daemon.exe" if os.name == "nt" else "zccache-daemon"
+            (tmp_root / daemon_name).write_text("", encoding="utf-8")
 
             def _fake_run(command: list[str], *, capture_output: bool, text: bool, check: bool) -> subprocess.CompletedProcess[str]:
                 self.assertTrue(capture_output)
@@ -315,6 +324,8 @@ class InstallTests(unittest.TestCase):
             tmp_root = Path(tmp)
             binary_path = tmp_root / ("zccache.exe" if os.name == "nt" else "zccache")
             binary_path.write_text("", encoding="utf-8")
+            daemon_name = "zccache-daemon.exe" if os.name == "nt" else "zccache-daemon"
+            (tmp_root / daemon_name).write_text("", encoding="utf-8")
 
             def _fake_run(command: list[str], *, capture_output: bool, text: bool, check: bool) -> subprocess.CompletedProcess[str]:
                 self.assertTrue(capture_output)
@@ -340,6 +351,8 @@ class InstallTests(unittest.TestCase):
             tmp_root = Path(tmp)
             binary_path = tmp_root / ("zccache.exe" if os.name == "nt" else "zccache")
             binary_path.write_text("", encoding="utf-8")
+            daemon_name = "zccache-daemon.exe" if os.name == "nt" else "zccache-daemon"
+            (tmp_root / daemon_name).write_text("", encoding="utf-8")
 
             def _fake_run(command: list[str], *, capture_output: bool, text: bool, check: bool) -> subprocess.CompletedProcess[str]:
                 self.assertTrue(capture_output)
@@ -359,6 +372,34 @@ class InstallTests(unittest.TestCase):
                         )
 
         self.assertIn("did not create", str(exc.exception))
+
+    def test_fetch_with_zccache_creates_expected_download_daemon_name(self) -> None:
+        with TemporaryDirectory() as tmp:
+            tmp_root = Path(tmp)
+            binary_path = tmp_root / ("zccache.exe" if os.name == "nt" else "zccache")
+            binary_path.write_text("", encoding="utf-8")
+            fallback_name = "zccache-daemon.exe" if os.name == "nt" else "zccache-daemon"
+            expected_name = "zccache-download-daemon.exe" if os.name == "nt" else "zccache-download-daemon"
+            (tmp_root / fallback_name).write_text("daemon", encoding="utf-8")
+            destination = tmp_root / "cache" / "llvm.tar.zst"
+
+            def _fake_run(command: list[str], *, capture_output: bool, text: bool, check: bool) -> subprocess.CompletedProcess[str]:
+                self.assertTrue((tmp_root / expected_name).exists())
+                if command[1:] == ["download", "--help"]:
+                    return subprocess.CompletedProcess(command, 0, "Usage: zccache download\n  --part-url <PART_URLS>\n", "")
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                destination.write_bytes(b"archive")
+                return subprocess.CompletedProcess(command, 0, "ok\n", "")
+
+            with patch.dict(os.environ, {"ZCCACHE_BIN": str(binary_path)}, clear=False):
+                with patch("tools.install.subprocess.run", side_effect=_fake_run):
+                    install._fetch_with_zccache(
+                        "https://example.invalid/llvm.tar.zst",
+                        destination,
+                        "0" * 64,
+                    )
+
+            self.assertTrue((tmp_root / expected_name).exists())
 
     def test_fetch_archive_rejects_missing_part_href(self) -> None:
         with TemporaryDirectory() as tmp:

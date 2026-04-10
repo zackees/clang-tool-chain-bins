@@ -1,15 +1,19 @@
 from __future__ import annotations
 
+import io
 import json
 import os
 import unittest
 import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from contextlib import redirect_stdout
 from pathlib import Path
+from tempfile import TemporaryDirectory
 from typing import Any
 from urllib.parse import urlparse
 
+from tools import cli
 from tools.download_sources import asset_repo_relative_path_from_url, build_download_descriptor
 
 
@@ -107,6 +111,57 @@ def _collect_manifest_probe_urls(assets_root: Path) -> list[dict[str, Any]]:
     ]
 
 
+def _collect_query_probe_urls(index_path: Path) -> list[dict[str, Any]]:
+    with TemporaryDirectory() as tmp:
+        output = io.StringIO()
+        with redirect_stdout(output):
+            exit_code = cli.main(["query", "*", "--index", str(index_path), "--home-dir", tmp])
+
+    if exit_code != 0:
+        raise RuntimeError(f"query CLI exited with {exit_code}")
+
+    urls: dict[str, set[str]] = {}
+    for raw_line in output.getvalue().splitlines():
+        line = raw_line.strip()
+        if not line:
+            continue
+        payload = json.loads(line)
+        if payload.get("matched") is False:
+            continue
+
+        source_urls = payload.get("source_urls")
+        if isinstance(source_urls, list) and source_urls:
+            probe_urls = [url for url in source_urls if isinstance(url, str)]
+        else:
+            probe_urls = []
+            parts = payload.get("parts")
+            if isinstance(parts, list):
+                probe_urls = [part["href"] for part in parts if isinstance(part, dict) and isinstance(part.get("href"), str)]
+            if not probe_urls and isinstance(payload.get("archive_url"), str):
+                probe_urls = [payload["archive_url"]]
+
+        match_label = " | ".join(
+            [
+                payload.get("query") or "-",
+                payload.get("tool_name") or "-",
+                payload.get("component") or "-",
+                payload.get("version") or "-",
+                payload.get("platform") or "-",
+                payload.get("arch") or "-",
+            ]
+        )
+        for url in probe_urls:
+            urls.setdefault(url, set()).add(match_label)
+
+    return [
+        {
+            "url": url,
+            "matches": sorted(match_labels),
+        }
+        for url, match_labels in sorted(urls.items())
+    ]
+
+
 def _probe_url_once(url: str, *, method: str, timeout: int) -> dict[str, Any]:
     request = urllib.request.Request(
         url,
@@ -187,6 +242,7 @@ class DownloadUrlTests(unittest.TestCase):
     def setUp(self) -> None:
         self.repo_root = Path(__file__).resolve().parents[1]
         self.assets_root = self.repo_root / "assets"
+        self.index_path = self.repo_root / "tools" / "data" / "tool-index.json"
 
     def test_manifest_download_urls_match_delivery_rules(self) -> None:
         entries = _collect_manifest_download_entries(self.assets_root)
@@ -283,6 +339,56 @@ class DownloadUrlTests(unittest.TestCase):
         self.assertFalse(
             failures,
             "download URL probe failures:\n" + "\n".join(failures[:50]),
+        )
+
+        if redirects:
+            self.assertTrue(all("->" in redirect for redirect in redirects))
+
+    def test_all_query_download_urls_resolve_to_final_2xx(self) -> None:
+        timeout = int(os.environ.get(URL_CHECK_TIMEOUT_ENV, DEFAULT_TIMEOUT_SECONDS))
+        max_workers = int(os.environ.get(URL_CHECK_WORKERS_ENV, DEFAULT_WORKERS))
+        url_entries = _collect_query_probe_urls(self.index_path)
+
+        self.assertTrue(url_entries, "expected at least one query download URL")
+
+        failures: list[str] = []
+        redirects: list[str] = []
+
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            future_map = {
+                executor.submit(_probe_url, entry["url"], timeout=timeout): entry for entry in url_entries
+            }
+            for future in as_completed(future_map):
+                entry = future_map[future]
+                result = future.result()
+                status = result.get("status")
+                final_url = result.get("final_url")
+                pointer_response = bool(result.get("pointer_response"))
+
+                if pointer_response or not isinstance(status, int) or status // 100 != 2:
+                    failures.append(
+                        " | ".join(
+                            [
+                                f"status={status}",
+                                f"method={result.get('method')}",
+                                f"url={entry['url']}",
+                                f"final_url={final_url}",
+                                f"pointer_response={pointer_response}",
+                                f"content_type={result.get('content_type')}",
+                                f"sample={result.get('sample_preview')}",
+                                f"matches={','.join(entry['matches'])}",
+                                f"error={result.get('error')}",
+                            ]
+                        )
+                    )
+                    continue
+
+                if final_url and final_url != entry["url"]:
+                    redirects.append(f"{entry['url']} -> {final_url}")
+
+        self.assertFalse(
+            failures,
+            "query URL probe failures:\n" + "\n".join(failures[:50]),
         )
 
         if redirects:

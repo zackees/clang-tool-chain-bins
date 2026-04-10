@@ -88,6 +88,20 @@ def _zccache_binary_name() -> str:
     return "zccache.exe" if os.name == "nt" else "zccache"
 
 
+def _ensure_zccache_download_daemon(binary: Path) -> None:
+    expected_name = "zccache-download-daemon.exe" if os.name == "nt" else "zccache-download-daemon"
+    fallback_name = "zccache-daemon.exe" if os.name == "nt" else "zccache-daemon"
+    expected_path = binary.with_name(expected_name)
+    if expected_path.exists():
+        return
+
+    fallback_path = binary.with_name(fallback_name)
+    if not fallback_path.exists():
+        return
+
+    shutil.copyfile(fallback_path, expected_path)
+
+
 @functools.lru_cache(maxsize=1)
 def _resolve_zccache_binary() -> Path:
     configured = os.environ.get("ZCCACHE_BIN")
@@ -141,6 +155,7 @@ def _fetch_with_zccache(source: str | list[str], destination: Path, expected_sha
         raise ValueError("expected at least one multipart source URL")
 
     binary = _resolve_zccache_binary()
+    _ensure_zccache_download_daemon(binary)
     _assert_zccache_download_support(str(binary))
     destination.parent.mkdir(parents=True, exist_ok=True)
 
