@@ -1,6 +1,6 @@
 [project]
 name = "clang-tool-chain-bins"
-version = "0.1.0"
+version = "0.2.0"
 description = "LLVM/Clang Toolchain Build Tools - Maintainer scripts for creating and managing LLVM/Clang toolchain binary archives"
 readme = "README.md"
 requires-python = ">=3.8"
