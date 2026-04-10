@@ -26,6 +26,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     query_parser.add_argument("--component", default=None, help="Filter by component family.")
     query_parser.add_argument("--home-dir", type=Path, default=None, help="Override the local install/cache root.")
     query_parser.add_argument("--index", type=Path, default=None, help="Override the aggregate index path.")
+    query_parser.add_argument("--pretty", action="store_true", help="Pretty-print results instead of JSON Lines.")
 
     install_parser = subparsers.add_parser("install", help="Install an archive that contains the requested tool.")
     install_parser.add_argument("tool", help="Exact tool name such as llvm-pdbutil.")
@@ -47,6 +48,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 *(["--arch", args.arch] if args.arch else []),
                 *(["--version", args.version] if args.version else []),
                 *(["--component", args.component] if args.component else []),
+                *(["--pretty"] if args.pretty else []),
                 *(["--home-dir", str(args.home_dir)] if args.home_dir else []),
                 *(["--index", str(args.index)] if args.index else []),
             ]

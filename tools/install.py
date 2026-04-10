@@ -15,6 +15,7 @@ import pyzstd
 
 from .archive_index import aggregate_index_path
 from .common import get_cache_path, get_home_dir, get_install_dir, get_lock_path, sha256_file
+from .json_utils import load_path
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -22,8 +23,7 @@ if TYPE_CHECKING:
 
 def _load_aggregate_index(index_path: Path | None = None) -> dict[str, Any]:
     path = index_path or aggregate_index_path()
-    with path.open("r", encoding="utf-8") as f:
-        return json.load(f)
+    return load_path(path)
 
 
 def _filter_matches(

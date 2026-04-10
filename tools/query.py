@@ -2,6 +2,9 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
+import subprocess
+import urllib.request
 from dataclasses import asdict, dataclass
 from fnmatch import fnmatchcase
 from pathlib import Path
@@ -9,9 +12,15 @@ from typing import TYPE_CHECKING, Any
 
 from .archive_index import aggregate_index_path
 from .common import get_cache_path, get_home_dir, get_install_dir
+from .json_utils import load, load_path
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Sequence
+
+
+REMOTE_INDEX_URL_ENV = "CLANG_TOOL_CHAIN_BINS_INDEX_URL"
+_REMOTE_INDEX_ATTEMPTED = False
+_REMOTE_INDEX_PAYLOAD: dict[str, Any] | None = None
 
 
 @dataclass(frozen=True)
@@ -33,11 +42,95 @@ class ToolRecord:
     parts: list[dict[str, Any]]
 
 
+def _reset_remote_index_cache() -> None:
+    global _REMOTE_INDEX_ATTEMPTED, _REMOTE_INDEX_PAYLOAD
+    _REMOTE_INDEX_ATTEMPTED = False
+    _REMOTE_INDEX_PAYLOAD = None
+
+
+def _git_output(repo_root: Path, *args: str) -> str | None:
+    try:
+        completed = subprocess.run(
+            ["git", *args],
+            cwd=repo_root,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        return None
+    output = completed.stdout.strip()
+    return output or None
+
+
+def _github_raw_url_from_remote(remote_url: str, branch: str) -> str | None:
+    normalized = remote_url.strip()
+    if normalized.endswith(".git"):
+        normalized = normalized[:-4]
+
+    owner_repo: str | None = None
+    if normalized.startswith("git@github.com:"):
+        owner_repo = normalized.split("git@github.com:", 1)[1]
+    elif normalized.startswith("https://github.com/"):
+        owner_repo = normalized.split("https://github.com/", 1)[1]
+
+    if not owner_repo or "/" not in owner_repo:
+        return None
+    return f"https://raw.githubusercontent.com/{owner_repo}/{branch}/tools/data/tool-index.json"
+
+
+def _discover_remote_index_url() -> str | None:
+    override = os.environ.get(REMOTE_INDEX_URL_ENV)
+    if override:
+        return override
+
+    repo_root = Path(__file__).resolve().parents[1]
+    remote_url = _git_output(repo_root, "config", "--get", "remote.origin.url")
+    if remote_url is None:
+        return None
+
+    branch = _git_output(repo_root, "rev-parse", "--abbrev-ref", "HEAD") or "main"
+    if branch == "HEAD":
+        branch = "main"
+    return _github_raw_url_from_remote(remote_url, branch)
+
+
+def _load_remote_index_payload() -> dict[str, Any] | None:
+    global _REMOTE_INDEX_ATTEMPTED, _REMOTE_INDEX_PAYLOAD
+    if _REMOTE_INDEX_ATTEMPTED:
+        return _REMOTE_INDEX_PAYLOAD
+
+    _REMOTE_INDEX_ATTEMPTED = True
+    url = _discover_remote_index_url()
+    if url is None:
+        return None
+
+    try:
+        with urllib.request.urlopen(url) as response:
+            payload = load(response)
+    except Exception:
+        return None
+
+    if not isinstance(payload, dict) or not isinstance(payload.get("tools"), list):
+        return None
+
+    _REMOTE_INDEX_PAYLOAD = payload
+    return _REMOTE_INDEX_PAYLOAD
+
+
 def _load_aggregate_records(index_path: Path | None = None) -> list[ToolRecord]:
-    path = index_path or aggregate_index_path()
-    with path.open("r", encoding="utf-8") as f:
-        data = json.load(f)
+    data: dict[str, Any] | None = None
+    if index_path is None:
+        data = _load_remote_index_payload()
+
+    if data is None:
+        path = index_path or aggregate_index_path()
+        data = load_path(path)
     return [ToolRecord(**entry) for entry in data.get("tools", [])]
+
+
+def _has_glob(pattern: str) -> bool:
+    return any(char in pattern for char in "*?[")
 
 
 def _record_matches(pattern: str, record: ToolRecord) -> bool:
@@ -45,11 +138,10 @@ def _record_matches(pattern: str, record: ToolRecord) -> bool:
     candidates = (
         record.tool_name.lower(),
         record.file_name.lower(),
-        record.component.lower(),
-        record.archive_filename.lower(),
-        record.path_in_archive.lower(),
     )
-    return any(fnmatchcase(candidate, pattern_lower) for candidate in candidates)
+    if _has_glob(pattern):
+        return any(fnmatchcase(candidate, pattern_lower) for candidate in candidates)
+    return pattern_lower in candidates
 
 
 def _record_passes_filters(
@@ -117,6 +209,67 @@ def format_query_results(results: Iterable[dict[str, Any]]) -> str:
     return "\n".join(json.dumps(result, sort_keys=True) for result in results)
 
 
+def _format_size(size: int) -> str:
+    units = ["B", "KiB", "MiB", "GiB"]
+    value = float(size)
+    for unit in units:
+        if value < 1024 or unit == units[-1]:
+            return f"{int(value)} {unit}" if unit == "B" else f"{value:.1f} {unit}"
+        value /= 1024
+    return f"{size} B"
+
+
+def _format_pretty_table(rows: list[list[str]]) -> str:
+    widths = [max(len(row[index]) for row in rows) for index in range(len(rows[0]))]
+    return "\n".join("  ".join(cell.ljust(widths[index]) for index, cell in enumerate(row)).rstrip() for row in rows)
+
+
+def format_pretty_results(results: Iterable[dict[str, Any]]) -> str:
+    sections: list[str] = []
+
+    for result in results:
+        query_name = result["query"]
+        matches = list(result["matches"])
+        header = f"Query: {query_name}"
+        if not matches:
+            sections.append(f"{header}\nNo matches.")
+            continue
+
+        table_rows = [["Tool", "Installed", "Version", "Size", "Platform", "Arch"]]
+        for match in matches:
+            table_rows.append(
+                [
+                    match["tool_name"],
+                    "yes" if match["installed"] else "no",
+                    match.get("version") or "-",
+                    _format_size(int(match["size"])),
+                    match.get("platform") or "-",
+                    match.get("arch") or "-",
+                ]
+            )
+
+        section_lines = [header, _format_pretty_table(table_rows)]
+
+        installed_matches = [match for match in matches if match["installed"]]
+        if installed_matches:
+            section_lines.append("")
+            section_lines.append("Installed Matches")
+            grouped: dict[str, list[dict[str, Any]]] = {}
+            for match in installed_matches:
+                grouped.setdefault(match["install_path"], []).append(match)
+            for install_path in sorted(grouped):
+                section_lines.append(install_path)
+                entries = sorted(grouped[install_path], key=lambda entry: (entry["tool_name"], entry.get("version") or ""))
+                for entry in entries:
+                    section_lines.append(
+                        f"|-- {entry['tool_name']} ({entry.get('version') or '-'}, {_format_size(int(entry['size']))})"
+                    )
+
+        sections.append("\n".join(section_lines))
+
+    return "\n\n".join(sections)
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Query the clang-tool-chain-bins aggregate tool index.")
     parser.add_argument("patterns", nargs="+", help='One or more glob-style patterns such as "clang*" or "llvm-*".')
@@ -126,6 +279,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--component", default=None, help="Filter by component family.")
     parser.add_argument("--home-dir", type=Path, default=None, help="Override the local install/cache root.")
     parser.add_argument("--index", type=Path, default=None, help="Override the aggregate index path.")
+    parser.add_argument("--pretty", action="store_true", help="Pretty-print query results instead of JSON Lines.")
     args = parser.parse_args(list(argv) if argv is not None else None)
 
     results = query_records(
@@ -137,7 +291,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         version=args.version,
         component=args.component,
     )
-    output = format_query_results(results)
+    output = format_pretty_results(results) if args.pretty else format_query_results(results)
     if output:
         print(output)
     return 0

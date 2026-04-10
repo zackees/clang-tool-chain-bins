@@ -14,6 +14,7 @@ from urllib.parse import urlparse
 import pyzstd
 
 from .common import EXECUTABLE_EXTENSIONS, NON_TOOL_EXTENSIONS, normalize_tool_name, sha256_file
+from .json_utils import load_path
 
 INDEX_SCHEMA_VERSION = 1
 
@@ -36,13 +37,16 @@ def aggregate_index_path() -> Path:
     return Path(__file__).resolve().parent / "data" / "tool-index.json"
 
 
+def meta_index_path() -> Path:
+    return Path(__file__).resolve().parent / "data" / "index-meta.json"
+
+
 def sidecar_path_for_archive(archive_path: Path) -> Path:
     return Path(f"{archive_path}.json")
 
 
 def _load_json(path: Path) -> Any:
-    with path.open("r", encoding="utf-8") as f:
-        return json.load(f)
+    return load_path(path)
 
 
 def _iter_manifest_archive_infos(assets_root: Path) -> list[ManifestArchiveInfo]:
@@ -382,12 +386,60 @@ def build_aggregate_index(assets_root: Path | None = None, output_path: Path | N
     return output
 
 
+def build_meta_index(assets_root: Path | None = None, output_path: Path | None = None) -> Path:
+    root = (assets_root or default_assets_root()).resolve()
+    output = output_path or meta_index_path()
+    output.parent.mkdir(parents=True, exist_ok=True)
+
+    sidecars = sorted(root.rglob("*.tar.zst.json"))
+    if not sidecars and any(root.rglob("*.tar.zst")):
+        build_sidecar_indexes(root)
+        sidecars = sorted(root.rglob("*.tar.zst.json"))
+
+    indexes: list[dict[str, Any]] = []
+    for sidecar_path in sidecars:
+        data = _load_json(sidecar_path)
+        archive = data["archive"]
+        indexes.append(
+            {
+                "archive_path": archive["relative_path"],
+                "filename": archive["filename"],
+                "component": archive["component"],
+                "version": archive.get("version"),
+                "platform": archive.get("platform"),
+                "arch": archive.get("arch"),
+                "archive_sha256": archive["sha256"],
+                "index_path": str(sidecar_path.relative_to(root)),
+            }
+        )
+
+    indexes.sort(
+        key=lambda item: (
+            item["component"],
+            item.get("platform") or "",
+            item.get("arch") or "",
+            item.get("version") or "",
+            item["filename"],
+        )
+    )
+    payload = {
+        "schema_version": INDEX_SCHEMA_VERSION,
+        "aggregate_index_path": aggregate_index_path().name,
+        "index_count": len(indexes),
+        "indexes": indexes,
+    }
+    output.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
+    return output
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Generate per-archive JSON indexes and an aggregate tool index.")
     parser.add_argument("--assets-root", type=Path, default=default_assets_root(), help="Assets root to scan.")
     parser.add_argument("--skip-sidecars", action="store_true", help="Skip per-archive sidecar generation.")
     parser.add_argument("--skip-aggregate", action="store_true", help="Skip aggregate index generation.")
+    parser.add_argument("--skip-meta", action="store_true", help="Skip meta index generation.")
     parser.add_argument("--aggregate-output", type=Path, default=aggregate_index_path(), help="Aggregate index output path.")
+    parser.add_argument("--meta-output", type=Path, default=meta_index_path(), help="Meta index output path.")
     args = parser.parse_args(argv)
 
     root = args.assets_root.resolve()
@@ -395,6 +447,8 @@ def main(argv: list[str] | None = None) -> int:
         build_sidecar_indexes(root)
     if not args.skip_aggregate:
         build_aggregate_index(root, args.aggregate_output)
+    if not args.skip_meta:
+        build_meta_index(root, args.meta_output)
     return 0
 
 
