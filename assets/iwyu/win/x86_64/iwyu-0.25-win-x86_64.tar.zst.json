@@ -1,0 +1,232 @@
+{
+  "archive": {
+    "arch": "x86_64",
+    "archive_size_bytes": 45536933,
+    "component": "iwyu",
+    "filename": "iwyu-0.25-win-x86_64.tar.zst",
+    "git_lfs_pointer": false,
+    "manifest_path": "iwyu\\win\\x86_64\\manifest.json",
+    "parts": [],
+    "platform": "win",
+    "relative_path": "iwyu\\win\\x86_64\\iwyu-0.25-win-x86_64.tar.zst",
+    "sha256": "3e960a0cd2b1ca3182659965c1ec36b9430d3280a06b49ddf54de71704b0c736",
+    "size_bytes": 45536933,
+    "url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/iwyu/win/x86_64/iwyu-0.25-win-x86_64.tar.zst",
+    "version": "0.25"
+  },
+  "file_count": 30,
+  "files": [
+    {
+      "mode": "0o777",
+      "path": "bin",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o755",
+      "path": "bin/fix_includes.py",
+      "size": 105127,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "bin/include-what-you-use.exe",
+      "size": 2423777,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "bin/iwyu_tool.py",
+      "size": 18918,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "bin/libLLVM-21.dll",
+      "size": 136030848,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "bin/libclang-cpp.dll",
+      "size": 57217231,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "bin/libffi-8.dll",
+      "size": 33708,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "bin/libgcc_s_seh-1.dll",
+      "size": 150196,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "bin/libiconv-2.dll",
+      "size": 1136529,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "bin/liblzma-5.dll",
+      "size": 188764,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "bin/libstdc++-6.dll",
+      "size": 2461848,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "bin/libwinpthread-1.dll",
+      "size": 65018,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "bin/libxml2-16.dll",
+      "size": 1278765,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "bin/libzstd.dll",
+      "size": 1196744,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "bin/zlib1.dll",
+      "size": 120814,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "share",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o777",
+      "path": "share/include-what-you-use",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o644",
+      "path": "share/include-what-you-use/boost-1.64-all-private.imp",
+      "size": 821321,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "share/include-what-you-use/boost-1.64-all.imp",
+      "size": 873231,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "share/include-what-you-use/boost-1.75-all-private.imp",
+      "size": 1053510,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "share/include-what-you-use/boost-1.75-all.imp",
+      "size": 1422268,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "share/include-what-you-use/boost-all-private.imp",
+      "size": 575030,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "share/include-what-you-use/boost-all.imp",
+      "size": 732734,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "share/include-what-you-use/clang-6.intrinsics.imp",
+      "size": 4477,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "share/include-what-you-use/gcc-8.intrinsics.imp",
+      "size": 4527,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "share/include-what-you-use/python2.7.imp",
+      "size": 5197,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "share/include-what-you-use/python3.8.imp",
+      "size": 8583,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "share/include-what-you-use/qt4.imp",
+      "size": 161307,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "share/include-what-you-use/qt5_11.imp",
+      "size": 368019,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "share/include-what-you-use/qt5_4.imp",
+      "size": 228868,
+      "type": "file"
+    }
+  ],
+  "hash_tree": null,
+  "schema_version": 1,
+  "tool_count": 3,
+  "tools": [
+    {
+      "file_name": "fix_includes.py",
+      "mode": "0o755",
+      "path": "bin/fix_includes.py",
+      "sha256": "f1c846db9df61752b29db42ae0a7b9460b18842e2420eb4690874fe31b07ce77",
+      "size": 105127,
+      "tool_name": "fix_includes",
+      "type": "file"
+    },
+    {
+      "file_name": "include-what-you-use.exe",
+      "mode": "0o755",
+      "path": "bin/include-what-you-use.exe",
+      "sha256": "2805870e05d64eb11f4fcb4aeb9dc08891113a378db9fd94ed350833c5b646e4",
+      "size": 2423777,
+      "tool_name": "include-what-you-use",
+      "type": "file"
+    },
+    {
+      "file_name": "iwyu_tool.py",
+      "mode": "0o755",
+      "path": "bin/iwyu_tool.py",
+      "sha256": "03f6dc7a49fe764c6e9ce86f33532296da3faad483729497f9ea776a92ad1034",
+      "size": 18918,
+      "tool_name": "iwyu_tool",
+      "type": "file"
+    }
+  ]
+}

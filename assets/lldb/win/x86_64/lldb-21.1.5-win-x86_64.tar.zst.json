@@ -1,0 +1,295 @@
+{
+  "archive": {
+    "arch": "x86_64",
+    "archive_size_bytes": 33467746,
+    "component": "lldb",
+    "filename": "lldb-21.1.5-win-x86_64.tar.zst",
+    "git_lfs_pointer": false,
+    "manifest_path": "lldb\\win\\x86_64\\manifest.json",
+    "parts": [],
+    "platform": "win",
+    "relative_path": "lldb\\win\\x86_64\\lldb-21.1.5-win-x86_64.tar.zst",
+    "sha256": "8f2c728dcf8ad5d62be4610f5aae0a933ab7769266c17a3ee430753245ad9756",
+    "size_bytes": 33467746,
+    "url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/lldb/win/x86_64/lldb-21.1.5-win-x86_64.tar.zst",
+    "version": "21.1.5"
+  },
+  "file_count": 39,
+  "files": [
+    {
+      "mode": "0o777",
+      "path": "bin",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o755",
+      "path": "bin/liblldb.dll",
+      "size": 104020992,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "bin/lldb-argdumper.exe",
+      "size": 350208,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "bin/lldb-server.exe",
+      "size": 6434816,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "bin/lldb.exe",
+      "size": 560640,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "python",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o777",
+      "path": "python/Lib",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o777",
+      "path": "python/Lib/site-packages",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o777",
+      "path": "python/Lib/site-packages/lldb",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o644",
+      "path": "python/Lib/site-packages/lldb/__init__.py",
+      "size": 794168,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "python/Lib/site-packages/lldb/_lldb.cp310-win_amd64.pyd",
+      "size": 104020992,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "python/Lib/site-packages/lldb/embedded_interpreter.py",
+      "size": 4093,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "python/Lib/site-packages/lldb/formatters",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o644",
+      "path": "python/Lib/site-packages/lldb/formatters/Logger.py",
+      "size": 3530,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "python/Lib/site-packages/lldb/formatters/__init__.py",
+      "size": 385,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "python/Lib/site-packages/lldb/formatters/attrib_fromdict.py",
+      "size": 1209,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "python/Lib/site-packages/lldb/formatters/cache.py",
+      "size": 1059,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "python/Lib/site-packages/lldb/formatters/cpp",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o644",
+      "path": "python/Lib/site-packages/lldb/formatters/cpp/__init__.py",
+      "size": 362,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "python/Lib/site-packages/lldb/formatters/cpp/gnu_libstdcpp.py",
+      "size": 36031,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "python/Lib/site-packages/lldb/formatters/cpp/libcxx.py",
+      "size": 33733,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "python/Lib/site-packages/lldb/formatters/metrics.py",
+      "size": 3114,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "python/Lib/site-packages/lldb/formatters/synth.py",
+      "size": 1819,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "python/Lib/site-packages/lldb/lldb-argdumper.exe",
+      "size": 350208,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "python/Lib/site-packages/lldb/plugins",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o644",
+      "path": "python/Lib/site-packages/lldb/plugins/__init__.py",
+      "size": 420,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "python/Lib/site-packages/lldb/plugins/operating_system.py",
+      "size": 3838,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "python/Lib/site-packages/lldb/plugins/parsed_cmd.py",
+      "size": 17569,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "python/Lib/site-packages/lldb/plugins/scripted_platform.py",
+      "size": 2692,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "python/Lib/site-packages/lldb/plugins/scripted_process.py",
+      "size": 40868,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "python/Lib/site-packages/lldb/plugins/scripted_thread_plan.py",
+      "size": 2649,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "python/Lib/site-packages/lldb/utils",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o644",
+      "path": "python/Lib/site-packages/lldb/utils/__init__.py",
+      "size": 351,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "python/Lib/site-packages/lldb/utils/in_call_stack.py",
+      "size": 797,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "python/Lib/site-packages/lldb/utils/symbolication.py",
+      "size": 30826,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "python/python310.dll",
+      "size": 4458776,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "python/python310.zip",
+      "size": 2642553,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "bin/python310.zip",
+      "size": 2642553,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "bin/python310.dll",
+      "size": 4458776,
+      "type": "file"
+    }
+  ],
+  "hash_tree": null,
+  "schema_version": 1,
+  "tool_count": 4,
+  "tools": [
+    {
+      "file_name": "lldb.exe",
+      "mode": "0o755",
+      "path": "bin/lldb.exe",
+      "sha256": "16c495cf7806a2411c97df9101b44344d6f029cf8500f434ddcb9c2fb074858d",
+      "size": 560640,
+      "tool_name": "lldb",
+      "type": "file"
+    },
+    {
+      "file_name": "lldb-argdumper.exe",
+      "mode": "0o755",
+      "path": "bin/lldb-argdumper.exe",
+      "sha256": "7cb9d65d880e2531fa62ea675eedf62cdf971064af8276934e724e8b6200e6a3",
+      "size": 350208,
+      "tool_name": "lldb-argdumper",
+      "type": "file"
+    },
+    {
+      "file_name": "lldb-server.exe",
+      "mode": "0o755",
+      "path": "bin/lldb-server.exe",
+      "sha256": "3dc6d27413b9de8868dce3b7db6b19af3ae9d05bf391a41a8df7d487e1337e2f",
+      "size": 6434816,
+      "tool_name": "lldb-server",
+      "type": "file"
+    },
+    {
+      "file_name": "python310.zip",
+      "mode": "0o755",
+      "path": "bin/python310.zip",
+      "sha256": "785b6e0911beda463342c9ba9eadc1841fcdf318c39c05554649cf9e7fda26ad",
+      "size": 2642553,
+      "tool_name": "python310.zip",
+      "type": "file"
+    }
+  ]
+}

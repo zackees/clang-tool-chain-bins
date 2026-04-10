@@ -1,0 +1,2639 @@
+{
+  "archive": {
+    "arch": "arm64",
+    "archive_size_bytes": 95393222,
+    "component": "clang",
+    "filename": "llvm-21.1.5-linux-arm64.tar.zst",
+    "git_lfs_pointer": false,
+    "manifest_path": "clang\\linux\\arm64\\manifest.json",
+    "parts": [],
+    "platform": "linux",
+    "relative_path": "clang\\linux\\arm64\\llvm-21.1.5-linux-arm64.tar.zst",
+    "sha256": "df774b7fc1e392458325552addb67bf8c11bd452ad7bc660cf77103c617f89c5",
+    "size_bytes": 95393222,
+    "url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang/linux/arm64/llvm-21.1.5-linux-arm64.tar.zst",
+    "version": "21.1.5"
+  },
+  "file_count": 419,
+  "files": [
+    {
+      "mode": "0o777",
+      "path": "hardlinked",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o777",
+      "path": "hardlinked/bin",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/bin/clang",
+      "size": 276253344,
+      "type": "file"
+    },
+    {
+      "linkname": "hardlinked/bin/clang",
+      "mode": "0o666",
+      "path": "hardlinked/bin/clang++",
+      "size": 0,
+      "type": "hardlink"
+    },
+    {
+      "linkname": "hardlinked/bin/clang",
+      "mode": "0o666",
+      "path": "hardlinked/bin/clang-cl",
+      "size": 0,
+      "type": "hardlink"
+    },
+    {
+      "linkname": "hardlinked/bin/clang",
+      "mode": "0o666",
+      "path": "hardlinked/bin/clang-cpp",
+      "size": 0,
+      "type": "hardlink"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/bin/ld.lld",
+      "size": 119101768,
+      "type": "file"
+    },
+    {
+      "linkname": "hardlinked/bin/ld.lld",
+      "mode": "0o666",
+      "path": "hardlinked/bin/ld64.lld",
+      "size": 0,
+      "type": "hardlink"
+    },
+    {
+      "linkname": "hardlinked/bin/ld.lld",
+      "mode": "0o666",
+      "path": "hardlinked/bin/lld",
+      "size": 0,
+      "type": "hardlink"
+    },
+    {
+      "linkname": "hardlinked/bin/ld.lld",
+      "mode": "0o666",
+      "path": "hardlinked/bin/lld-link",
+      "size": 0,
+      "type": "hardlink"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/bin/llvm-ar",
+      "size": 36605800,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/bin/llvm-nm",
+      "size": 37545416,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/bin/llvm-objcopy",
+      "size": 5621960,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/bin/llvm-objdump",
+      "size": 34055048,
+      "type": "file"
+    },
+    {
+      "linkname": "hardlinked/bin/llvm-ar",
+      "mode": "0o666",
+      "path": "hardlinked/bin/llvm-ranlib",
+      "size": 0,
+      "type": "hardlink"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/bin/llvm-readelf",
+      "size": 7325032,
+      "type": "file"
+    },
+    {
+      "linkname": "hardlinked/bin/llvm-readelf",
+      "mode": "0o666",
+      "path": "hardlinked/bin/llvm-readobj",
+      "size": 0,
+      "type": "hardlink"
+    },
+    {
+      "linkname": "hardlinked/bin/llvm-objcopy",
+      "mode": "0o666",
+      "path": "hardlinked/bin/llvm-strip",
+      "size": 0,
+      "type": "hardlink"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/bin/llvm-symbolizer",
+      "size": 5904368,
+      "type": "file"
+    },
+    {
+      "linkname": "hardlinked/bin/ld.lld",
+      "mode": "0o666",
+      "path": "hardlinked/bin/wasm-ld",
+      "size": 0,
+      "type": "hardlink"
+    },
+    {
+      "mode": "0o777",
+      "path": "hardlinked/include",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/include/libunwind-aarch64.h",
+      "size": 5746,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/include/libunwind-common.h",
+      "size": 11545,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/include/libunwind-coredump.h",
+      "size": 3155,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/include/libunwind-dynamic.h",
+      "size": 8954,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/include/libunwind-ptrace.h",
+      "size": 2707,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/include/libunwind.h",
+      "size": 924,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/include/unwind.h",
+      "size": 6145,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "hardlinked/lib",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o777",
+      "path": "hardlinked/lib/clang",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o777",
+      "path": "hardlinked/lib/clang/21",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o777",
+      "path": "hardlinked/lib/clang/21/bin",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o777",
+      "path": "hardlinked/lib/clang/21/include",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/ISO_Fortran_binding.h",
+      "size": 7628,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__clang_cuda_builtin_vars.h",
+      "size": 4892,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__clang_cuda_cmath.h",
+      "size": 18493,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__clang_cuda_complex_builtins.h",
+      "size": 9581,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__clang_cuda_device_functions.h",
+      "size": 58740,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__clang_cuda_intrinsics.h",
+      "size": 46120,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__clang_cuda_libdevice_declares.h",
+      "size": 22414,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__clang_cuda_math.h",
+      "size": 16602,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__clang_cuda_math_forward_declares.h",
+      "size": 8469,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__clang_cuda_runtime_wrapper.h",
+      "size": 18067,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__clang_cuda_texture_intrinsics.h",
+      "size": 56680,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__clang_hip_cmath.h",
+      "size": 27196,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__clang_hip_libdevice_declares.h",
+      "size": 19875,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__clang_hip_math.h",
+      "size": 36683,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__clang_hip_runtime_wrapper.h",
+      "size": 5156,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__clang_hip_stdlib.h",
+      "size": 1223,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__clang_spirv_builtins.h",
+      "size": 9090,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__stdarg___gnuc_va_list.h",
+      "size": 467,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__stdarg___va_copy.h",
+      "size": 445,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__stdarg_header_macro.h",
+      "size": 417,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__stdarg_va_arg.h",
+      "size": 771,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__stdarg_va_copy.h",
+      "size": 451,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__stdarg_va_list.h",
+      "size": 448,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__stddef_header_macro.h",
+      "size": 417,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__stddef_max_align_t.h",
+      "size": 857,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__stddef_null.h",
+      "size": 875,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__stddef_nullptr_t.h",
+      "size": 958,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__stddef_offsetof.h",
+      "size": 708,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__stddef_ptrdiff_t.h",
+      "size": 717,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__stddef_rsize_t.h",
+      "size": 710,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__stddef_size_t.h",
+      "size": 708,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__stddef_unreachable.h",
+      "size": 735,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__stddef_wchar_t.h",
+      "size": 853,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__stddef_wint_t.h",
+      "size": 443,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__wmmintrin_aes.h",
+      "size": 5269,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/__wmmintrin_pclmul.h",
+      "size": 2036,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/adcintrin.h",
+      "size": 5565,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/adxintrin.h",
+      "size": 3447,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/altivec.h",
+      "size": 715031,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/amdgpuintrin.h",
+      "size": 7483,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/ammintrin.h",
+      "size": 7739,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/amxavx512intrin.h",
+      "size": 12986,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/amxbf16transposeintrin.h",
+      "size": 3525,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/amxcomplexintrin.h",
+      "size": 6933,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/amxcomplextransposeintrin.h",
+      "size": 12061,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/amxfp16intrin.h",
+      "size": 3327,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/amxfp16transposeintrin.h",
+      "size": 3525,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/amxfp8intrin.h",
+      "size": 8839,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/amxintrin.h",
+      "size": 20304,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/amxmovrsintrin.h",
+      "size": 2290,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/amxmovrstransposeintrin.h",
+      "size": 9402,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/amxtf32intrin.h",
+      "size": 3562,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/amxtf32transposeintrin.h",
+      "size": 3643,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/amxtransposeintrin.h",
+      "size": 10853,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/andes_vector.h",
+      "size": 518,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/arm64intr.h",
+      "size": 993,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/arm_acle.h",
+      "size": 29940,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/arm_bf16.h",
+      "size": 548,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/arm_cde.h",
+      "size": 33450,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/arm_cmse.h",
+      "size": 6357,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/arm_fp16.h",
+      "size": 19040,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/arm_mve.h",
+      "size": 1554929,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/arm_neon.h",
+      "size": 3188137,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/arm_neon_sve_bridge.h",
+      "size": 9708,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/arm_sme.h",
+      "size": 281408,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/arm_sve.h",
+      "size": 2148970,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/arm_vector_types.h",
+      "size": 10098,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/armintr.h",
+      "size": 843,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx10_2_512bf16intrin.h",
+      "size": 23410,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx10_2_512convertintrin.h",
+      "size": 13192,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx10_2_512minmaxintrin.h",
+      "size": 7526,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx10_2_512niintrin.h",
+      "size": 14039,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx10_2_512satcvtdsintrin.h",
+      "size": 13799,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx10_2_512satcvtintrin.h",
+      "size": 16999,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx10_2bf16intrin.h",
+      "size": 44706,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx10_2convertintrin.h",
+      "size": 108821,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx10_2copyintrin.h",
+      "size": 2410,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx10_2minmaxintrin.h",
+      "size": 13680,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx10_2niintrin.h",
+      "size": 17003,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx10_2satcvtdsintrin.h",
+      "size": 15253,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx10_2satcvtintrin.h",
+      "size": 18140,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx2intrin.h",
+      "size": 192637,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx512bf16intrin.h",
+      "size": 10832,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx512bitalgintrin.h",
+      "size": 2626,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx512bwintrin.h",
+      "size": 77845,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx512cdintrin.h",
+      "size": 4327,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx512dqintrin.h",
+      "size": 60287,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx512fintrin.h",
+      "size": 392651,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx512fp16intrin.h",
+      "size": 160735,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx512ifmaintrin.h",
+      "size": 2660,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx512ifmavlintrin.h",
+      "size": 4712,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx512vbmi2intrin.h",
+      "size": 13493,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx512vbmiintrin.h",
+      "size": 3920,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx512vbmivlintrin.h",
+      "size": 7402,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx512vlbf16intrin.h",
+      "size": 19922,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx512vlbitalgintrin.h",
+      "size": 4629,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx512vlbwintrin.h",
+      "size": 124474,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx512vlcdintrin.h",
+      "size": 8141,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx512vldqintrin.h",
+      "size": 47827,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx512vlfp16intrin.h",
+      "size": 87561,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx512vlintrin.h",
+      "size": 330339,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx512vlvbmi2intrin.h",
+      "size": 26633,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx512vlvnniintrin.h",
+      "size": 13736,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx512vlvp2intersectintrin.h",
+      "size": 4782,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx512vnniintrin.h",
+      "size": 4428,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx512vp2intersectintrin.h",
+      "size": 3102,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx512vpopcntdqintrin.h",
+      "size": 2357,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avx512vpopcntdqvlintrin.h",
+      "size": 3957,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avxifmaintrin.h",
+      "size": 5886,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avxintrin.h",
+      "size": 201849,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avxneconvertintrin.h",
+      "size": 14432,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avxvnniint16intrin.h",
+      "size": 16222,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avxvnniint8intrin.h",
+      "size": 17431,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/avxvnniintrin.h",
+      "size": 10690,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/bmi2intrin.h",
+      "size": 7546,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/bmiintrin.h",
+      "size": 20350,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/builtins.h",
+      "size": 846,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/cet.h",
+      "size": 1527,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/cetintrin.h",
+      "size": 3351,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/cldemoteintrin.h",
+      "size": 1207,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/clflushoptintrin.h",
+      "size": 1193,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/clwbintrin.h",
+      "size": 1229,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/clzerointrin.h",
+      "size": 1220,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/cmpccxaddintrin.h",
+      "size": 2383,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/cpuid.h",
+      "size": 12681,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/crc32intrin.h",
+      "size": 3347,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "hardlinked/lib/clang/21/include/cuda_wrappers",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/cuda_wrappers/algorithm",
+      "size": 4612,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "hardlinked/lib/clang/21/include/cuda_wrappers/bits",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/cuda_wrappers/bits/basic_string.h",
+      "size": 352,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/cuda_wrappers/bits/basic_string.tcc",
+      "size": 354,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/cuda_wrappers/bits/c++config.h",
+      "size": 1739,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/cuda_wrappers/bits/shared_ptr_base.h",
+      "size": 355,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/cuda_wrappers/cmath",
+      "size": 2045,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/cuda_wrappers/complex",
+      "size": 3618,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/cuda_wrappers/new",
+      "size": 3739,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/emmintrin.h",
+      "size": 201616,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/enqcmdintrin.h",
+      "size": 2167,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/f16cintrin.h",
+      "size": 5524,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/float.h",
+      "size": 6268,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/fma4intrin.h",
+      "size": 6986,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/fmaintrin.h",
+      "size": 29337,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "hardlinked/lib/clang/21/include/fuzzer",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/fuzzer/FuzzedDataProvider.h",
+      "size": 16106,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/fxsrintrin.h",
+      "size": 2890,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/gfniintrin.h",
+      "size": 9822,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/gpuintrin.h",
+      "size": 13232,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/hexagon_circ_brev_intrinsics.h",
+      "size": 15966,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/hexagon_protos.h",
+      "size": 383410,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/hexagon_types.h",
+      "size": 133505,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/hresetintrin.h",
+      "size": 1395,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/htmintrin.h",
+      "size": 6283,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/htmxlintrin.h",
+      "size": 9225,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/hvx_hexagon_protos.h",
+      "size": 281785,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/ia32intrin.h",
+      "size": 25986,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/immintrin.h",
+      "size": 16632,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/intrin.h",
+      "size": 19754,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/intrin0.h",
+      "size": 14093,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/inttypes.h",
+      "size": 2427,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/invpcidintrin.h",
+      "size": 764,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/iso646.h",
+      "size": 763,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/keylockerintrin.h",
+      "size": 17973,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/larchintrin.h",
+      "size": 8703,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/lasxintrin.h",
+      "size": 145551,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/limits.h",
+      "size": 3794,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "hardlinked/lib/clang/21/include/llvm_libc_wrappers",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/llvm_libc_wrappers/assert.h",
+      "size": 942,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/llvm_libc_wrappers/ctype.h",
+      "size": 3840,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/llvm_libc_wrappers/inttypes.h",
+      "size": 954,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/llvm_libc_wrappers/stdio.h",
+      "size": 2931,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/llvm_libc_wrappers/stdlib.h",
+      "size": 1706,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/llvm_libc_wrappers/string.h",
+      "size": 4028,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/llvm_libc_wrappers/time.h",
+      "size": 976,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "hardlinked/lib/clang/21/include/llvm_offload_wrappers",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/llvm_offload_wrappers/__llvm_offload.h",
+      "size": 1063,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/llvm_offload_wrappers/__llvm_offload_device.h",
+      "size": 400,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/llvm_offload_wrappers/__llvm_offload_host.h",
+      "size": 569,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/lsxintrin.h",
+      "size": 137936,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/lwpintrin.h",
+      "size": 5115,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/lzcntintrin.h",
+      "size": 3659,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/mm3dnow.h",
+      "size": 729,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/mm_malloc.h",
+      "size": 1929,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/mmintrin.h",
+      "size": 60004,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/module.modulemap",
+      "size": 6808,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/movdirintrin.h",
+      "size": 1612,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/movrs_avx10_2_512intrin.h",
+      "size": 3973,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/movrs_avx10_2intrin.h",
+      "size": 7036,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/movrsintrin.h",
+      "size": 2025,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/msa.h",
+      "size": 25615,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/mwaitxintrin.h",
+      "size": 2244,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/nmmintrin.h",
+      "size": 709,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/nvptxintrin.h",
+      "size": 7911,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/opencl-c-base.h",
+      "size": 32184,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/opencl-c.h",
+      "size": 913161,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "hardlinked/lib/clang/21/include/openmp_wrappers",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/openmp_wrappers/__clang_openmp_device_functions.h",
+      "size": 2603,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/openmp_wrappers/cmath",
+      "size": 5251,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/openmp_wrappers/complex",
+      "size": 1802,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/openmp_wrappers/complex.h",
+      "size": 898,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/openmp_wrappers/complex_cmath.h",
+      "size": 12559,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/openmp_wrappers/math.h",
+      "size": 2054,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/openmp_wrappers/new",
+      "size": 1409,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "hardlinked/lib/clang/21/include/orc",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/orc/c_api.h",
+      "size": 7008,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/pconfigintrin.h",
+      "size": 1216,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/pkuintrin.h",
+      "size": 934,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/pmmintrin.h",
+      "size": 11390,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/popcntintrin.h",
+      "size": 1948,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "hardlinked/lib/clang/21/include/ppc_wrappers",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/ppc_wrappers/bmi2intrin.h",
+      "size": 4671,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/ppc_wrappers/bmiintrin.h",
+      "size": 5002,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/ppc_wrappers/emmintrin.h",
+      "size": 71273,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/ppc_wrappers/immintrin.h",
+      "size": 611,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/ppc_wrappers/mm_malloc.h",
+      "size": 1337,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/ppc_wrappers/mmintrin.h",
+      "size": 45763,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/ppc_wrappers/nmmintrin.h",
+      "size": 977,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/ppc_wrappers/pmmintrin.h",
+      "size": 5898,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/ppc_wrappers/smmintrin.h",
+      "size": 23559,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/ppc_wrappers/tmmintrin.h",
+      "size": 16341,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/ppc_wrappers/x86gprintrin.h",
+      "size": 499,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/ppc_wrappers/x86intrin.h",
+      "size": 1067,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/ppc_wrappers/xmmintrin.h",
+      "size": 64333,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/prfchiintrin.h",
+      "size": 2073,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/prfchwintrin.h",
+      "size": 1842,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "hardlinked/lib/clang/21/include/profile",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/profile/InstrProfData.inc",
+      "size": 39222,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/profile/instr_prof_interface.h",
+      "size": 3137,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/ptrauth.h",
+      "size": 18574,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/ptwriteintrin.h",
+      "size": 1076,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/raointintrin.h",
+      "size": 6748,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/rdpruintrin.h",
+      "size": 1624,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/rdseedintrin.h",
+      "size": 2919,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/riscv_bitmanip.h",
+      "size": 5725,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/riscv_corev_alu.h",
+      "size": 4033,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/riscv_crypto.h",
+      "size": 5211,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/riscv_ntlh.h",
+      "size": 744,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/riscv_vector.h",
+      "size": 17461,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/rtmintrin.h",
+      "size": 1280,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/s390intrin.h",
+      "size": 604,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "hardlinked/lib/clang/21/include/sanitizer",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/sanitizer/allocator_interface.h",
+      "size": 4973,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/sanitizer/asan_interface.h",
+      "size": 13654,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/sanitizer/common_interface_defs.h",
+      "size": 22789,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/sanitizer/coverage_interface.h",
+      "size": 1133,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/sanitizer/dfsan_interface.h",
+      "size": 10102,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/sanitizer/hwasan_interface.h",
+      "size": 5043,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/sanitizer/linux_syscall_hooks.h",
+      "size": 219473,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/sanitizer/lsan_interface.h",
+      "size": 3993,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/sanitizer/memprof_interface.h",
+      "size": 2661,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/sanitizer/msan_interface.h",
+      "size": 5992,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/sanitizer/netbsd_syscall_hooks.h",
+      "size": 355693,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/sanitizer/rtsan_interface.h",
+      "size": 2196,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/sanitizer/scudo_interface.h",
+      "size": 1513,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/sanitizer/tsan_interface.h",
+      "size": 14952,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/sanitizer/tsan_interface_atomic.h",
+      "size": 9745,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/sanitizer/ubsan_interface.h",
+      "size": 1090,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/serializeintrin.h",
+      "size": 881,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/sgxintrin.h",
+      "size": 1816,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/sha512intrin.h",
+      "size": 6088,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/shaintrin.h",
+      "size": 7660,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/sifive_vector.h",
+      "size": 7041,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/sm3intrin.h",
+      "size": 7470,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/sm4evexintrin.h",
+      "size": 1195,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/sm4intrin.h",
+      "size": 8401,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/smmintrin.h",
+      "size": 101720,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/stdalign.h",
+      "size": 756,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/stdarg.h",
+      "size": 2497,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/stdatomic.h",
+      "size": 8662,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/stdbool.h",
+      "size": 1172,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/stdckdint.h",
+      "size": 1666,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/stdcountof.h",
+      "size": 473,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/stddef.h",
+      "size": 5053,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/stdint.h",
+      "size": 27519,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/stdnoreturn.h",
+      "size": 1316,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/tbmintrin.h",
+      "size": 3507,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/tgmath.h",
+      "size": 30389,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/tmmintrin.h",
+      "size": 31927,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/tsxldtrkintrin.h",
+      "size": 2015,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/uintrintrin.h",
+      "size": 5079,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/unwind.h",
+      "size": 11477,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/usermsrintrin.h",
+      "size": 1572,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/vadefs.h",
+      "size": 1420,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/vaesintrin.h",
+      "size": 2671,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/varargs.h",
+      "size": 584,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/vecintrin.h",
+      "size": 429293,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/velintrin.h",
+      "size": 2153,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/velintrin_approx.h",
+      "size": 3623,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/velintrin_gen.h",
+      "size": 70721,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/vpclmulqdqintrin.h",
+      "size": 1086,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/waitpkgintrin.h",
+      "size": 1357,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/wasm_simd128.h",
+      "size": 83675,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/wbnoinvdintrin.h",
+      "size": 749,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/wmmintrin.h",
+      "size": 659,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/x86gprintrin.h",
+      "size": 1727,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/x86intrin.h",
+      "size": 721,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/xmmintrin.h",
+      "size": 120340,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/xopintrin.h",
+      "size": 20434,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "hardlinked/lib/clang/21/include/xray",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/xray/xray_interface.h",
+      "size": 7619,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/xray/xray_log_interface.h",
+      "size": 15991,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/xray/xray_records.h",
+      "size": 3941,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/xsavecintrin.h",
+      "size": 2574,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/xsaveintrin.h",
+      "size": 1678,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/xsaveoptintrin.h",
+      "size": 1026,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/xsavesintrin.h",
+      "size": 1268,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/xtestintrin.h",
+      "size": 873,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/yvals_core.h",
+      "size": 687,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "hardlinked/lib/clang/21/include/zos_wrappers",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/include/zos_wrappers/builtins.h",
+      "size": 608,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "hardlinked/lib/clang/21/lib",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o777",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/clang_rt.crtbegin.o",
+      "size": 3296,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/clang_rt.crtend.o",
+      "size": 920,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.asan-preinit.a",
+      "size": 1424,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.asan.a",
+      "size": 6376244,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.asan.a.syms",
+      "size": 88168,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.asan.so",
+      "size": 3389184,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.asan_cxx.a",
+      "size": 33852,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.asan_cxx.a.syms",
+      "size": 463,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.asan_static.a",
+      "size": 8368,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.builtins.a",
+      "size": 392544,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.cfi.a",
+      "size": 1153210,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.cfi_diag.a",
+      "size": 1879572,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.dfsan.a",
+      "size": 2050670,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.dfsan.a.syms",
+      "size": 3717,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.fuzzer.a",
+      "size": 3582174,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.fuzzer_interceptors.a",
+      "size": 20608,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.fuzzer_no_main.a",
+      "size": 3580612,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.gwp_asan.a",
+      "size": 79856,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.hwasan-preinit.a",
+      "size": 1434,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.hwasan.a",
+      "size": 3022630,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.hwasan.a.syms",
+      "size": 33774,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.hwasan.so",
+      "size": 1487408,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.hwasan_cxx.a",
+      "size": 26834,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.hwasan_cxx.a.syms",
+      "size": 490,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.lsan.a",
+      "size": 2163418,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.msan.a",
+      "size": 4993926,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.msan.a.syms",
+      "size": 108018,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.msan_cxx.a",
+      "size": 27302,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.msan_cxx.a.syms",
+      "size": 488,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.profile.a",
+      "size": 175026,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.rtsan.a",
+      "size": 1948846,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.safestack.a",
+      "size": 32128,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.scudo_standalone.a",
+      "size": 1018640,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.scudo_standalone.so",
+      "size": 783088,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.scudo_standalone_cxx.a",
+      "size": 455860,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.stats.a",
+      "size": 1599772,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.stats_client.a",
+      "size": 7626,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.tsan.a",
+      "size": 6063942,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.tsan.a.syms",
+      "size": 96281,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.tsan.so",
+      "size": 3486216,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.tsan_cxx.a",
+      "size": 32092,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.tsan_cxx.a.syms",
+      "size": 1213,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.tysan.a",
+      "size": 1663962,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.ubsan_minimal.a",
+      "size": 40134,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.ubsan_minimal.a.syms",
+      "size": 18,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.ubsan_minimal.so",
+      "size": 27592,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.ubsan_standalone.a",
+      "size": 1860984,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.ubsan_standalone.a.syms",
+      "size": 1860,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.ubsan_standalone.so",
+      "size": 858792,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.ubsan_standalone_cxx.a",
+      "size": 34282,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.ubsan_standalone_cxx.a.syms",
+      "size": 18,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.xray-basic.a",
+      "size": 58462,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.xray-dso.a",
+      "size": 10778,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.xray-fdr.a",
+      "size": 101764,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.xray-profiling.a",
+      "size": 155740,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/libclang_rt.xray.a",
+      "size": 1275280,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/lib/aarch64-unknown-linux-gnu/liborc_rt.a",
+      "size": 430444,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "hardlinked/lib/clang/21/share",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/share/asan_ignorelist.txt",
+      "size": 703,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/share/cfi_ignorelist.txt",
+      "size": 590,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/share/dfsan_abilist.txt",
+      "size": 124672,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/share/hwasan_ignorelist.txt",
+      "size": 285,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/clang/21/share/msan_ignorelist.txt",
+      "size": 353,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/libunwind-aarch64.so",
+      "size": 59456,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/libunwind-aarch64.so.8",
+      "size": 59456,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/libunwind-aarch64.so.8.0.1",
+      "size": 59456,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/libunwind-coredump.so",
+      "size": 14064,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/libunwind-coredump.so.0",
+      "size": 14064,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/libunwind-coredump.so.0.0.0",
+      "size": 14064,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/libunwind-ptrace.so",
+      "size": 14464,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/libunwind-ptrace.so.0",
+      "size": 14464,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/libunwind-ptrace.so.0.0.0",
+      "size": 14464,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/libunwind.so",
+      "size": 55560,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/libunwind.so.8",
+      "size": 55560,
+      "type": "file"
+    },
+    {
+      "mode": "0o666",
+      "path": "hardlinked/lib/libunwind.so.8.0.1",
+      "size": 55560,
+      "type": "file"
+    }
+  ],
+  "hash_tree": null,
+  "schema_version": 1,
+  "tool_count": 10,
+  "tools": [
+    {
+      "file_name": "clang++",
+      "linkname": "hardlinked/bin/clang",
+      "mode": "0o666",
+      "path": "hardlinked/bin/clang++",
+      "size": 0,
+      "tool_name": "clang++",
+      "type": "hardlink"
+    },
+    {
+      "file_name": "clang-cl",
+      "linkname": "hardlinked/bin/clang",
+      "mode": "0o666",
+      "path": "hardlinked/bin/clang-cl",
+      "size": 0,
+      "tool_name": "clang-cl",
+      "type": "hardlink"
+    },
+    {
+      "file_name": "clang-cpp",
+      "linkname": "hardlinked/bin/clang",
+      "mode": "0o666",
+      "path": "hardlinked/bin/clang-cpp",
+      "size": 0,
+      "tool_name": "clang-cpp",
+      "type": "hardlink"
+    },
+    {
+      "file_name": "ld64.lld",
+      "linkname": "hardlinked/bin/ld.lld",
+      "mode": "0o666",
+      "path": "hardlinked/bin/ld64.lld",
+      "size": 0,
+      "tool_name": "ld64.lld",
+      "type": "hardlink"
+    },
+    {
+      "file_name": "lld",
+      "linkname": "hardlinked/bin/ld.lld",
+      "mode": "0o666",
+      "path": "hardlinked/bin/lld",
+      "size": 0,
+      "tool_name": "lld",
+      "type": "hardlink"
+    },
+    {
+      "file_name": "lld-link",
+      "linkname": "hardlinked/bin/ld.lld",
+      "mode": "0o666",
+      "path": "hardlinked/bin/lld-link",
+      "size": 0,
+      "tool_name": "lld-link",
+      "type": "hardlink"
+    },
+    {
+      "file_name": "llvm-ranlib",
+      "linkname": "hardlinked/bin/llvm-ar",
+      "mode": "0o666",
+      "path": "hardlinked/bin/llvm-ranlib",
+      "size": 0,
+      "tool_name": "llvm-ranlib",
+      "type": "hardlink"
+    },
+    {
+      "file_name": "llvm-readobj",
+      "linkname": "hardlinked/bin/llvm-readelf",
+      "mode": "0o666",
+      "path": "hardlinked/bin/llvm-readobj",
+      "size": 0,
+      "tool_name": "llvm-readobj",
+      "type": "hardlink"
+    },
+    {
+      "file_name": "llvm-strip",
+      "linkname": "hardlinked/bin/llvm-objcopy",
+      "mode": "0o666",
+      "path": "hardlinked/bin/llvm-strip",
+      "size": 0,
+      "tool_name": "llvm-strip",
+      "type": "hardlink"
+    },
+    {
+      "file_name": "wasm-ld",
+      "linkname": "hardlinked/bin/ld.lld",
+      "mode": "0o666",
+      "path": "hardlinked/bin/wasm-ld",
+      "size": 0,
+      "tool_name": "wasm-ld",
+      "type": "hardlink"
+    }
+  ]
+}

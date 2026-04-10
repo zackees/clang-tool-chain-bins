@@ -1,0 +1,106 @@
+{
+  "archive": {
+    "arch": "x86_64",
+    "archive_size_bytes": 20249121,
+    "component": "clang-extra",
+    "filename": "clang-extra-21.1.6-darwin-x86_64.tar.zst",
+    "git_lfs_pointer": false,
+    "manifest_path": "clang-extra\\darwin\\x86_64\\manifest.json",
+    "parts": [],
+    "platform": "darwin",
+    "relative_path": "clang-extra\\darwin\\x86_64\\clang-extra-21.1.6-darwin-x86_64.tar.zst",
+    "sha256": "b436f9e260c4697a49e6aa9b5cc8e7e6c5139d42a13ba8b4884204c960955d45",
+    "size_bytes": 20249121,
+    "url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/x86_64/clang-extra-21.1.6-darwin-x86_64.tar.zst",
+    "version": "21.1.6"
+  },
+  "file_count": 6,
+  "files": [
+    {
+      "mode": "0o755",
+      "path": "bin",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o755",
+      "path": "bin/clang-format",
+      "size": 3734296,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "bin/clang-query",
+      "size": 39164360,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "bin/run-clang-tidy",
+      "size": 19695,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "bin/clang-tidy",
+      "size": 77122776,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "bin/git-clang-format",
+      "size": 28325,
+      "type": "file"
+    }
+  ],
+  "hash_tree": null,
+  "schema_version": 1,
+  "tool_count": 5,
+  "tools": [
+    {
+      "file_name": "clang-format",
+      "mode": "0o755",
+      "path": "bin/clang-format",
+      "sha256": "567113552b1cf8386a5f165dc2ff3efb834124d910cb7df4fe81ca85ed396541",
+      "size": 3734296,
+      "tool_name": "clang-format",
+      "type": "file"
+    },
+    {
+      "file_name": "clang-query",
+      "mode": "0o755",
+      "path": "bin/clang-query",
+      "sha256": "d6db5f76d6a9052cb82749013eaac66cc90e59db923e447bacfaafea97318c26",
+      "size": 39164360,
+      "tool_name": "clang-query",
+      "type": "file"
+    },
+    {
+      "file_name": "clang-tidy",
+      "mode": "0o755",
+      "path": "bin/clang-tidy",
+      "sha256": "02f71c27e80c9d198b1676b69e209eac646be12cccfe306882ca8ceb83e2f292",
+      "size": 77122776,
+      "tool_name": "clang-tidy",
+      "type": "file"
+    },
+    {
+      "file_name": "git-clang-format",
+      "mode": "0o755",
+      "path": "bin/git-clang-format",
+      "sha256": "e190438d9e396d629eabd6a83c855969e81f4bdd2a211532c40cdeab9145a421",
+      "size": 28325,
+      "tool_name": "git-clang-format",
+      "type": "file"
+    },
+    {
+      "file_name": "run-clang-tidy",
+      "mode": "0o755",
+      "path": "bin/run-clang-tidy",
+      "sha256": "2b2bacf525daba5ab183f98fdbd0f21df8bb421e15d938b2245180944186fc73",
+      "size": 19695,
+      "tool_name": "run-clang-tidy",
+      "type": "file"
+    }
+  ]
+}

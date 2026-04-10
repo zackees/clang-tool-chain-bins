@@ -1,0 +1,118 @@
+{
+  "archive": {
+    "arch": "arm64",
+    "archive_size_bytes": 25556587,
+    "component": "nodejs",
+    "filename": "nodejs-22.11.0-darwin-arm64.tar.zst",
+    "git_lfs_pointer": false,
+    "manifest_path": "nodejs\\darwin\\arm64\\manifest.json",
+    "parts": [],
+    "platform": "darwin",
+    "relative_path": "nodejs\\darwin\\arm64\\nodejs-22.11.0-darwin-arm64.tar.zst",
+    "sha256": "2e217a2f0c54f22d080e2d589981c1c8e2c866625a1603c09a1b63f19db3337d",
+    "size_bytes": 25556587,
+    "url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/nodejs/darwin/arm64/nodejs-22.11.0-darwin-arm64.tar.zst",
+    "version": "22.11.0"
+  },
+  "file_count": 9,
+  "files": [
+    {
+      "mode": "0o755",
+      "path": ".",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o644",
+      "path": "./LICENSE",
+      "size": 139053,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "./bin",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "linkname": "../lib/node_modules/corepack/dist/corepack.js",
+      "mode": "0o644",
+      "path": "./bin/corepack",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "./bin/node",
+      "size": 119121584,
+      "type": "file"
+    },
+    {
+      "linkname": "../lib/node_modules/npm/bin/npm-cli.js",
+      "mode": "0o644",
+      "path": "./bin/npm",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "linkname": "../lib/node_modules/npm/bin/npx-cli.js",
+      "mode": "0o644",
+      "path": "./bin/npx",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "./lib",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o755",
+      "path": "./lib/node_modules",
+      "size": 0,
+      "type": "dir"
+    }
+  ],
+  "hash_tree": null,
+  "schema_version": 1,
+  "tool_count": 4,
+  "tools": [
+    {
+      "file_name": "corepack",
+      "linkname": "../lib/node_modules/corepack/dist/corepack.js",
+      "mode": "0o644",
+      "path": "./bin/corepack",
+      "size": 0,
+      "tool_name": "corepack",
+      "type": "symlink"
+    },
+    {
+      "file_name": "node",
+      "mode": "0o755",
+      "path": "./bin/node",
+      "sha256": "b3766cc0774a690436a2bc9e3cbfd9d80c29a3f64499ae2f98ca203853b1cd85",
+      "size": 119121584,
+      "tool_name": "node",
+      "type": "file"
+    },
+    {
+      "file_name": "npm",
+      "linkname": "../lib/node_modules/npm/bin/npm-cli.js",
+      "mode": "0o644",
+      "path": "./bin/npm",
+      "size": 0,
+      "tool_name": "npm",
+      "type": "symlink"
+    },
+    {
+      "file_name": "npx",
+      "linkname": "../lib/node_modules/npm/bin/npx-cli.js",
+      "mode": "0o644",
+      "path": "./bin/npx",
+      "size": 0,
+      "tool_name": "npx",
+      "type": "symlink"
+    }
+  ]
+}

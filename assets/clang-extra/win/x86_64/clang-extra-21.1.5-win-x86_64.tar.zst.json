@@ -1,0 +1,100 @@
+{
+  "archive": {
+    "arch": "x86_64",
+    "archive_size_bytes": 17330138,
+    "component": "clang-extra",
+    "filename": "clang-extra-21.1.5-win-x86_64.tar.zst",
+    "git_lfs_pointer": false,
+    "manifest_path": "clang-extra\\win\\x86_64\\manifest.json",
+    "parts": [],
+    "platform": "win",
+    "relative_path": "clang-extra\\win\\x86_64\\clang-extra-21.1.5-win-x86_64.tar.zst",
+    "sha256": "aaf5bc0194f440cbba72aa8d41434f3d1f403739a8791c674edae6e3a49d2401",
+    "size_bytes": 17330138,
+    "url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/x86_64/clang-extra-21.1.5-win-x86_64.tar.zst",
+    "version": "21.1.5"
+  },
+  "file_count": 5,
+  "files": [
+    {
+      "mode": "0o755",
+      "path": "bin/clang-format.exe",
+      "size": 3869696,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "bin/clang-query.exe",
+      "size": 31934976,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "bin/clang-tidy.exe",
+      "size": 56003072,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "bin/git-clang-format",
+      "size": 28325,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "bin/run-clang-tidy",
+      "size": 19695,
+      "type": "file"
+    }
+  ],
+  "hash_tree": null,
+  "schema_version": 1,
+  "tool_count": 5,
+  "tools": [
+    {
+      "file_name": "clang-format.exe",
+      "mode": "0o755",
+      "path": "bin/clang-format.exe",
+      "sha256": "f4d5213631e1dad8ae4c1495f9aff2a9d54166143ecd8f0fcd1e174568ea98c9",
+      "size": 3869696,
+      "tool_name": "clang-format",
+      "type": "file"
+    },
+    {
+      "file_name": "clang-query.exe",
+      "mode": "0o755",
+      "path": "bin/clang-query.exe",
+      "sha256": "e6655d69c7b7c005c54c5d629b188c47b95d5670a0be589d3afab57bb86e3a21",
+      "size": 31934976,
+      "tool_name": "clang-query",
+      "type": "file"
+    },
+    {
+      "file_name": "clang-tidy.exe",
+      "mode": "0o755",
+      "path": "bin/clang-tidy.exe",
+      "sha256": "00a5b9665a8ba76aef58b2b3e9dc28b4120d458b0a341d8bb477a68a62f3dd71",
+      "size": 56003072,
+      "tool_name": "clang-tidy",
+      "type": "file"
+    },
+    {
+      "file_name": "git-clang-format",
+      "mode": "0o755",
+      "path": "bin/git-clang-format",
+      "sha256": "e190438d9e396d629eabd6a83c855969e81f4bdd2a211532c40cdeab9145a421",
+      "size": 28325,
+      "tool_name": "git-clang-format",
+      "type": "file"
+    },
+    {
+      "file_name": "run-clang-tidy",
+      "mode": "0o755",
+      "path": "bin/run-clang-tidy",
+      "sha256": "2b2bacf525daba5ab183f98fdbd0f21df8bb421e15d938b2245180944186fc73",
+      "size": 19695,
+      "tool_name": "run-clang-tidy",
+      "type": "file"
+    }
+  ]
+}

@@ -1,0 +1,257 @@
+{
+  "archive": {
+    "arch": "arm64",
+    "archive_size_bytes": 55114001,
+    "component": "iwyu",
+    "filename": "iwyu-0.25-darwin-arm64.tar.zst",
+    "git_lfs_pointer": false,
+    "manifest_path": "iwyu\\darwin\\arm64\\manifest.json",
+    "parts": [],
+    "platform": "darwin",
+    "relative_path": "iwyu\\darwin\\arm64\\iwyu-0.25-darwin-arm64.tar.zst",
+    "sha256": "ce4b96f49adfdde7fe5176dca6ef6893c9a6a962ad2cf39a31b60032c188ca70",
+    "size_bytes": 55114001,
+    "url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/iwyu/darwin/arm64/iwyu-0.25-darwin-arm64.tar.zst",
+    "version": "0.25"
+  },
+  "file_count": 34,
+  "files": [
+    {
+      "mode": "0o755",
+      "path": "bin",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o755",
+      "path": "bin/fix_includes.py",
+      "size": 105227,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "bin/include-what-you-use",
+      "size": 2410016,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "bin/iwyu_tool.py",
+      "size": 18978,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "linkname": "libLLVM.dylib",
+      "mode": "0o755",
+      "path": "lib/libLLVM-21.dylib",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o644",
+      "path": "lib/libLLVM-C.dylib",
+      "size": 88784,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "lib/libLLVM.dylib",
+      "size": 152509136,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "lib/libclang-cpp.dylib",
+      "size": 66839296,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "lib/libclang.dylib",
+      "size": 38955264,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "share",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o755",
+      "path": "share/include-what-you-use",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o644",
+      "path": "share/include-what-you-use/boost-1.64-all-private.imp",
+      "size": 821321,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "share/include-what-you-use/boost-1.64-all.imp",
+      "size": 873231,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "share/include-what-you-use/boost-1.75-all-private.imp",
+      "size": 1053510,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "share/include-what-you-use/boost-1.75-all.imp",
+      "size": 1422268,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "share/include-what-you-use/boost-all-private.imp",
+      "size": 575030,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "share/include-what-you-use/boost-all.imp",
+      "size": 732734,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "share/include-what-you-use/clang-6.intrinsics.imp",
+      "size": 4477,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "share/include-what-you-use/gcc-8.intrinsics.imp",
+      "size": 4527,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "share/include-what-you-use/python2.7.imp",
+      "size": 5197,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "share/include-what-you-use/python3.8.imp",
+      "size": 8583,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "share/include-what-you-use/qt4.imp",
+      "size": 161307,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "share/include-what-you-use/qt5_11.imp",
+      "size": 368019,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "share/include-what-you-use/qt5_4.imp",
+      "size": 228868,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "share/man",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o755",
+      "path": "share/man/man1",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o644",
+      "path": "share/man/man1/include-what-you-use.1",
+      "size": 10631,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "sbom.spdx.json",
+      "size": 1322,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "README.md",
+      "size": 15883,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "iwyu-0.25-darwin-arm64.tar.zst",
+      "size": 131,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "manifest.json",
+      "size": 269,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "iwyu-0.25-darwin-arm64.tar.zst.sha256",
+      "size": 97,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "LICENSE.TXT",
+      "size": 2943,
+      "type": "file"
+    }
+  ],
+  "hash_tree": null,
+  "schema_version": 1,
+  "tool_count": 3,
+  "tools": [
+    {
+      "file_name": "fix_includes.py",
+      "mode": "0o755",
+      "path": "bin/fix_includes.py",
+      "sha256": "72896371b374e296622729a6c5bd88cbdfd417e4a12a49cc0c4fc726ade943df",
+      "size": 105227,
+      "tool_name": "fix_includes",
+      "type": "file"
+    },
+    {
+      "file_name": "include-what-you-use",
+      "mode": "0o755",
+      "path": "bin/include-what-you-use",
+      "sha256": "ffe45f067bab1250816dc498103a4febf8f4c5594d4a452381e9ad1a80a2306a",
+      "size": 2410016,
+      "tool_name": "include-what-you-use",
+      "type": "file"
+    },
+    {
+      "file_name": "iwyu_tool.py",
+      "mode": "0o755",
+      "path": "bin/iwyu_tool.py",
+      "sha256": "d7e657dfeedde46268039fc7be470e8a73423980277a4c8894ca6ad16461305a",
+      "size": 18978,
+      "tool_name": "iwyu_tool",
+      "type": "file"
+    }
+  ]
+}

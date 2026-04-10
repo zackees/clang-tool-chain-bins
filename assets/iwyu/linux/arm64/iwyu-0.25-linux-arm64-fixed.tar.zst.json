@@ -1,0 +1,2428 @@
+{
+  "archive": {
+    "arch": "arm64",
+    "archive_size_bytes": 93836231,
+    "component": "iwyu",
+    "filename": "iwyu-0.25-linux-arm64-fixed.tar.zst",
+    "git_lfs_pointer": false,
+    "manifest_path": "iwyu\\linux\\arm64\\manifest.json",
+    "parts": [],
+    "platform": "linux",
+    "relative_path": "iwyu\\linux\\arm64\\iwyu-0.25-linux-arm64-fixed.tar.zst",
+    "sha256": "4d9afb232c733b8929b8105d5e1267f2bcf3b0a75817c0f4606b078323cb47d0",
+    "size_bytes": 93836231,
+    "url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/iwyu/linux/arm64/iwyu-0.25-linux-arm64-fixed.tar.zst",
+    "version": "0.25"
+  },
+  "file_count": 359,
+  "files": [
+    {
+      "mode": "0o777",
+      "path": "bin",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o777",
+      "path": "bin/fix_includes.py",
+      "size": 105227,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "bin/fix_includes_test.py",
+      "size": 128474,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "bin/include-what-you-use",
+      "size": 3543928,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "bin/iwyu-check-license-header.py",
+      "size": 8658,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "bin/iwyu_test_util.py",
+      "size": 23996,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "bin/iwyu_tool.py",
+      "size": 18978,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "bin/iwyu_tool_test.py",
+      "size": 19235,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "bin/run_iwyu_tests.py",
+      "size": 6634,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "bin/scrub-logs.py",
+      "size": 1128,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "linkname": "libclang-cpp.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclang-cpp.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclang-cpp.so.21.1",
+      "size": 79967160,
+      "type": "file"
+    },
+    {
+      "linkname": "libclang.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclang.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "linkname": "libclang.so.21.1.5",
+      "mode": "0o777",
+      "path": "lib/libclang.so.21.1",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclang.so.21.1.5",
+      "size": 1170408,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangAnalysis.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangAnalysis.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangAnalysis.so.21.1",
+      "size": 2564848,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangAnalysisFlowSensitive.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangAnalysisFlowSensitive.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangAnalysisFlowSensitive.so.21.1",
+      "size": 1318256,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangAnalysisFlowSensitiveModels.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangAnalysisFlowSensitiveModels.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangAnalysisFlowSensitiveModels.so.21.1",
+      "size": 654976,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangAPINotes.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangAPINotes.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangAPINotes.so.21.1",
+      "size": 481592,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangAST.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangAST.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangAST.so.21.1",
+      "size": 17167648,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangASTMatchers.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangASTMatchers.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangASTMatchers.so.21.1",
+      "size": 1076832,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangBasic.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangBasic.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangBasic.so.21.1",
+      "size": 5274872,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangCodeGen.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangCodeGen.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangCodeGen.so.21.1",
+      "size": 10068424,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangCrossTU.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangCrossTU.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangCrossTU.so.21.1",
+      "size": 157584,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangDependencyScanning.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangDependencyScanning.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangDependencyScanning.so.21.1",
+      "size": 427336,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangDirectoryWatcher.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangDirectoryWatcher.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangDirectoryWatcher.so.21.1",
+      "size": 80528,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangDriver.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangDriver.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangDriver.so.21.1",
+      "size": 4000520,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangDynamicASTMatchers.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangDynamicASTMatchers.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangDynamicASTMatchers.so.21.1",
+      "size": 3369296,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangEdit.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangEdit.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangEdit.so.21.1",
+      "size": 87008,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangExtractAPI.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangExtractAPI.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangExtractAPI.so.21.1",
+      "size": 1159504,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangFormat.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangFormat.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangFormat.so.21.1",
+      "size": 1331336,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangFrontend.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangFrontend.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangFrontend.so.21.1",
+      "size": 2582928,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangFrontendTool.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangFrontendTool.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangFrontendTool.so.21.1",
+      "size": 75792,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangHandleCXX.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangHandleCXX.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangHandleCXX.so.21.1",
+      "size": 76192,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangHandleLLVM.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangHandleLLVM.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangHandleLLVM.so.21.1",
+      "size": 79152,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangIndex.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangIndex.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangIndex.so.21.1",
+      "size": 610952,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangIndexSerialization.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangIndexSerialization.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangIndexSerialization.so.21.1",
+      "size": 72688,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangInstallAPI.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangInstallAPI.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangInstallAPI.so.21.1",
+      "size": 679120,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangInterpreter.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangInterpreter.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangInterpreter.so.21.1",
+      "size": 341456,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangLex.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangLex.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangLex.so.21.1",
+      "size": 1327768,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangParse.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangParse.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangParse.so.21.1",
+      "size": 1834504,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangRewrite.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangRewrite.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangRewrite.so.21.1",
+      "size": 149592,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangRewriteFrontend.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangRewriteFrontend.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangRewriteFrontend.so.21.1",
+      "size": 178424,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangSema.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangSema.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangSema.so.21.1",
+      "size": 17018176,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangSerialization.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangSerialization.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangSerialization.so.21.1",
+      "size": 2737544,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangStaticAnalyzerCheckers.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangStaticAnalyzerCheckers.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangStaticAnalyzerCheckers.so.21.1",
+      "size": 6427288,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangStaticAnalyzerCore.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangStaticAnalyzerCore.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangStaticAnalyzerCore.so.21.1",
+      "size": 3494944,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangStaticAnalyzerFrontend.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangStaticAnalyzerFrontend.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangStaticAnalyzerFrontend.so.21.1",
+      "size": 746040,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangSupport.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangSupport.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangSupport.so.21.1",
+      "size": 77360,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangTooling.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangTooling.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangTooling.so.21.1",
+      "size": 786816,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangToolingASTDiff.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangToolingASTDiff.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangToolingASTDiff.so.21.1",
+      "size": 236176,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangToolingCore.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangToolingCore.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangToolingCore.so.21.1",
+      "size": 153176,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangToolingInclusions.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangToolingInclusions.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangToolingInclusions.so.21.1",
+      "size": 84104,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangToolingInclusionsStdlib.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangToolingInclusionsStdlib.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangToolingInclusionsStdlib.so.21.1",
+      "size": 729192,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangToolingRefactoring.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangToolingRefactoring.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangToolingRefactoring.so.21.1",
+      "size": 1354416,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangToolingSyntax.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangToolingSyntax.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangToolingSyntax.so.21.1",
+      "size": 461600,
+      "type": "file"
+    },
+    {
+      "linkname": "libclangTransformer.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libclangTransformer.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libclangTransformer.so.21.1",
+      "size": 625904,
+      "type": "file"
+    },
+    {
+      "linkname": "libicudata.so.74.2",
+      "mode": "0o777",
+      "path": "lib/libicudata.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "linkname": "libicudata.so.74.2",
+      "mode": "0o777",
+      "path": "lib/libicudata.so.74",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libicudata.so.74.2",
+      "size": 30803584,
+      "type": "file"
+    },
+    {
+      "linkname": "libicui18n.so.74.2",
+      "mode": "0o777",
+      "path": "lib/libicui18n.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "linkname": "libicui18n.so.74.2",
+      "mode": "0o777",
+      "path": "lib/libicui18n.so.74",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libicui18n.so.74.2",
+      "size": 3541096,
+      "type": "file"
+    },
+    {
+      "linkname": "libicuio.so.74.2",
+      "mode": "0o777",
+      "path": "lib/libicuio.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "linkname": "libicuio.so.74.2",
+      "mode": "0o777",
+      "path": "lib/libicuio.so.74",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libicuio.so.74.2",
+      "size": 67528,
+      "type": "file"
+    },
+    {
+      "linkname": "libicutest.so.74.2",
+      "mode": "0o777",
+      "path": "lib/libicutest.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "linkname": "libicutest.so.74.2",
+      "mode": "0o777",
+      "path": "lib/libicutest.so.74",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libicutest.so.74.2",
+      "size": 134424,
+      "type": "file"
+    },
+    {
+      "linkname": "libicutu.so.74.2",
+      "mode": "0o777",
+      "path": "lib/libicutu.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "linkname": "libicutu.so.74.2",
+      "mode": "0o777",
+      "path": "lib/libicutu.so.74",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libicutu.so.74.2",
+      "size": 264888,
+      "type": "file"
+    },
+    {
+      "linkname": "libicuuc.so.74.2",
+      "mode": "0o777",
+      "path": "lib/libicuuc.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "linkname": "libicuuc.so.74.2",
+      "mode": "0o777",
+      "path": "lib/libicuuc.so.74",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libicuuc.so.74.2",
+      "size": 2230272,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMAArch64AsmParser.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMAArch64AsmParser.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMAArch64AsmParser.so.21.1",
+      "size": 1422408,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMAArch64CodeGen.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMAArch64CodeGen.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMAArch64CodeGen.so.21.1",
+      "size": 6654392,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMAArch64Desc.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMAArch64Desc.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMAArch64Desc.so.21.1",
+      "size": 2709656,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMAArch64Disassembler.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMAArch64Disassembler.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMAArch64Disassembler.so.21.1",
+      "size": 279744,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMAArch64Info.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMAArch64Info.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMAArch64Info.so.21.1",
+      "size": 71896,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMAArch64Utils.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMAArch64Utils.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMAArch64Utils.so.21.1",
+      "size": 277592,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMAggressiveInstCombine.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMAggressiveInstCombine.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMAggressiveInstCombine.so.21.1",
+      "size": 160216,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMAnalysis.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMAnalysis.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMAnalysis.so.21.1",
+      "size": 6368208,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMAsmParser.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMAsmParser.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMAsmParser.so.21.1",
+      "size": 728344,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMAsmPrinter.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMAsmPrinter.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMAsmPrinter.so.21.1",
+      "size": 1412488,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMBinaryFormat.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMBinaryFormat.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMBinaryFormat.so.21.1",
+      "size": 299832,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMBitReader.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMBitReader.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMBitReader.so.21.1",
+      "size": 638664,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMBitstreamReader.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMBitstreamReader.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMBitstreamReader.so.21.1",
+      "size": 75712,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMBitWriter.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMBitWriter.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMBitWriter.so.21.1",
+      "size": 404336,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMCFGuard.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMCFGuard.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMCFGuard.so.21.1",
+      "size": 77608,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMCFIVerify.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMCFIVerify.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMCFIVerify.so.21.1",
+      "size": 158456,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMCGData.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMCGData.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMCGData.so.21.1",
+      "size": 244072,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMCodeGen.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMCodeGen.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMCodeGen.so.21.1",
+      "size": 9766408,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMCodeGenTypes.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMCodeGenTypes.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMCodeGenTypes.so.21.1",
+      "size": 70832,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMCore.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMCore.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMCore.so.21.1",
+      "size": 5466720,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMCoroutines.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMCoroutines.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMCoroutines.so.21.1",
+      "size": 477752,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMCoverage.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMCoverage.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMCoverage.so.21.1",
+      "size": 410000,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMDebugInfoBTF.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMDebugInfoBTF.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMDebugInfoBTF.so.21.1",
+      "size": 83856,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMDebugInfoCodeView.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMDebugInfoCodeView.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMDebugInfoCodeView.so.21.1",
+      "size": 944016,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMDebuginfod.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMDebuginfod.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMDebuginfod.so.21.1",
+      "size": 166208,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMDebugInfoDWARF.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMDebugInfoDWARF.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMDebugInfoDWARF.so.21.1",
+      "size": 1163192,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMDebugInfoDWARFLowLevel.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMDebugInfoDWARFLowLevel.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMDebugInfoDWARFLowLevel.so.21.1",
+      "size": 78720,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMDebugInfoGSYM.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMDebugInfoGSYM.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMDebugInfoGSYM.so.21.1",
+      "size": 399760,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMDebugInfoLogicalView.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMDebugInfoLogicalView.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMDebugInfoLogicalView.so.21.1",
+      "size": 1366232,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMDebugInfoMSF.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMDebugInfoMSF.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMDebugInfoMSF.so.21.1",
+      "size": 158304,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMDebugInfoPDB.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMDebugInfoPDB.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMDebugInfoPDB.so.21.1",
+      "size": 1365304,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMDemangle.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMDemangle.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMDemangle.so.21.1",
+      "size": 442240,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMDiff.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMDiff.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMDiff.so.21.1",
+      "size": 144584,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMDlltoolDriver.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMDlltoolDriver.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMDlltoolDriver.so.21.1",
+      "size": 77560,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMDWARFCFIChecker.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMDWARFCFIChecker.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMDWARFCFIChecker.so.21.1",
+      "size": 164328,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMDWARFLinker.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMDWARFLinker.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMDWARFLinker.so.21.1",
+      "size": 69504,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMDWARFLinkerClassic.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMDWARFLinkerClassic.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMDWARFLinkerClassic.so.21.1",
+      "size": 350944,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMDWARFLinkerParallel.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMDWARFLinkerParallel.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMDWARFLinkerParallel.so.21.1",
+      "size": 595920,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMDWP.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMDWP.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMDWP.so.21.1",
+      "size": 83280,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMExecutionEngine.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMExecutionEngine.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMExecutionEngine.so.21.1",
+      "size": 247576,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMExegesis.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMExegesis.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMExegesis.so.21.1",
+      "size": 591728,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMExegesisAArch64.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMExegesisAArch64.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMExegesisAArch64.so.21.1",
+      "size": 79408,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMExtensions.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMExtensions.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMExtensions.so.21.1",
+      "size": 69280,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMFileCheck.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMFileCheck.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMFileCheck.so.21.1",
+      "size": 242488,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMFrontendAtomic.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMFrontendAtomic.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMFrontendAtomic.so.21.1",
+      "size": 76048,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMFrontendDirective.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMFrontendDirective.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMFrontendDirective.so.21.1",
+      "size": 69312,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMFrontendDriver.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMFrontendDriver.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMFrontendDriver.so.21.1",
+      "size": 70392,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMFrontendHLSL.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMFrontendHLSL.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMFrontendHLSL.so.21.1",
+      "size": 148968,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMFrontendOffloading.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMFrontendOffloading.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMFrontendOffloading.so.21.1",
+      "size": 153728,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMFrontendOpenACC.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMFrontendOpenACC.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMFrontendOpenACC.so.21.1",
+      "size": 71416,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMFrontendOpenMP.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMFrontendOpenMP.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMFrontendOpenMP.so.21.1",
+      "size": 811248,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMFuzzerCLI.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMFuzzerCLI.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMFuzzerCLI.so.21.1",
+      "size": 72360,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMFuzzMutate.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMFuzzMutate.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMFuzzMutate.so.21.1",
+      "size": 269120,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMGlobalISel.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMGlobalISel.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMGlobalISel.so.21.1",
+      "size": 1985440,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMHipStdPar.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMHipStdPar.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMHipStdPar.so.21.1",
+      "size": 73632,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMInstCombine.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMInstCombine.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMInstCombine.so.21.1",
+      "size": 1912648,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMInstrumentation.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMInstrumentation.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMInstrumentation.so.21.1",
+      "size": 1842240,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMInterfaceStub.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMInterfaceStub.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMInterfaceStub.so.21.1",
+      "size": 159936,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMInterpreter.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMInterpreter.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMInterpreter.so.21.1",
+      "size": 235392,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMipo.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMipo.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMipo.so.21.1",
+      "size": 4524144,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMIRPrinter.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMIRPrinter.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMIRPrinter.so.21.1",
+      "size": 72312,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMIRReader.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMIRReader.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMIRReader.so.21.1",
+      "size": 75008,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMJITLink.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMJITLink.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMJITLink.so.21.1",
+      "size": 1137872,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMLibDriver.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMLibDriver.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMLibDriver.so.21.1",
+      "size": 82032,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMLineEditor.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMLineEditor.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMLineEditor.so.21.1",
+      "size": 73480,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMLinker.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMLinker.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMLinker.so.21.1",
+      "size": 165648,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMLTO.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMLTO.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMLTO.so.21.1",
+      "size": 623504,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMMC.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMMC.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMMC.so.21.1",
+      "size": 1432560,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMMCA.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMMCA.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMMCA.so.21.1",
+      "size": 256648,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMMCDisassembler.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMMCDisassembler.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMMCDisassembler.so.21.1",
+      "size": 77784,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMMCJIT.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMMCJIT.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMMCJIT.so.21.1",
+      "size": 88520,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMMCParser.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMMCParser.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMMCParser.so.21.1",
+      "size": 644064,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMMIRParser.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMMIRParser.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMMIRParser.so.21.1",
+      "size": 393448,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMObjCARCOpts.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMObjCARCOpts.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMObjCARCOpts.so.21.1",
+      "size": 237576,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMObjCopy.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMObjCopy.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMObjCopy.so.21.1",
+      "size": 909296,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMObject.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMObject.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMObject.so.21.1",
+      "size": 2064720,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMObjectYAML.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMObjectYAML.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMObjectYAML.so.21.1",
+      "size": 2321632,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMOptDriver.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMOptDriver.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMOptDriver.so.21.1",
+      "size": 296584,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMOption.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMOption.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMOption.so.21.1",
+      "size": 156192,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMOrcDebugging.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMOrcDebugging.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMOrcDebugging.so.21.1",
+      "size": 176584,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMOrcJIT.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMOrcJIT.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMOrcJIT.so.21.1",
+      "size": 2827576,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMOrcShared.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMOrcShared.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMOrcShared.so.21.1",
+      "size": 91480,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMOrcTargetProcess.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMOrcTargetProcess.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMOrcTargetProcess.so.21.1",
+      "size": 256648,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMPasses.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMPasses.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMPasses.so.21.1",
+      "size": 3478496,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMProfileData.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMProfileData.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMProfileData.so.21.1",
+      "size": 1709744,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMRemarks.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMRemarks.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMRemarks.so.21.1",
+      "size": 245456,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMRuntimeDyld.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMRuntimeDyld.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMRuntimeDyld.so.21.1",
+      "size": 679568,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMSandboxIR.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMSandboxIR.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMSandboxIR.so.21.1",
+      "size": 590328,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMScalarOpts.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMScalarOpts.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMScalarOpts.so.21.1",
+      "size": 4097688,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMSelectionDAG.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMSelectionDAG.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMSelectionDAG.so.21.1",
+      "size": 4237168,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMSupport.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMSupport.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMSupport.so.21.1",
+      "size": 3083832,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMSymbolize.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMSymbolize.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMSymbolize.so.21.1",
+      "size": 329472,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMTableGen.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMTableGen.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMTableGen.so.21.1",
+      "size": 739128,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMTableGenBasic.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMTableGenBasic.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMTableGenBasic.so.21.1",
+      "size": 463296,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMTableGenCommon.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMTableGenCommon.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMTableGenCommon.so.21.1",
+      "size": 1560240,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMTarget.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMTarget.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMTarget.so.21.1",
+      "size": 167968,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMTargetParser.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMTargetParser.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMTargetParser.so.21.1",
+      "size": 582200,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMTelemetry.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMTelemetry.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMTelemetry.so.21.1",
+      "size": 72088,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMTextAPI.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMTextAPI.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMTextAPI.so.21.1",
+      "size": 477200,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMTextAPIBinaryReader.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMTextAPIBinaryReader.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMTextAPIBinaryReader.so.21.1",
+      "size": 82784,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMTransformUtils.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMTransformUtils.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMTransformUtils.so.21.1",
+      "size": 3469456,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMVectorize.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMVectorize.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMVectorize.so.21.1",
+      "size": 3546248,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMWindowsDriver.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMWindowsDriver.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMWindowsDriver.so.21.1",
+      "size": 74944,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMWindowsManifest.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMWindowsManifest.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMWindowsManifest.so.21.1",
+      "size": 75920,
+      "type": "file"
+    },
+    {
+      "linkname": "libLLVMXRay.so.21.1",
+      "mode": "0o777",
+      "path": "lib/libLLVMXRay.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libLLVMXRay.so.21.1",
+      "size": 257408,
+      "type": "file"
+    },
+    {
+      "linkname": "liblzma.so.5.4.5",
+      "mode": "0o777",
+      "path": "lib/liblzma.so.5",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/liblzma.so.5.4.5",
+      "size": 198584,
+      "type": "file"
+    },
+    {
+      "linkname": "libxml2.so.2.9.14",
+      "mode": "0o777",
+      "path": "lib/libxml2.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "linkname": "libxml2.so.2.9.14",
+      "mode": "0o777",
+      "path": "lib/libxml2.so.2",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libxml2.so.2.9.14",
+      "size": 2101984,
+      "type": "file"
+    },
+    {
+      "linkname": "libz.so.1.3",
+      "mode": "0o777",
+      "path": "lib/libz.so",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "linkname": "libz.so.1.3",
+      "mode": "0o777",
+      "path": "lib/libz.so.1",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libz.so.1.3",
+      "size": 133272,
+      "type": "file"
+    },
+    {
+      "linkname": "libzstd.so.1.5.5",
+      "mode": "0o777",
+      "path": "lib/libzstd.so.1",
+      "size": 0,
+      "type": "symlink"
+    },
+    {
+      "mode": "0o755",
+      "path": "lib/libzstd.so.1.5.5",
+      "size": 657432,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "share",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o777",
+      "path": "share/include-what-you-use",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o777",
+      "path": "share/include-what-you-use/boost-1.64-all-private.imp",
+      "size": 821321,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "share/include-what-you-use/boost-1.64-all.imp",
+      "size": 873231,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "share/include-what-you-use/boost-1.75-all-private.imp",
+      "size": 1053510,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "share/include-what-you-use/boost-1.75-all.imp",
+      "size": 1422268,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "share/include-what-you-use/boost-all-private.imp",
+      "size": 575030,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "share/include-what-you-use/boost-all.imp",
+      "size": 732734,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "share/include-what-you-use/clang-6.intrinsics.imp",
+      "size": 4477,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "share/include-what-you-use/gcc-8.intrinsics.imp",
+      "size": 4527,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "share/include-what-you-use/python2.7.imp",
+      "size": 5197,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "share/include-what-you-use/python3.8.imp",
+      "size": 8583,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "share/include-what-you-use/qt4.imp",
+      "size": 161307,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "share/include-what-you-use/qt5_11.imp",
+      "size": 368019,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "share/include-what-you-use/qt5_4.imp",
+      "size": 228868,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "share/man",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o777",
+      "path": "share/man/man1",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o777",
+      "path": "share/man/man1/include-what-you-use.1",
+      "size": 10631,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "LICENSE.TXT",
+      "size": 2943,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "README.md",
+      "size": 15883,
+      "type": "file"
+    },
+    {
+      "mode": "0o777",
+      "path": "sbom.spdx.json",
+      "size": 1322,
+      "type": "file"
+    }
+  ],
+  "hash_tree": null,
+  "schema_version": 1,
+  "tool_count": 9,
+  "tools": [
+    {
+      "file_name": "fix_includes.py",
+      "mode": "0o777",
+      "path": "bin/fix_includes.py",
+      "sha256": "72896371b374e296622729a6c5bd88cbdfd417e4a12a49cc0c4fc726ade943df",
+      "size": 105227,
+      "tool_name": "fix_includes",
+      "type": "file"
+    },
+    {
+      "file_name": "fix_includes_test.py",
+      "mode": "0o755",
+      "path": "bin/fix_includes_test.py",
+      "sha256": "ded35a659812f7161272ab9088b812b5d1df9dbd210012fcedc9ca7cf4292242",
+      "size": 128474,
+      "tool_name": "fix_includes_test",
+      "type": "file"
+    },
+    {
+      "file_name": "include-what-you-use",
+      "mode": "0o777",
+      "path": "bin/include-what-you-use",
+      "sha256": "de5f852b3cae01cfe39f61b1637e7260bec5a8217b1a4e963dc0b02537acce5e",
+      "size": 3543928,
+      "tool_name": "include-what-you-use",
+      "type": "file"
+    },
+    {
+      "file_name": "iwyu-check-license-header.py",
+      "mode": "0o755",
+      "path": "bin/iwyu-check-license-header.py",
+      "sha256": "dc13739d51e33fc7189cae2aec28d61a5bf2626f1d8c8f2165872af7630bc1b1",
+      "size": 8658,
+      "tool_name": "iwyu-check-license-header",
+      "type": "file"
+    },
+    {
+      "file_name": "iwyu_test_util.py",
+      "mode": "0o755",
+      "path": "bin/iwyu_test_util.py",
+      "sha256": "1bb8a01b836546d1576de609ad8503caf8b4464751823a89931d2dad459ff076",
+      "size": 23996,
+      "tool_name": "iwyu_test_util",
+      "type": "file"
+    },
+    {
+      "file_name": "iwyu_tool.py",
+      "mode": "0o777",
+      "path": "bin/iwyu_tool.py",
+      "sha256": "d7e657dfeedde46268039fc7be470e8a73423980277a4c8894ca6ad16461305a",
+      "size": 18978,
+      "tool_name": "iwyu_tool",
+      "type": "file"
+    },
+    {
+      "file_name": "iwyu_tool_test.py",
+      "mode": "0o755",
+      "path": "bin/iwyu_tool_test.py",
+      "sha256": "a14b24b1739bb25338ede114c6a306ab6c8374067871a2e179940f977be7685a",
+      "size": 19235,
+      "tool_name": "iwyu_tool_test",
+      "type": "file"
+    },
+    {
+      "file_name": "run_iwyu_tests.py",
+      "mode": "0o755",
+      "path": "bin/run_iwyu_tests.py",
+      "sha256": "13fb24c5f580e7e977251652bf2e32b39937b85755553c43430950fc4dbfc3bb",
+      "size": 6634,
+      "tool_name": "run_iwyu_tests",
+      "type": "file"
+    },
+    {
+      "file_name": "scrub-logs.py",
+      "mode": "0o755",
+      "path": "bin/scrub-logs.py",
+      "sha256": "24d3f9e2e8261da52f789a1325a1205ad61c39f2c2cec05b66146378f7c96b1d",
+      "size": 1128,
+      "tool_name": "scrub-logs",
+      "type": "file"
+    }
+  ]
+}

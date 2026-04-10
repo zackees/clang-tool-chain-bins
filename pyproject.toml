@@ -5,11 +5,17 @@ description = "LLVM/Clang Toolchain Build Tools - Maintainer scripts for creatin
 readme = "README.md"
 requires-python = ">=3.8"
 dependencies = [
+    "fasteners>=0.19.0",
     "zstandard>=0.22.0",
     "pyzstd>=0.15.0",
 ]
 
 [project.scripts]
+# Query/install frontend
+clang-tool-chain-bins = "tools.cli:main"
+clang-tool-chain-bins-index = "tools.archive_index:main"
+clang-tool-chain-bins-publish = "tools.publish:main"
+
 # Main pipeline
 fetch-and-archive = "tools.fetch_and_archive:main"
 
@@ -29,6 +35,37 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["tools"]
+include = [
+    "tools/**/*.py",
+    "tools/data/**/*.json",
+    "README.md",
+]
+exclude = [
+    "tools/.gitignore",
+    "tools/*.md",
+    "tools/work/**",
+    "tools/work_nodejs/**",
+    "tools/__pycache__/**",
+]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/tools",
+    "/tests",
+    "/README.md",
+    "/TASK.md",
+    "/pyproject.toml",
+]
+exclude = [
+    "/.gitignore",
+    "/tools/.gitignore",
+    "/tools/*.md",
+    "/tools/work/**",
+    "/tools/work_nodejs/**",
+    "/assets/**/*.tar.zst",
+    "/dist/**",
+    "/tmp_extract/**",
+]
 
 [tool.uv]
 dev-dependencies = []

@@ -1,0 +1,919 @@
+{
+  "archive": {
+    "arch": "x86_64",
+    "archive_size_bytes": 24946528,
+    "component": "valgrind",
+    "filename": "valgrind-3.24.0-linux-x86_64.tar.zst",
+    "git_lfs_pointer": false,
+    "manifest_path": "valgrind\\linux\\x86_64\\manifest.json",
+    "parts": [],
+    "platform": "linux",
+    "relative_path": "valgrind\\linux\\x86_64\\valgrind-3.24.0-linux-x86_64.tar.zst",
+    "sha256": "b986c447d12709c572e7164a117740222aefa62282cfb18ebb9874b9aef10d03",
+    "size_bytes": 24946528,
+    "url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/refs/heads/main/assets/valgrind/linux/x86_64/valgrind-3.24.0-linux-x86_64.tar.zst",
+    "version": "3.24.0"
+  },
+  "file_count": 143,
+  "files": [
+    {
+      "mode": "0o755",
+      "path": ".",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o755",
+      "path": "./bin",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o755",
+      "path": "./bin/valgrind",
+      "size": 61288,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "./bin/valgrind-di-server",
+      "size": 98336,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "./bin/vgdb",
+      "size": 274608,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "./bin/valgrind-listener",
+      "size": 33064,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "./lib",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o755",
+      "path": "./lib/valgrind",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o644",
+      "path": "./lib/valgrind/libvex-amd64-linux.a",
+      "size": 48858348,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./lib/valgrind/libvexmultiarch-amd64-linux.a",
+      "size": 419166,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./lib/valgrind/libgcc-sup-amd64-linux.a",
+      "size": 3178,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./lib/valgrind/libreplacemalloc_toolpreload-amd64-linux.a",
+      "size": 235658,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./lib/valgrind/libcoregrind-amd64-linux.a",
+      "size": 13164980,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "./libexec",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o755",
+      "path": "./libexec/valgrind",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "mode": "0o755",
+      "path": "./libexec/valgrind/drd-amd64-linux",
+      "size": 11697048,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "./libexec/valgrind/getoff-amd64-linux",
+      "size": 23576,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/mips64-cp0-valgrind-s2.xml",
+      "size": 546,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/s390x-core64-valgrind-s1.xml",
+      "size": 1537,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/power-fpu.xml",
+      "size": 2112,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/powerpc-altivec32l-valgrind.xml",
+      "size": 1140,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/s390x-linux64.xml",
+      "size": 478,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/mips-fpu-valgrind-s1.xml",
+      "size": 2225,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/s390x-linux64-valgrind-s2.xml",
+      "size": 492,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "./libexec/valgrind/dhat-amd64-linux",
+      "size": 11150496,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/mips-fpu.xml",
+      "size": 2145,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/s390x-vx-linux-valgrind.xml",
+      "size": 1107,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/power-fpu-valgrind-s1.xml",
+      "size": 2006,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/32bit-sse-valgrind-s2.xml",
+      "size": 2111,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "./libexec/valgrind/lackey-amd64-linux",
+      "size": 11121736,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/amd64-avx-coresse.xml",
+      "size": 530,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/power-vsx.xml",
+      "size": 2029,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/power-altivec-valgrind-s1.xml",
+      "size": 2558,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/mips-linux-valgrind.xml",
+      "size": 921,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/mips-fpu-valgrind-s2.xml",
+      "size": 2225,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/mips-cpu-valgrind-s1.xml",
+      "size": 1655,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/s390-fpr.xml",
+      "size": 1477,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/power-core-valgrind-s1.xml",
+      "size": 2263,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "./libexec/valgrind/vgpreload_memcheck-amd64-linux.so",
+      "size": 317936,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/power64-core-valgrind-s1.xml",
+      "size": 3474,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/s390-acr-valgrind-s1.xml",
+      "size": 1428,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/amd64-avx-coresse-valgrind.xml",
+      "size": 818,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "./libexec/valgrind/memcheck-amd64-linux",
+      "size": 12658864,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/mips64-linux-valgrind.xml",
+      "size": 899,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/i386-coresse-valgrind.xml",
+      "size": 667,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/s390-vx-valgrind-s1.xml",
+      "size": 1988,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/powerpc-altivec32l.xml",
+      "size": 734,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/power-core.xml",
+      "size": 2175,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/64bit-avx-valgrind-s2.xml",
+      "size": 1236,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/i386-linux-valgrind.xml",
+      "size": 878,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/s390x-linux64-valgrind-s1.xml",
+      "size": 492,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/64bit-core-valgrind-s1.xml",
+      "size": 3339,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "./libexec/valgrind/vgpreload_drd-amd64-linux.so",
+      "size": 752200,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/mips-cpu.xml",
+      "size": 1573,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/power64-linux.xml",
+      "size": 469,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/powerpc-altivec64l.xml",
+      "size": 778,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/power-altivec.xml",
+      "size": 2490,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/arm-with-vfpv3-valgrind.xml",
+      "size": 607,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/power-linux.xml",
+      "size": 469,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/mips-cp0-valgrind-s2.xml",
+      "size": 546,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/power-core-valgrind-s2.xml",
+      "size": 2263,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/arm-core-valgrind-s2.xml",
+      "size": 1197,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "./libexec/valgrind/cachegrind-amd64-linux",
+      "size": 11234520,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "./libexec/valgrind/vgpreload_massif-amd64-linux.so",
+      "size": 160864,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/amd64-avx-linux-valgrind.xml",
+      "size": 1021,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/s390x-generic.xml",
+      "size": 576,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/power-altivec-valgrind-s2.xml",
+      "size": 2558,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/32bit-core-valgrind-s1.xml",
+      "size": 2957,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/64bit-linux-valgrind-s2.xml",
+      "size": 430,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/power64-linux-valgrind-s1.xml",
+      "size": 473,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/arm-vfpv3.xml",
+      "size": 2085,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/arm-vfpv3-valgrind-s1.xml",
+      "size": 2003,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/s390-vx-valgrind-s2.xml",
+      "size": 1988,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/32bit-sse.xml",
+      "size": 2077,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "./libexec/valgrind/helgrind-amd64-linux",
+      "size": 11825544,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/64bit-sse-valgrind-s1.xml",
+      "size": 2541,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/arm-vfpv3-valgrind-s2.xml",
+      "size": 2003,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/power64-linux-valgrind-s2.xml",
+      "size": 473,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "./libexec/valgrind/vgpreload_dhat-amd64-linux.so",
+      "size": 298712,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/mips64-cpu-valgrind-s1.xml",
+      "size": 1642,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/mips64-cp0.xml",
+      "size": 528,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/32bit-core-valgrind-s2.xml",
+      "size": 2957,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/arm-with-vfpv3.xml",
+      "size": 413,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/power-vsx-valgrind-s1.xml",
+      "size": 2080,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/default.supp",
+      "size": 33699,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/power-linux-valgrind-s1.xml",
+      "size": 485,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/s390-acr-valgrind-s2.xml",
+      "size": 1428,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/mips-cp0-valgrind-s1.xml",
+      "size": 546,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/s390-fpr-valgrind-s1.xml",
+      "size": 1443,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "./libexec/valgrind/vgpreload_helgrind-amd64-linux.so",
+      "size": 422288,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/power64-core2-valgrind-s2.xml",
+      "size": 693,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/mips64-cpu-valgrind-s2.xml",
+      "size": 1642,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/32bit-linux-valgrind-s1.xml",
+      "size": 442,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/power-fpu-valgrind-s2.xml",
+      "size": 2006,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/mips64-cpu.xml",
+      "size": 1560,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "./libexec/valgrind/vgpreload_core-amd64-linux.so",
+      "size": 18224,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/dh_view.html",
+      "size": 198,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "./libexec/valgrind/none-amd64-linux",
+      "size": 11079424,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/mips-cp0.xml",
+      "size": 528,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/dh_view.css",
+      "size": 3281,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/s390x-core64-valgrind-s2.xml",
+      "size": 1537,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/32bit-core.xml",
+      "size": 2749,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/64bit-core-valgrind-s2.xml",
+      "size": 3339,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/64bit-linux.xml",
+      "size": 416,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/powerpc-altivec64l-valgrind.xml",
+      "size": 1396,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/64bit-linux-valgrind-s1.xml",
+      "size": 430,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/mips64-cp0-valgrind-s1.xml",
+      "size": 546,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/32bit-linux.xml",
+      "size": 428,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/32bit-sse-valgrind-s1.xml",
+      "size": 2111,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/mips64-fpu.xml",
+      "size": 2131,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/mips64-linux.xml",
+      "size": 598,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/64bit-sse-valgrind-s2.xml",
+      "size": 2541,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/mips-linux.xml",
+      "size": 633,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/valgrind-monitor.py",
+      "size": 1370,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/dh_view.js",
+      "size": 50377,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/s390x-core64.xml",
+      "size": 1489,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/arm-core-valgrind-s1.xml",
+      "size": 1197,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/32bit-linux-valgrind-s2.xml",
+      "size": 443,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/amd64-linux-valgrind.xml",
+      "size": 877,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/power64-core-valgrind-s2.xml",
+      "size": 3475,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/s390-fpr-valgrind-s2.xml",
+      "size": 1443,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/arm-core.xml",
+      "size": 1151,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/power64-core2-valgrind-s1.xml",
+      "size": 693,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/64bit-core.xml",
+      "size": 3115,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/amd64-avx-linux.xml",
+      "size": 623,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/64bit-avx-valgrind-s1.xml",
+      "size": 1236,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/64bit-avx.xml",
+      "size": 1192,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/s390-acr.xml",
+      "size": 1384,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "./libexec/valgrind/exp-bbv-amd64-linux",
+      "size": 11098400,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/64bit-sse.xml",
+      "size": 2475,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/power64-core.xml",
+      "size": 2633,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/s390x-vx-linux.xml",
+      "size": 611,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/mips64-fpu-valgrind-s1.xml",
+      "size": 2225,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/amd64-coresse-valgrind.xml",
+      "size": 683,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/s390-vx.xml",
+      "size": 2506,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/s390x-generic-valgrind.xml",
+      "size": 978,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/power-vsx-valgrind-s2.xml",
+      "size": 2080,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "./libexec/valgrind/massif-amd64-linux",
+      "size": 11240376,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/valgrind-monitor-def.py",
+      "size": 37567,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/mips64-fpu-valgrind-s2.xml",
+      "size": 2225,
+      "type": "file"
+    },
+    {
+      "mode": "0o755",
+      "path": "./libexec/valgrind/callgrind-amd64-linux",
+      "size": 11716728,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/power-linux-valgrind-s2.xml",
+      "size": 485,
+      "type": "file"
+    },
+    {
+      "mode": "0o644",
+      "path": "./libexec/valgrind/mips-cpu-valgrind-s2.xml",
+      "size": 1655,
+      "type": "file"
+    }
+  ],
+  "hash_tree": null,
+  "schema_version": 1,
+  "tool_count": 4,
+  "tools": [
+    {
+      "file_name": "valgrind",
+      "mode": "0o755",
+      "path": "./bin/valgrind",
+      "sha256": "6c2f5c3b152a4accdb2b2038becc5ebdf64d5ef8972152e2ea98422b86c268ad",
+      "size": 61288,
+      "tool_name": "valgrind",
+      "type": "file"
+    },
+    {
+      "file_name": "valgrind-di-server",
+      "mode": "0o755",
+      "path": "./bin/valgrind-di-server",
+      "sha256": "bdb62c36fc92bb552893a579f08e514ea9d1eb2f78760f87a936eeb2002a64c2",
+      "size": 98336,
+      "tool_name": "valgrind-di-server",
+      "type": "file"
+    },
+    {
+      "file_name": "valgrind-listener",
+      "mode": "0o755",
+      "path": "./bin/valgrind-listener",
+      "sha256": "f5a82a66196d6bafcc99b07061ab58cd84c544844aa231452b01937f20f59a4d",
+      "size": 33064,
+      "tool_name": "valgrind-listener",
+      "type": "file"
+    },
+    {
+      "file_name": "vgdb",
+      "mode": "0o755",
+      "path": "./bin/vgdb",
+      "sha256": "500118fdff89a1b788ccff0d8bf570526d27bea749f6d4ba64917b5ba1310840",
+      "size": 274608,
+      "tool_name": "vgdb",
+      "type": "file"
+    }
+  ]
+}
