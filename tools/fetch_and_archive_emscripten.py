@@ -121,8 +121,6 @@ def identify_minimal_files(emsdk_dir: Path) -> list[Path]:
     """
     print("\nIdentifying minimal required files...")
 
-    upstream = emsdk_dir / "upstream"
-
     essential_dirs = [
         "upstream/emscripten",  # Emscripten Python scripts and tools
         "upstream/bin",         # LLVM/Clang binaries
@@ -213,7 +211,7 @@ def strip_unnecessary_files(extract_dir: Path) -> int:
         else:
             print(f"    Preserving: {txt_file.relative_to(extract_dir)}")
 
-    print(f"  Removed {txt_files_removed} .txt files, preserved {len([f for f in extract_dir.rglob('*.txt')])} critical .txt files")
+    print(f"  Removed {txt_files_removed} .txt files, preserved {len(list(extract_dir.rglob('*.txt')))} critical .txt files")
 
     final_size = sum(f.stat().st_size for f in extract_dir.rglob('*') if f.is_file())
     actual_saved = initial_size - final_size
@@ -444,7 +442,7 @@ def main() -> None:
         print(f"  Warning: .emscripten config file not found at {config_file}")
 
     # Step 4: Strip unnecessary files
-    bytes_saved = strip_unnecessary_files(staging_dir)
+    strip_unnecessary_files(staging_dir)
 
     # Step 5: Create archive
     final_archive = create_archive(staging_dir, output_dir, args.platform, args.arch, installed_version)

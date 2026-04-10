@@ -18,7 +18,6 @@ Example:
 import argparse
 import hashlib
 import json
-import os
 import shutil
 import subprocess
 import sys
@@ -175,10 +174,9 @@ def create_tar_zst(source_dir: Path, output_file: Path, compression_level: int =
     try:
         import zstandard as zstd
 
-        with open(tar_file, "rb") as f_in:
-            with open(output_file, "wb") as f_out:
-                cctx = zstd.ZstdCompressor(level=compression_level)
-                cctx.copy_stream(f_in, f_out)
+        with open(tar_file, "rb") as f_in, open(output_file, "wb") as f_out:
+            cctx = zstd.ZstdCompressor(level=compression_level)
+            cctx.copy_stream(f_in, f_out)
     except ImportError:
         # Fallback to command-line zstd
         subprocess.run(
@@ -263,11 +261,7 @@ def main() -> int:
 
         # Find the actual content directory (may be nested)
         content_dirs = list(extract_dir.iterdir())
-        if len(content_dirs) == 1 and content_dirs[0].is_dir():
-            # Single directory extracted - use its contents
-            source_dir = content_dirs[0]
-        else:
-            source_dir = extract_dir
+        source_dir = content_dirs[0] if len(content_dirs) == 1 and content_dirs[0].is_dir() else extract_dir
 
         # Strip unnecessary files
         print("\nStep 2.5: Removing unnecessary files to reduce archive size...")

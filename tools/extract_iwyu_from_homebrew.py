@@ -116,10 +116,11 @@ def verify_binary_dependencies(binary_path: Path) -> bool:
         line = line.strip().lower()
 
         # Check for Homebrew-specific paths (problematic)
-        if '/opt/homebrew/' in line or '/usr/local/opt/' in line or '/usr/local/cellar/' in line:
-            if 'llvm' in line or 'clang' in line:
-                has_homebrew_llvm = True
-                print(f"⚠️  Found Homebrew LLVM dependency: {line}")
+        if ('/opt/homebrew/' in line or '/usr/local/opt/' in line or '/usr/local/cellar/' in line) and (
+            'llvm' in line or 'clang' in line
+        ):
+            has_homebrew_llvm = True
+            print(f"⚠️  Found Homebrew LLVM dependency: {line}")
 
         # System LLVM is okay (but rare on Homebrew builds)
         if '/usr/lib/' in line and ('llvm' in line or 'clang' in line):
@@ -359,10 +360,7 @@ def fix_install_names(output_dir: Path) -> None:
                 dylib_name = Path(old_path).name
 
                 # For dylibs, use @loader_path; for binaries, use @executable_path
-                if is_dylib:
-                    new_path = f"@loader_path/{dylib_name}"
-                else:
-                    new_path = f"@executable_path/../lib/{dylib_name}"
+                new_path = f"@loader_path/{dylib_name}" if is_dylib else f"@executable_path/../lib/{dylib_name}"
 
                 print(f"Fixing: {binary_path.name}")
                 print(f"  Old: {old_path}")

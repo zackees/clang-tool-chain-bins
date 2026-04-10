@@ -116,19 +116,17 @@ def update_manifest_with_parts(
     for key, value in manifest.items():
         if key == "latest":
             continue
-        if isinstance(value, dict) and "href" in value:
-            if archive_name in value["href"]:
-                version_key = key
-                break
+        if isinstance(value, dict) and "href" in value and archive_name in value["href"]:
+            version_key = key
+            break
 
     # Also check nested versions structure
     if version_key is None and "versions" in manifest:
         for key, value in manifest["versions"].items():
-            if isinstance(value, dict) and "href" in value:
-                if archive_name in value["href"]:
-                    version_key = key
-                    manifest = manifest["versions"]  # Work with nested structure
-                    break
+            if isinstance(value, dict) and "href" in value and archive_name in value["href"]:
+                version_key = key
+                manifest = manifest["versions"]  # Work with nested structure
+                break
 
     if version_key is None:
         print(f"Warning: Could not find version entry for {archive_name}")

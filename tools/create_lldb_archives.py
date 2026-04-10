@@ -171,11 +171,9 @@ def extract_llvm_archive(archive_path: Path, extract_dir: Path, platform: str) -
     # Find the LLVM root directory
     llvm_root = None
     for item in extract_dir.iterdir():
-        if item.is_dir():
-            # Check if it has a bin/ directory
-            if (item / "bin").exists():
-                llvm_root = item
-                break
+        if item.is_dir() and (item / "bin").exists():
+            llvm_root = item
+            break
 
     if not llvm_root:
         raise RuntimeError(f"Could not find LLVM root with bin/ directory in {extract_dir}")

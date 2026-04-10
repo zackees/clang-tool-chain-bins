@@ -230,8 +230,8 @@ def extract_deb_package(deb_path: Path, output_dir: Path) -> None:
         print("    Decompressing with zstandard...")
         try:
             import zstandard as zstd
-        except ImportError:
-            raise RuntimeError("zstandard library required. Install with: pip install zstandard")
+        except ImportError as exc:
+            raise RuntimeError("zstandard library required. Install with: pip install zstandard") from exc
 
         # Decompress data.tar.zst to data.tar
         data_tar_decompressed = Path("data.tar")

@@ -224,11 +224,9 @@ def extract_llvm_archive(archive_path: Path, extract_dir: Path, platform: str) -
     # Otherwise look for subdirectories (Linux/macOS .tar.xz case)
     llvm_root = None
     for item in extract_dir.iterdir():
-        if item.is_dir():
-            # Check if it has lib/site-packages/lldb/ (or bin/ for fallback)
-            if (item / "lib" / "site-packages" / "lldb").exists() or (item / "bin").exists():
-                llvm_root = item
-                break
+        if item.is_dir() and ((item / "lib" / "site-packages" / "lldb").exists() or (item / "bin").exists()):
+            llvm_root = item
+            break
 
     if not llvm_root:
         raise RuntimeError(f"Could not find LLVM root directory in {extract_dir}")

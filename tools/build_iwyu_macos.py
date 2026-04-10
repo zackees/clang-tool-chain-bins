@@ -291,10 +291,7 @@ def main():
     print(f"Linking Mode: {'STATIC' if static_linking else 'DYNAMIC'}")
 
     # Determine LLVM path (not used anymore - Homebrew LLVM will be installed during build)
-    if args.llvm_path:
-        llvm_path = args.llvm_path
-    else:
-        llvm_path = Path.home() / ".clang-tool-chain" / "clang" / "darwin" / target_arch
+    llvm_path = args.llvm_path or Path.home() / ".clang-tool-chain" / "clang" / "darwin" / target_arch
 
     # Note: LLVM path check removed - Homebrew LLVM will be installed during build_iwyu()
 

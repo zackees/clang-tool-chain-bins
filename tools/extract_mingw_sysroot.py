@@ -237,7 +237,7 @@ def extract_sysroot(archive_path: Path, extract_dir: Path, arch: str, gcc_dlls: 
         sysroot_bin = sysroot_dst / "bin"
         sysroot_bin.mkdir(parents=True, exist_ok=True)
 
-        print(f"\nCopying GCC runtime DLLs to sysroot:")
+        print("\nCopying GCC runtime DLLs to sysroot:")
         for dll_path in gcc_dlls:
             dll_dst = sysroot_bin / dll_path.name
             print(f"  {dll_path.name} -> {dll_dst}")
