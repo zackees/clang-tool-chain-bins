@@ -3,15 +3,19 @@
     "arch": "x86_64",
     "archive_size_bytes": 24946528,
     "component": "valgrind",
+    "download_kind": "raw",
     "filename": "valgrind-3.24.0-linux-x86_64.tar.zst",
     "git_lfs_pointer": false,
     "manifest_path": "valgrind\\linux\\x86_64\\manifest.json",
     "parts": [],
     "platform": "linux",
+    "probe_urls": [
+      "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/valgrind/linux/x86_64/valgrind-3.24.0-linux-x86_64.tar.zst"
+    ],
     "relative_path": "valgrind\\linux\\x86_64\\valgrind-3.24.0-linux-x86_64.tar.zst",
     "sha256": "b986c447d12709c572e7164a117740222aefa62282cfb18ebb9874b9aef10d03",
     "size_bytes": 24946528,
-    "url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/refs/heads/main/assets/valgrind/linux/x86_64/valgrind-3.24.0-linux-x86_64.tar.zst",
+    "url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/valgrind/linux/x86_64/valgrind-3.24.0-linux-x86_64.tar.zst",
     "version": "3.24.0"
   },
   "file_count": 143,

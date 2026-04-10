@@ -3,11 +3,15 @@
     "arch": "x86_64",
     "archive_size_bytes": 41987658,
     "component": "clang-extra",
+    "download_kind": "raw",
     "filename": "clang-extra-21.1.5-linux-x86_64.tar.zst",
     "git_lfs_pointer": false,
     "manifest_path": "clang-extra\\linux\\x86_64\\manifest.json",
     "parts": [],
     "platform": "linux",
+    "probe_urls": [
+      "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/x86_64/clang-extra-21.1.5-linux-x86_64.tar.zst"
+    ],
     "relative_path": "clang-extra\\linux\\x86_64\\clang-extra-21.1.5-linux-x86_64.tar.zst",
     "sha256": "1d4d89fdd80f57fd862ce6f0a261389fa90b43ecba7143f0baa968566d155869",
     "size_bytes": 41987658,

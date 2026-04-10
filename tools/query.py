@@ -40,6 +40,8 @@ class ToolRecord:
     archive_sha256: str
     archive_url: str | None
     parts: list[dict[str, Any]]
+    download_kind: str | None = None
+    probe_urls: list[str] | None = None
 
 
 def _reset_remote_index_cache() -> None:

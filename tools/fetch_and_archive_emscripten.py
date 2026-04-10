@@ -15,6 +15,11 @@ import sys
 import tarfile
 from pathlib import Path
 
+try:
+    from .download_sources import build_asset_download_descriptor
+except ImportError:
+    from download_sources import build_asset_download_descriptor
+
 # Emscripten version to package
 EMSCRIPTEN_VERSION = "latest"  # Can be specific version like "3.1.50"
 EMSDK_REPO = "https://github.com/emscripten-core/emsdk.git"
@@ -307,13 +312,14 @@ def create_manifest(output_dir: Path, version: str, platform: str, arch: str, ch
     manifest_path = output_dir / "manifest.json"
 
     archive_name = f"emscripten-{version}-{platform}-{arch}.tar.zst"
+    descriptor = build_asset_download_descriptor(output_dir / archive_name)
 
     manifest_data = {
         "latest": version,
         "versions": {
             version: {
                 "version": version,
-                "href": f"https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/emscripten/{platform}/{arch}/{archive_name}",
+                "href": descriptor.href,
                 "sha256": checksums["sha256"],
             }
         },

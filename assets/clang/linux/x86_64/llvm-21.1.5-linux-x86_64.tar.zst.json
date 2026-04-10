@@ -3,11 +3,15 @@
     "arch": "x86_64",
     "archive_size_bytes": 98921700,
     "component": "clang",
+    "download_kind": "raw",
     "filename": "llvm-21.1.5-linux-x86_64.tar.zst",
     "git_lfs_pointer": false,
     "manifest_path": "clang\\linux\\x86_64\\manifest.json",
     "parts": [],
     "platform": "linux",
+    "probe_urls": [
+      "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang/linux/x86_64/llvm-21.1.5-linux-x86_64.tar.zst"
+    ],
     "relative_path": "clang\\linux\\x86_64\\llvm-21.1.5-linux-x86_64.tar.zst",
     "sha256": "4021cc49d70472122761709e7376835dfc857b5ec77183fa969b5f61d0f13a2f",
     "size_bytes": 98921700,

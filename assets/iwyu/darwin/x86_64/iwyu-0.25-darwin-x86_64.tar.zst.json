@@ -3,15 +3,19 @@
     "arch": "x86_64",
     "archive_size_bytes": 59245570,
     "component": "iwyu",
+    "download_kind": "raw",
     "filename": "iwyu-0.25-darwin-x86_64.tar.zst",
     "git_lfs_pointer": false,
     "manifest_path": "iwyu\\darwin\\x86_64\\manifest.json",
     "parts": [],
     "platform": "darwin",
+    "probe_urls": [
+      "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/iwyu/darwin/x86_64/iwyu-0.25-darwin-x86_64.tar.zst"
+    ],
     "relative_path": "iwyu\\darwin\\x86_64\\iwyu-0.25-darwin-x86_64.tar.zst",
     "sha256": "ba55202f00cfbe57fe86292a099ee0ce4c8badacbf39e53e3a5356f9bf67b728",
     "size_bytes": 59245570,
-    "url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/iwyu/darwin/x86_64/iwyu-0.25-darwin-x86_64.tar.zst",
+    "url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/iwyu/darwin/x86_64/iwyu-0.25-darwin-x86_64.tar.zst",
     "version": "0.25"
   },
   "file_count": 34,

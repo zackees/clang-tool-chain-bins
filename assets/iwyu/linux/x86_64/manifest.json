@@ -1,7 +1,21 @@
 {
   "latest": "0.25",
   "0.25": {
-    "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/refs/heads/main/assets/iwyu/linux/x86_64/iwyu-0.25-linux-x86_64-fixed.tar.zst",
-    "sha256": "b731a01834d7390023a2e30a2b6f644e98054fa07232f7cf056c0249fba7aa8d"
+    "href": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/iwyu/linux/x86_64/iwyu-0.25-linux-x86_64-fixed.tar.zst",
+    "sha256": "b731a01834d7390023a2e30a2b6f644e98054fa07232f7cf056c0249fba7aa8d",
+    "parts": [
+      {
+        "href": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/iwyu/linux/x86_64/iwyu-0.25-linux-x86_64-fixed.tar.zst.part-aa",
+        "size": 99614720
+      },
+      {
+        "href": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/iwyu/linux/x86_64/iwyu-0.25-linux-x86_64-fixed.tar.zst.part-ab",
+        "size": 99614720
+      },
+      {
+        "href": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/iwyu/linux/x86_64/iwyu-0.25-linux-x86_64-fixed.tar.zst.part-ac",
+        "size": 11841085
+      }
+    ]
   }
 }

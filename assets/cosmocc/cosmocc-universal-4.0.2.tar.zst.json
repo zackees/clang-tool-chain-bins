@@ -3,11 +3,15 @@
     "arch": null,
     "archive_size_bytes": 315905840,
     "component": "cosmocc",
+    "download_kind": "lfs",
     "filename": "cosmocc-universal-4.0.2.tar.zst",
     "git_lfs_pointer": false,
     "manifest_path": "cosmocc\\manifest-universal.json",
     "parts": [],
     "platform": null,
+    "probe_urls": [
+      "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/cosmocc/cosmocc-universal-4.0.2.tar.zst"
+    ],
     "relative_path": "cosmocc\\cosmocc-universal-4.0.2.tar.zst",
     "sha256": "ade991cb32e14dfe52ba6e1dc164665f91f0142b09b802c647aa62074d70dec8",
     "size_bytes": 315905840,

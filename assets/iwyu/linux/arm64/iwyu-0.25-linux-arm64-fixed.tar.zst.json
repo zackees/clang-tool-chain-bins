@@ -3,15 +3,19 @@
     "arch": "arm64",
     "archive_size_bytes": 93836231,
     "component": "iwyu",
+    "download_kind": "raw",
     "filename": "iwyu-0.25-linux-arm64-fixed.tar.zst",
     "git_lfs_pointer": false,
     "manifest_path": "iwyu\\linux\\arm64\\manifest.json",
     "parts": [],
     "platform": "linux",
+    "probe_urls": [
+      "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/iwyu/linux/arm64/iwyu-0.25-linux-arm64-fixed.tar.zst"
+    ],
     "relative_path": "iwyu\\linux\\arm64\\iwyu-0.25-linux-arm64-fixed.tar.zst",
     "sha256": "4d9afb232c733b8929b8105d5e1267f2bcf3b0a75817c0f4606b078323cb47d0",
     "size_bytes": 93836231,
-    "url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/iwyu/linux/arm64/iwyu-0.25-linux-arm64-fixed.tar.zst",
+    "url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/iwyu/linux/arm64/iwyu-0.25-linux-arm64-fixed.tar.zst",
     "version": "0.25"
   },
   "file_count": 359,

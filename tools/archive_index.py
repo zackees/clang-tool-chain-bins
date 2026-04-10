@@ -14,6 +14,11 @@ from urllib.parse import urlparse
 import pyzstd
 
 from .common import EXECUTABLE_EXTENSIONS, NON_TOOL_EXTENSIONS, normalize_tool_name, sha256_file
+from .download_sources import (
+    asset_repo_relative_path_from_url,
+    build_asset_download_descriptor,
+    parse_git_lfs_pointer,
+)
 from .json_utils import load_path
 
 INDEX_SCHEMA_VERSION = 1
@@ -134,11 +139,6 @@ def _guess_version_from_filename(component: str, filename: str) -> str | None:
     return None
 
 
-def _fallback_archive_url(archive_path: Path, assets_root: Path) -> str:
-    rel = archive_path.relative_to(assets_root).as_posix()
-    return f"https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/{rel}"
-
-
 def _parse_sha256_sidefile(path: Path) -> str | None:
     if not path.exists():
         return None
@@ -150,25 +150,6 @@ def _parse_sha256_sidefile(path: Path) -> str | None:
 
 def _write_sha256_sidefile(path: Path, sha256: str, archive_name: str) -> None:
     path.write_text(f"{sha256}  {archive_name}\n", encoding="utf-8")
-
-
-def _parse_git_lfs_pointer(path: Path) -> dict[str, str] | None:
-    if path.stat().st_size > 1024:
-        return None
-    try:
-        content = path.read_text(encoding="utf-8")
-    except UnicodeDecodeError:
-        return None
-    lines = [line.strip() for line in content.splitlines() if line.strip()]
-    if not lines or lines[0] != "version https://git-lfs.github.com/spec/v1":
-        return None
-    payload: dict[str, str] = {}
-    for line in lines[1:]:
-        if line.startswith("oid sha256:"):
-            payload["sha256"] = line.split("oid sha256:", 1)[1]
-        elif line.startswith("size "):
-            payload["size"] = line.split("size ", 1)[1]
-    return payload if "sha256" in payload else None
 
 
 def _member_type(member: tarfile.TarInfo) -> str:
@@ -201,7 +182,7 @@ def _is_tool_candidate(member: tarfile.TarInfo) -> bool:
 
 @contextlib.contextmanager
 def _materialized_archive_path(archive_path: Path, manifest_info: ManifestArchiveInfo | None):
-    pointer_info = _parse_git_lfs_pointer(archive_path)
+    pointer_info = parse_git_lfs_pointer(archive_path)
     if pointer_info is None:
         yield archive_path, None
         return
@@ -223,8 +204,26 @@ def _materialized_archive_path(archive_path: Path, manifest_info: ManifestArchiv
 def index_archive(archive_path: Path, assets_root: Path, manifest_lookup: dict[str, ManifestArchiveInfo]) -> dict[str, Any]:
     component, platform, arch = _infer_component_platform_arch(archive_path, assets_root)
     manifest_info = manifest_lookup.get(archive_path.name)
-    pointer_info = _parse_git_lfs_pointer(archive_path)
+    pointer_info = parse_git_lfs_pointer(archive_path)
     archive_sha256 = pointer_info["sha256"] if pointer_info else sha256_file(archive_path)
+    part_asset_paths: list[Path] = []
+    if manifest_info:
+        for part in manifest_info.parts:
+            href = part.get("href")
+            if not isinstance(href, str):
+                continue
+            repo_relative_part = asset_repo_relative_path_from_url(href)
+            if repo_relative_part is not None:
+                part_asset_paths.append(assets_root.parent / Path(repo_relative_part.as_posix()))
+                continue
+            part_asset_paths.append(archive_path.parent / Path(urlparse(href).path).name)
+    descriptor = build_asset_download_descriptor(
+        archive_path,
+        repo_root=assets_root.parent,
+        part_asset_paths=part_asset_paths,
+    )
+    probe_urls = [part["href"] for part in manifest_info.parts if isinstance(part.get("href"), str)] if manifest_info and manifest_info.parts else list(descriptor.probe_urls)
+    archive_url = manifest_info.url if manifest_info else descriptor.href
 
     sha_sidecar = Path(f"{archive_path}.sha256")
     existing_sha = _parse_sha256_sidefile(sha_sidecar)
@@ -290,7 +289,9 @@ def index_archive(archive_path: Path, assets_root: Path, manifest_lookup: dict[s
             "size_bytes": archive_path.stat().st_size,
             "archive_size_bytes": int(pointer_info["size"]) if pointer_info and "size" in pointer_info else archive_path.stat().st_size,
             "sha256": archive_sha256,
-            "url": manifest_info.url if manifest_info else _fallback_archive_url(archive_path, assets_root),
+            "url": archive_url,
+            "download_kind": descriptor.kind.value,
+            "probe_urls": probe_urls,
             "manifest_path": manifest_info.manifest_path if manifest_info else None,
             "parts": manifest_info.parts if manifest_info else [],
             "git_lfs_pointer": bool(pointer_info),
@@ -345,6 +346,8 @@ def build_aggregate_index(assets_root: Path | None = None, output_path: Path | N
                 "arch": archive.get("arch"),
                 "sha256": archive["sha256"],
                 "url": archive.get("url"),
+                "download_kind": archive.get("download_kind"),
+                "probe_urls": archive.get("probe_urls", []),
                 "parts": archive.get("parts", []),
                 "index_path": str(sidecar_path.relative_to(root)),
                 "tool_count": data.get("tool_count", 0),
@@ -368,6 +371,8 @@ def build_aggregate_index(assets_root: Path | None = None, output_path: Path | N
                     "archive_filename": archive["filename"],
                     "archive_sha256": archive["sha256"],
                     "archive_url": archive.get("url"),
+                    "download_kind": archive.get("download_kind"),
+                    "probe_urls": archive.get("probe_urls", []),
                     "parts": archive.get("parts", []),
                 }
             )

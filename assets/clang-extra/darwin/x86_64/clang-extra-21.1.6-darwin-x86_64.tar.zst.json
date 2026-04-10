@@ -3,11 +3,15 @@
     "arch": "x86_64",
     "archive_size_bytes": 20249121,
     "component": "clang-extra",
+    "download_kind": "raw",
     "filename": "clang-extra-21.1.6-darwin-x86_64.tar.zst",
     "git_lfs_pointer": false,
     "manifest_path": "clang-extra\\darwin\\x86_64\\manifest.json",
     "parts": [],
     "platform": "darwin",
+    "probe_urls": [
+      "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/x86_64/clang-extra-21.1.6-darwin-x86_64.tar.zst"
+    ],
     "relative_path": "clang-extra\\darwin\\x86_64\\clang-extra-21.1.6-darwin-x86_64.tar.zst",
     "sha256": "b436f9e260c4697a49e6aa9b5cc8e7e6c5139d42a13ba8b4884204c960955d45",
     "size_bytes": 20249121,

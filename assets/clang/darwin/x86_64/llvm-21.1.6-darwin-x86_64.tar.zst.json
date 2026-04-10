@@ -3,11 +3,15 @@
     "arch": "x86_64",
     "archive_size_bytes": 80197310,
     "component": "clang",
+    "download_kind": "lfs",
     "filename": "llvm-21.1.6-darwin-x86_64.tar.zst",
     "git_lfs_pointer": true,
     "manifest_path": "clang\\darwin\\x86_64\\manifest.json",
     "parts": [],
     "platform": "darwin",
+    "probe_urls": [
+      "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang/darwin/x86_64/llvm-21.1.6-darwin-x86_64.tar.zst"
+    ],
     "relative_path": "clang\\darwin\\x86_64\\llvm-21.1.6-darwin-x86_64.tar.zst",
     "sha256": "2f010a75d4b4f238b132ec22f3b9df5d341be9be60b73a5790436642f85fba71",
     "size_bytes": 133,

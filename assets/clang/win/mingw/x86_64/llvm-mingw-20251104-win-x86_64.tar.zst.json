@@ -3,15 +3,19 @@
     "arch": "mingw-x86_64",
     "archive_size_bytes": 91525865,
     "component": "clang",
+    "download_kind": "raw",
     "filename": "llvm-mingw-20251104-win-x86_64.tar.zst",
     "git_lfs_pointer": false,
     "manifest_path": "clang\\win\\mingw\\x86_64\\manifest.json",
     "parts": [],
     "platform": "win",
+    "probe_urls": [
+      "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang/win/mingw/x86_64/llvm-mingw-20251104-win-x86_64.tar.zst"
+    ],
     "relative_path": "clang\\win\\mingw\\x86_64\\llvm-mingw-20251104-win-x86_64.tar.zst",
     "sha256": "a18059f62f4435c0f023073e186f7c14be5fdfc07a193b1f1e627bcad7f15d87",
     "size_bytes": 91525865,
-    "url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang/win/mingw/x86_64/llvm-mingw-20251104-win-x86_64.tar.zst",
+    "url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang/win/mingw/x86_64/llvm-mingw-20251104-win-x86_64.tar.zst",
     "version": "20251104"
   },
   "file_count": 9489,

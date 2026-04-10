@@ -16,6 +16,11 @@ import urllib.request
 import zipfile
 from pathlib import Path
 
+try:
+    from .download_sources import build_asset_download_descriptor
+except ImportError:
+    from download_sources import build_asset_download_descriptor
+
 # LLVM-MinGW version and download URLs
 LLVM_MINGW_VERSION = "20251104"  # Release date format (latest as of Nov 2024)
 LLVM_VERSION = "21.1.5"
@@ -457,12 +462,13 @@ def main() -> None:
 
     # Step 6: Update manifest
     manifest_path = output_dir / "manifest.json"
+    descriptor = build_asset_download_descriptor(final_archive)
     manifest_data = {
         "latest": LLVM_VERSION,
         "versions": {
             LLVM_VERSION: {
                 "version": LLVM_VERSION,
-                "href": f"./mingw-sysroot-{LLVM_VERSION}-win-{args.arch}.tar.zst",
+                "href": descriptor.href,
                 "sha256": checksums["sha256"],
             }
         },

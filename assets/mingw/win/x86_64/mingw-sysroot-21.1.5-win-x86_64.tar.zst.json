@@ -3,15 +3,19 @@
     "arch": "x86_64",
     "archive_size_bytes": 21015016,
     "component": "mingw",
+    "download_kind": "raw",
     "filename": "mingw-sysroot-21.1.5-win-x86_64.tar.zst",
     "git_lfs_pointer": false,
     "manifest_path": "mingw\\win\\x86_64\\manifest.json",
     "parts": [],
     "platform": "win",
+    "probe_urls": [
+      "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/mingw/win/x86_64/mingw-sysroot-21.1.5-win-x86_64.tar.zst"
+    ],
     "relative_path": "mingw\\win\\x86_64\\mingw-sysroot-21.1.5-win-x86_64.tar.zst",
     "sha256": "60cc8b10b293b41005ccea5d809c66e4d0e4538135c9072e445da7ed0df61e42",
     "size_bytes": 21015016,
-    "url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/mingw/win/x86_64/mingw-sysroot-21.1.5-win-x86_64.tar.zst",
+    "url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/mingw/win/x86_64/mingw-sysroot-21.1.5-win-x86_64.tar.zst",
     "version": "21.1.5"
   },
   "file_count": 5238,

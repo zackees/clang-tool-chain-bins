@@ -38,6 +38,11 @@ import urllib.request
 import zipfile
 from pathlib import Path
 
+try:
+    from .download_sources import build_asset_download_descriptor
+except ImportError:
+    from download_sources import build_asset_download_descriptor
+
 # ============================================================================
 # Configuration
 # ============================================================================
@@ -494,11 +499,8 @@ def create_manifest(
     manifest_dir = output_dir
     manifest_path = manifest_dir / "manifest.json"
 
-    # Construct GitHub URL for the archive
-    github_url = (
-        f"https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/"
-        f"assets/nodejs/{platform}/{arch}/{archive_path.name}"
-    )
+    descriptor = build_asset_download_descriptor(output_dir / archive_path.name)
+    github_url = descriptor.href
 
     # Create or update manifest
     manifest = {}

@@ -3,11 +3,15 @@
     "arch": "x86_64",
     "archive_size_bytes": 17330138,
     "component": "clang-extra",
+    "download_kind": "raw",
     "filename": "clang-extra-21.1.5-win-x86_64.tar.zst",
     "git_lfs_pointer": false,
     "manifest_path": "clang-extra\\win\\x86_64\\manifest.json",
     "parts": [],
     "platform": "win",
+    "probe_urls": [
+      "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/x86_64/clang-extra-21.1.5-win-x86_64.tar.zst"
+    ],
     "relative_path": "clang-extra\\win\\x86_64\\clang-extra-21.1.5-win-x86_64.tar.zst",
     "sha256": "aaf5bc0194f440cbba72aa8d41434f3d1f403739a8791c674edae6e3a49d2401",
     "size_bytes": 17330138,

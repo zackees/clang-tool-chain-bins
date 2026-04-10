@@ -25,6 +25,11 @@ import tempfile
 import urllib.request
 from pathlib import Path
 
+try:
+    from .download_sources import build_asset_download_descriptor
+except ImportError:
+    from download_sources import build_asset_download_descriptor
+
 # Default version
 DEFAULT_VERSION = "4.0.2"
 
@@ -195,6 +200,7 @@ def create_tar_zst(source_dir: Path, output_file: Path, compression_level: int =
 def update_manifest(output_dir: Path, version: str, archive_name: str, sha256: str) -> None:
     """Update the manifest-universal.json file."""
     manifest_path = output_dir / "manifest-universal.json"
+    descriptor = build_asset_download_descriptor(output_dir / archive_name)
 
     # Load existing manifest or create new
     if manifest_path.exists():
@@ -206,7 +212,7 @@ def update_manifest(output_dir: Path, version: str, archive_name: str, sha256: s
     # Update with new version
     manifest["latest"] = version
     manifest["versions"][version] = {
-        "href": f"https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/cosmocc/{archive_name}",
+        "href": descriptor.href,
         "sha256": sha256,
     }
 
