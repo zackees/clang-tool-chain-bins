@@ -1,14 +1,17 @@
 from __future__ import annotations
 
 import argparse
+import functools
 import json
 import os
 import shutil
+import subprocess
+import sys
 import tarfile
 import tempfile
-import urllib.request
 from pathlib import Path, PurePosixPath
 from typing import TYPE_CHECKING, Any
+from urllib.parse import urlparse, unquote
 
 import fasteners
 import pyzstd
@@ -55,18 +58,136 @@ def _filter_matches(
     return matches
 
 
-def _download(url: str, destination: Path) -> None:
+def _local_file_path_from_url(url: str) -> Path | None:
+    parsed = urlparse(url)
+    if parsed.scheme != "file":
+        return None
+    return Path(unquote(parsed.path.lstrip("/")))
+
+
+def _copy_file_url(url: str, destination: Path) -> None:
+    source_path = _local_file_path_from_url(url)
+    if source_path is None:
+        raise ValueError(f"expected file:// URL, got {url}")
     destination.parent.mkdir(parents=True, exist_ok=True)
-    with urllib.request.urlopen(url) as response, destination.open("wb") as out_f:
-        shutil.copyfileobj(response, out_f)
+    shutil.copyfile(source_path, destination)
 
 
-def _download_multipart(parts: list[dict[str, Any]], destination: Path) -> None:
+def _copy_multipart_file_urls(urls: list[str], destination: Path) -> None:
     destination.parent.mkdir(parents=True, exist_ok=True)
     with destination.open("wb") as out_f:
-        for part in parts:
-            with urllib.request.urlopen(part["href"]) as response:
-                shutil.copyfileobj(response, out_f)
+        for url in urls:
+            source_path = _local_file_path_from_url(url)
+            if source_path is None:
+                raise ValueError(f"expected file:// URL, got {url}")
+            with source_path.open("rb") as in_f:
+                shutil.copyfileobj(in_f, out_f)
+
+
+def _zccache_binary_name() -> str:
+    return "zccache.exe" if os.name == "nt" else "zccache"
+
+
+@functools.lru_cache(maxsize=1)
+def _resolve_zccache_binary() -> Path:
+    configured = os.environ.get("ZCCACHE_BIN")
+    candidates: list[Path] = []
+    if configured:
+        candidates.append(Path(configured).expanduser())
+
+    on_path = shutil.which(_zccache_binary_name())
+    if on_path:
+        candidates.append(Path(on_path))
+
+    python_bin_candidate = Path(sys.executable).resolve().parent / _zccache_binary_name()
+    if python_bin_candidate.exists():
+        candidates.append(python_bin_candidate)
+
+    seen: set[str] = set()
+    for candidate in candidates:
+        key = os.path.normcase(str(candidate))
+        if key in seen:
+            continue
+        seen.add(key)
+        if candidate.is_file():
+            return candidate
+
+    raise RuntimeError(
+        "HTTP artifact downloads require a zccache binary with multipart download support. "
+        "Install zccache so `zccache` is on PATH or set ZCCACHE_BIN to the binary path."
+    )
+
+
+@functools.lru_cache(maxsize=None)
+def _assert_zccache_download_support(binary: str) -> None:
+    help_result = subprocess.run(
+        [binary, "download", "--help"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if help_result.returncode != 0:
+        detail = (help_result.stderr or help_result.stdout).strip()
+        raise RuntimeError(f"Failed to inspect zccache download support: {detail or 'exit code ' + str(help_result.returncode)}")
+    if "--part-url" not in help_result.stdout:
+        raise RuntimeError(
+            "Installed zccache binary does not support multipart downloads. "
+            "Upgrade to a zccache release that includes `zccache download --part-url`."
+        )
+
+
+def _fetch_with_zccache(source: str | list[str], destination: Path, expected_sha256: str) -> None:
+    if isinstance(source, list) and not source:
+        raise ValueError("expected at least one multipart source URL")
+
+    binary = _resolve_zccache_binary()
+    _assert_zccache_download_support(str(binary))
+    destination.parent.mkdir(parents=True, exist_ok=True)
+
+    command = [str(binary), "download"]
+    if isinstance(source, str):
+        command.extend(["--url", source])
+    else:
+        for url in source:
+            command.extend(["--part-url", url])
+    command.extend(
+        [
+            "--sha256",
+            expected_sha256,
+            str(destination),
+        ]
+    )
+
+    result = subprocess.run(
+        command,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        detail = (result.stderr or result.stdout).strip()
+        raise RuntimeError(f"zccache download failed for {destination.name}: {detail or 'exit code ' + str(result.returncode)}")
+    if not destination.exists():
+        raise RuntimeError(f"zccache reported success but did not create {destination}")
+
+
+def _fetch_archive(match: dict[str, Any], destination: Path) -> None:
+    parts = match.get("parts") or []
+    if parts:
+        part_urls = [part["href"] for part in parts if isinstance(part.get("href"), str)]
+        if len(part_urls) != len(parts):
+            raise RuntimeError(f"Multipart download entry is missing href values for {match['archive_filename']}")
+        if part_urls and all(_local_file_path_from_url(url) is not None for url in part_urls):
+            _copy_multipart_file_urls(part_urls, destination)
+            return
+        _fetch_with_zccache(part_urls, destination, match["archive_sha256"])
+        return
+
+    archive_url = match["archive_url"]
+    if _local_file_path_from_url(archive_url) is not None:
+        _copy_file_url(archive_url, destination)
+        return
+    _fetch_with_zccache(archive_url, destination, match["archive_sha256"])
 
 
 def _validated_member_path(base_dir: Path, member_name: str) -> Path:
@@ -101,11 +222,7 @@ def _ensure_cached(match: dict[str, Any], home_dir: Path) -> Path:
     if tmp_path.exists():
         tmp_path.unlink()
 
-    parts = match.get("parts") or []
-    if parts:
-        _download_multipart(parts, tmp_path)
-    else:
-        _download(match["archive_url"], tmp_path)
+    _fetch_archive(match, tmp_path)
 
     actual_sha = sha256_file(tmp_path)
     if actual_sha != match["archive_sha256"]:
