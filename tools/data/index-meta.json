@@ -1,0 +1,287 @@
+{
+  "aggregate_index_path": "tool-index.json",
+  "index_count": 28,
+  "indexes": [
+    {
+      "arch": "arm64",
+      "archive_path": "clang\\darwin\\arm64\\llvm-21.1.6-darwin-arm64.tar.zst",
+      "archive_sha256": "f7631c8b96d76dadd9aa69be681e164a5b5fbbb0dd95ecf99764d9d2222ca65a",
+      "component": "clang",
+      "filename": "llvm-21.1.6-darwin-arm64.tar.zst",
+      "index_path": "clang\\darwin\\arm64\\llvm-21.1.6-darwin-arm64.tar.zst.json",
+      "platform": "darwin",
+      "version": "21.1.6"
+    },
+    {
+      "arch": "x86_64",
+      "archive_path": "clang\\darwin\\x86_64\\llvm-21.1.6-darwin-x86_64.tar.zst",
+      "archive_sha256": "2f010a75d4b4f238b132ec22f3b9df5d341be9be60b73a5790436642f85fba71",
+      "component": "clang",
+      "filename": "llvm-21.1.6-darwin-x86_64.tar.zst",
+      "index_path": "clang\\darwin\\x86_64\\llvm-21.1.6-darwin-x86_64.tar.zst.json",
+      "platform": "darwin",
+      "version": "21.1.6"
+    },
+    {
+      "arch": "arm64",
+      "archive_path": "clang\\linux\\arm64\\llvm-21.1.5-linux-arm64.tar.zst",
+      "archive_sha256": "df774b7fc1e392458325552addb67bf8c11bd452ad7bc660cf77103c617f89c5",
+      "component": "clang",
+      "filename": "llvm-21.1.5-linux-arm64.tar.zst",
+      "index_path": "clang\\linux\\arm64\\llvm-21.1.5-linux-arm64.tar.zst.json",
+      "platform": "linux",
+      "version": "21.1.5"
+    },
+    {
+      "arch": "x86_64",
+      "archive_path": "clang\\linux\\x86_64\\llvm-21.1.5-linux-x86_64.tar.zst",
+      "archive_sha256": "4021cc49d70472122761709e7376835dfc857b5ec77183fa969b5f61d0f13a2f",
+      "component": "clang",
+      "filename": "llvm-21.1.5-linux-x86_64.tar.zst",
+      "index_path": "clang\\linux\\x86_64\\llvm-21.1.5-linux-x86_64.tar.zst.json",
+      "platform": "linux",
+      "version": "21.1.5"
+    },
+    {
+      "arch": "mingw-x86_64",
+      "archive_path": "clang\\win\\mingw\\x86_64\\llvm-mingw-20251104-win-x86_64.tar.zst",
+      "archive_sha256": "a18059f62f4435c0f023073e186f7c14be5fdfc07a193b1f1e627bcad7f15d87",
+      "component": "clang",
+      "filename": "llvm-mingw-20251104-win-x86_64.tar.zst",
+      "index_path": "clang\\win\\mingw\\x86_64\\llvm-mingw-20251104-win-x86_64.tar.zst.json",
+      "platform": "win",
+      "version": "20251104"
+    },
+    {
+      "arch": "x86_64",
+      "archive_path": "clang\\win\\x86_64\\llvm-21.1.5-win-x86_64.tar.zst",
+      "archive_sha256": "8d6dd1cbc2261f8e6fa657b48f10a6e44223441d4b5487f056838cb8c2403a77",
+      "component": "clang",
+      "filename": "llvm-21.1.5-win-x86_64.tar.zst",
+      "index_path": "clang\\win\\x86_64\\llvm-21.1.5-win-x86_64.tar.zst.json",
+      "platform": "win",
+      "version": "21.1.5"
+    },
+    {
+      "arch": "arm64",
+      "archive_path": "clang-extra\\darwin\\arm64\\clang-extra-21.1.6-darwin-arm64.tar.zst",
+      "archive_sha256": "78ba5dc377392082ff05323aed5efaa5e5d5c84bbeb6e0b241964225195fab52",
+      "component": "clang-extra",
+      "filename": "clang-extra-21.1.6-darwin-arm64.tar.zst",
+      "index_path": "clang-extra\\darwin\\arm64\\clang-extra-21.1.6-darwin-arm64.tar.zst.json",
+      "platform": "darwin",
+      "version": "21.1.6"
+    },
+    {
+      "arch": "x86_64",
+      "archive_path": "clang-extra\\darwin\\x86_64\\clang-extra-21.1.6-darwin-x86_64.tar.zst",
+      "archive_sha256": "b436f9e260c4697a49e6aa9b5cc8e7e6c5139d42a13ba8b4884204c960955d45",
+      "component": "clang-extra",
+      "filename": "clang-extra-21.1.6-darwin-x86_64.tar.zst",
+      "index_path": "clang-extra\\darwin\\x86_64\\clang-extra-21.1.6-darwin-x86_64.tar.zst.json",
+      "platform": "darwin",
+      "version": "21.1.6"
+    },
+    {
+      "arch": "x86_64",
+      "archive_path": "clang-extra\\linux\\x86_64\\clang-extra-21.1.5-linux-x86_64.tar.zst",
+      "archive_sha256": "1d4d89fdd80f57fd862ce6f0a261389fa90b43ecba7143f0baa968566d155869",
+      "component": "clang-extra",
+      "filename": "clang-extra-21.1.5-linux-x86_64.tar.zst",
+      "index_path": "clang-extra\\linux\\x86_64\\clang-extra-21.1.5-linux-x86_64.tar.zst.json",
+      "platform": "linux",
+      "version": "21.1.5"
+    },
+    {
+      "arch": "x86_64",
+      "archive_path": "clang-extra\\win\\x86_64\\clang-extra-21.1.5-win-x86_64.tar.zst",
+      "archive_sha256": "aaf5bc0194f440cbba72aa8d41434f3d1f403739a8791c674edae6e3a49d2401",
+      "component": "clang-extra",
+      "filename": "clang-extra-21.1.5-win-x86_64.tar.zst",
+      "index_path": "clang-extra\\win\\x86_64\\clang-extra-21.1.5-win-x86_64.tar.zst.json",
+      "platform": "win",
+      "version": "21.1.5"
+    },
+    {
+      "arch": null,
+      "archive_path": "cosmocc\\cosmocc-universal-4.0.2.tar.zst",
+      "archive_sha256": "ade991cb32e14dfe52ba6e1dc164665f91f0142b09b802c647aa62074d70dec8",
+      "component": "cosmocc",
+      "filename": "cosmocc-universal-4.0.2.tar.zst",
+      "index_path": "cosmocc\\cosmocc-universal-4.0.2.tar.zst.json",
+      "platform": null,
+      "version": "4.0.2"
+    },
+    {
+      "arch": "arm64",
+      "archive_path": "emscripten\\darwin\\arm64\\emscripten-releases-8b01e2ec3f33e6b94842096d7312ce4ef5f33f6c-darwin-arm64.tar.zst",
+      "archive_sha256": "c34e431172af712e491824224dfea1a75039fa0521deba851761715552f2f994",
+      "component": "emscripten",
+      "filename": "emscripten-releases-8b01e2ec3f33e6b94842096d7312ce4ef5f33f6c-darwin-arm64.tar.zst",
+      "index_path": "emscripten\\darwin\\arm64\\emscripten-releases-8b01e2ec3f33e6b94842096d7312ce4ef5f33f6c-darwin-arm64.tar.zst.json",
+      "platform": "darwin",
+      "version": "releases"
+    },
+    {
+      "arch": "arm64",
+      "archive_path": "emscripten\\darwin\\arm64\\emscripten-releases-d70a5da89b3e673bf6a482724478fc17e81e575e-darwin-arm64.tar.zst",
+      "archive_sha256": "6af749f0d44927c7d4c93c9e407e195257ed690b8e3bd3a43d7a3f4badc52082",
+      "component": "emscripten",
+      "filename": "emscripten-releases-d70a5da89b3e673bf6a482724478fc17e81e575e-darwin-arm64.tar.zst",
+      "index_path": "emscripten\\darwin\\arm64\\emscripten-releases-d70a5da89b3e673bf6a482724478fc17e81e575e-darwin-arm64.tar.zst.json",
+      "platform": "darwin",
+      "version": "releases-d70a5da89b3e673bf6a482724478fc17e81e575e"
+    },
+    {
+      "arch": "x86_64",
+      "archive_path": "emscripten\\darwin\\x86_64\\emscripten-releases-8b01e2ec3f33e6b94842096d7312ce4ef5f33f6c-darwin-x86_64.tar.zst",
+      "archive_sha256": "3d2802d83ba8c82d503dd069bd03a59af5d601875208605b3691120f4546d62d",
+      "component": "emscripten",
+      "filename": "emscripten-releases-8b01e2ec3f33e6b94842096d7312ce4ef5f33f6c-darwin-x86_64.tar.zst",
+      "index_path": "emscripten\\darwin\\x86_64\\emscripten-releases-8b01e2ec3f33e6b94842096d7312ce4ef5f33f6c-darwin-x86_64.tar.zst.json",
+      "platform": "darwin",
+      "version": "releases"
+    },
+    {
+      "arch": "x86_64",
+      "archive_path": "emscripten\\darwin\\x86_64\\emscripten-releases-d70a5da89b3e673bf6a482724478fc17e81e575e-darwin-x86_64.tar.zst",
+      "archive_sha256": "6ba74e00642568383798a7ccd3b643ce3c5cd5606789bbe824aa9971f0d8894f",
+      "component": "emscripten",
+      "filename": "emscripten-releases-d70a5da89b3e673bf6a482724478fc17e81e575e-darwin-x86_64.tar.zst",
+      "index_path": "emscripten\\darwin\\x86_64\\emscripten-releases-d70a5da89b3e673bf6a482724478fc17e81e575e-darwin-x86_64.tar.zst.json",
+      "platform": "darwin",
+      "version": "releases-d70a5da89b3e673bf6a482724478fc17e81e575e"
+    },
+    {
+      "arch": "arm64",
+      "archive_path": "iwyu\\darwin\\arm64\\iwyu-0.25-darwin-arm64.tar.zst",
+      "archive_sha256": "ce4b96f49adfdde7fe5176dca6ef6893c9a6a962ad2cf39a31b60032c188ca70",
+      "component": "iwyu",
+      "filename": "iwyu-0.25-darwin-arm64.tar.zst",
+      "index_path": "iwyu\\darwin\\arm64\\iwyu-0.25-darwin-arm64.tar.zst.json",
+      "platform": "darwin",
+      "version": "0.25"
+    },
+    {
+      "arch": "x86_64",
+      "archive_path": "iwyu\\darwin\\x86_64\\iwyu-0.25-darwin-x86_64.tar.zst",
+      "archive_sha256": "ba55202f00cfbe57fe86292a099ee0ce4c8badacbf39e53e3a5356f9bf67b728",
+      "component": "iwyu",
+      "filename": "iwyu-0.25-darwin-x86_64.tar.zst",
+      "index_path": "iwyu\\darwin\\x86_64\\iwyu-0.25-darwin-x86_64.tar.zst.json",
+      "platform": "darwin",
+      "version": "0.25"
+    },
+    {
+      "arch": "arm64",
+      "archive_path": "iwyu\\linux\\arm64\\iwyu-0.25-linux-arm64-fixed.tar.zst",
+      "archive_sha256": "4d9afb232c733b8929b8105d5e1267f2bcf3b0a75817c0f4606b078323cb47d0",
+      "component": "iwyu",
+      "filename": "iwyu-0.25-linux-arm64-fixed.tar.zst",
+      "index_path": "iwyu\\linux\\arm64\\iwyu-0.25-linux-arm64-fixed.tar.zst.json",
+      "platform": "linux",
+      "version": "0.25"
+    },
+    {
+      "arch": "arm64",
+      "archive_path": "iwyu\\linux\\arm64\\iwyu-0.25-linux-arm64.tar.zst",
+      "archive_sha256": "65e9061ea78c6c505f5290b82925c0fa7bd385fdf783852b96ed68db7e78d9dc",
+      "component": "iwyu",
+      "filename": "iwyu-0.25-linux-arm64.tar.zst",
+      "index_path": "iwyu\\linux\\arm64\\iwyu-0.25-linux-arm64.tar.zst.json",
+      "platform": "linux",
+      "version": "0.25"
+    },
+    {
+      "arch": "x86_64",
+      "archive_path": "iwyu\\win\\x86_64\\iwyu-0.25-win-x86_64.tar.zst",
+      "archive_sha256": "3e960a0cd2b1ca3182659965c1ec36b9430d3280a06b49ddf54de71704b0c736",
+      "component": "iwyu",
+      "filename": "iwyu-0.25-win-x86_64.tar.zst",
+      "index_path": "iwyu\\win\\x86_64\\iwyu-0.25-win-x86_64.tar.zst.json",
+      "platform": "win",
+      "version": "0.25"
+    },
+    {
+      "arch": "x86_64",
+      "archive_path": "lldb\\win\\x86_64\\lldb-21.1.5-win-x86_64.tar.zst",
+      "archive_sha256": "8f2c728dcf8ad5d62be4610f5aae0a933ab7769266c17a3ee430753245ad9756",
+      "component": "lldb",
+      "filename": "lldb-21.1.5-win-x86_64.tar.zst",
+      "index_path": "lldb\\win\\x86_64\\lldb-21.1.5-win-x86_64.tar.zst.json",
+      "platform": "win",
+      "version": "21.1.5"
+    },
+    {
+      "arch": "x86_64",
+      "archive_path": "mingw\\win\\x86_64\\mingw-sysroot-21.1.5-win-x86_64.tar.zst",
+      "archive_sha256": "60cc8b10b293b41005ccea5d809c66e4d0e4538135c9072e445da7ed0df61e42",
+      "component": "mingw",
+      "filename": "mingw-sysroot-21.1.5-win-x86_64.tar.zst",
+      "index_path": "mingw\\win\\x86_64\\mingw-sysroot-21.1.5-win-x86_64.tar.zst.json",
+      "platform": "win",
+      "version": "21.1.5"
+    },
+    {
+      "arch": "arm64",
+      "archive_path": "nodejs\\darwin\\arm64\\nodejs-22.11.0-darwin-arm64.tar.zst",
+      "archive_sha256": "2e217a2f0c54f22d080e2d589981c1c8e2c866625a1603c09a1b63f19db3337d",
+      "component": "nodejs",
+      "filename": "nodejs-22.11.0-darwin-arm64.tar.zst",
+      "index_path": "nodejs\\darwin\\arm64\\nodejs-22.11.0-darwin-arm64.tar.zst.json",
+      "platform": "darwin",
+      "version": "22.11.0"
+    },
+    {
+      "arch": "x86_64",
+      "archive_path": "nodejs\\darwin\\x86_64\\nodejs-22.11.0-darwin-x86_64.tar.zst",
+      "archive_sha256": "0ea4f59a7ac77953ee330ce6f829f9e0f43e4cb1185df894f29c29fff7e07a4d",
+      "component": "nodejs",
+      "filename": "nodejs-22.11.0-darwin-x86_64.tar.zst",
+      "index_path": "nodejs\\darwin\\x86_64\\nodejs-22.11.0-darwin-x86_64.tar.zst.json",
+      "platform": "darwin",
+      "version": "22.11.0"
+    },
+    {
+      "arch": "arm64",
+      "archive_path": "nodejs\\linux\\arm64\\nodejs-22.11.0-linux-arm64.tar.zst",
+      "archive_sha256": "438eec9f1f21e1b719152bc337c73d9442e6c3b9300d287d6a8b258c43b16c53",
+      "component": "nodejs",
+      "filename": "nodejs-22.11.0-linux-arm64.tar.zst",
+      "index_path": "nodejs\\linux\\arm64\\nodejs-22.11.0-linux-arm64.tar.zst.json",
+      "platform": "linux",
+      "version": "22.11.0"
+    },
+    {
+      "arch": "x86_64",
+      "archive_path": "nodejs\\linux\\x86_64\\nodejs-22.11.0-linux-x86_64.tar.zst",
+      "archive_sha256": "6cbc0d6e0824a116ac34957529477ba207027ef01fb1a200c91706073b7c4c00",
+      "component": "nodejs",
+      "filename": "nodejs-22.11.0-linux-x86_64.tar.zst",
+      "index_path": "nodejs\\linux\\x86_64\\nodejs-22.11.0-linux-x86_64.tar.zst.json",
+      "platform": "linux",
+      "version": "22.11.0"
+    },
+    {
+      "arch": "x86_64",
+      "archive_path": "nodejs\\win\\x86_64\\nodejs-22.11.0-win-x86_64.tar.zst",
+      "archive_sha256": "d68b56dab16f1864dc60a14455ce6a00289d4d2a29285f24c837e843757674f7",
+      "component": "nodejs",
+      "filename": "nodejs-22.11.0-win-x86_64.tar.zst",
+      "index_path": "nodejs\\win\\x86_64\\nodejs-22.11.0-win-x86_64.tar.zst.json",
+      "platform": "win",
+      "version": "22.11.0"
+    },
+    {
+      "arch": "x86_64",
+      "archive_path": "valgrind\\linux\\x86_64\\valgrind-3.24.0-linux-x86_64.tar.zst",
+      "archive_sha256": "b986c447d12709c572e7164a117740222aefa62282cfb18ebb9874b9aef10d03",
+      "component": "valgrind",
+      "filename": "valgrind-3.24.0-linux-x86_64.tar.zst",
+      "index_path": "valgrind\\linux\\x86_64\\valgrind-3.24.0-linux-x86_64.tar.zst.json",
+      "platform": "linux",
+      "version": "3.24.0"
+    }
+  ],
+  "schema_version": 1
+}
