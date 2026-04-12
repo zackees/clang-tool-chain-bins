@@ -238,3 +238,78 @@ class TestMultipartArchives:
                             f"{tool}/{plat}/{arch} v{ver} part[{i}]: "
                             f"href '{href}' must start with https://"
                         )
+
+
+# ===========================================================================
+# Platform coverage — every platform the downstream CI tests against must have
+# a valid archive. Failures here = downstream CI failures.
+# ===========================================================================
+
+class TestRequiredPlatformCoverage:
+    """Verify that all platforms tested by clang-tool-chain CI have archives."""
+
+    def _assert_platform_exists(self, tool: str, platform: str, arch: str):
+        """Assert a tool has a manifest entry for the given platform/arch."""
+        root_path = ASSETS / tool / "manifest.json"
+        assert root_path.exists(), f"{tool}/manifest.json does not exist"
+        root = _load_json(root_path)
+
+        platforms = {
+            (p["platform"], a["arch"])
+            for p in root.get("platforms", [])
+            for a in p.get("architectures", [])
+        }
+        assert (platform, arch) in platforms, (
+            f"{tool}: platform {platform}/{arch} not in root manifest. "
+            f"Available: {sorted(platforms)}. "
+            f"Downstream CI will fail with: '{tool} platform {platform}/{arch} not found in manifest'"
+        )
+
+        # Also verify the platform manifest has valid data
+        for p in root["platforms"]:
+            if p["platform"] != platform:
+                continue
+            for a in p["architectures"]:
+                if a["arch"] != arch:
+                    continue
+                pm_path = ASSETS / tool / a["manifest_path"]
+                assert pm_path.exists(), f"{tool}/{a['manifest_path']} does not exist"
+                pm = _load_json(pm_path)
+                assert pm.get("latest"), (
+                    f"{tool}/{platform}/{arch}: latest is empty/null"
+                )
+
+    # -- clang-extra: required by Format & Lint CI jobs --
+
+    def test_clang_extra_linux_arm64(self):
+        self._assert_platform_exists("clang-extra", "linux", "arm64")
+
+    def test_clang_extra_linux_x86_64(self):
+        self._assert_platform_exists("clang-extra", "linux", "x86_64")
+
+    def test_clang_extra_darwin_arm64(self):
+        self._assert_platform_exists("clang-extra", "darwin", "arm64")
+
+    def test_clang_extra_darwin_x86_64(self):
+        self._assert_platform_exists("clang-extra", "darwin", "x86_64")
+
+    def test_clang_extra_win_x86_64(self):
+        self._assert_platform_exists("clang-extra", "win", "x86_64")
+
+    # -- lldb: required by LLDB CI jobs --
+
+    def test_lldb_win_x86_64(self):
+        self._assert_platform_exists("lldb", "win", "x86_64")
+
+    def test_lldb_linux_x86_64(self):
+        self._assert_platform_exists("lldb", "linux", "x86_64")
+
+    def test_lldb_linux_arm64(self):
+        self._assert_platform_exists("lldb", "linux", "arm64")
+
+    @pytest.mark.skip(reason="No upstream LLVM macOS x86_64 release available for 21.x")
+    def test_lldb_darwin_x86_64(self):
+        self._assert_platform_exists("lldb", "darwin", "x86_64")
+
+    def test_lldb_darwin_arm64(self):
+        self._assert_platform_exists("lldb", "darwin", "arm64")
