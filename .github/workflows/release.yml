@@ -50,19 +50,15 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v5
       - name: Build binary
-        run: cargo build --release --target ${{ matrix.target }} -p ctcb-cli
         if: ${{ !matrix.zig }}
-      - name: Build binary (cross-compile via zig)
-        run: |
-          export CC="zig cc -target aarch64-linux-gnu"
-          cargo build --release --target ${{ matrix.target }} -p ctcb-cli
-        if: ${{ matrix.zig }}
+        run: cargo build --release --target ${{ matrix.target }} -p ctcb-cli
       - name: Build wheel
         run: |
           uv sync
           uv run maturin build --release --target ${{ matrix.target }} ${{ matrix.zig && '--zig' || '' }} --out dist
         shell: bash
       - name: Upload binary
+        if: ${{ !matrix.zig }}
         uses: actions/upload-artifact@v4
         with:
           name: binary-${{ matrix.target }}
