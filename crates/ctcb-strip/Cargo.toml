@@ -1,0 +1,13 @@
+[package]
+name = "ctcb-strip"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+walkdir = { workspace = true }
+anyhow = { workspace = true }
+ctcb-core = { path = "../ctcb-core" }
+
+[dev-dependencies]
+tempfile = { workspace = true }

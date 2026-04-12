@@ -1,0 +1,17 @@
+[package]
+name = "ctcb-dedup"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+md-5 = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+walkdir = { workspace = true }
+anyhow = { workspace = true }
+ctcb-checksum = { path = "../ctcb-checksum" }
+ctcb-core = { path = "../ctcb-core" }
+
+[dev-dependencies]
+tempfile = { workspace = true }

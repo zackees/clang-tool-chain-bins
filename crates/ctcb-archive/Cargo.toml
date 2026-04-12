@@ -1,0 +1,17 @@
+[package]
+name = "ctcb-archive"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+tar = { workspace = true }
+zstd = { workspace = true }
+walkdir = { workspace = true }
+anyhow = { workspace = true }
+indicatif = { workspace = true }
+flate2 = { workspace = true }
+ctcb-core = { path = "../ctcb-core" }
+
+[dev-dependencies]
+tempfile = { workspace = true }

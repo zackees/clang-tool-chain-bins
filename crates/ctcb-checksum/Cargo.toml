@@ -1,0 +1,13 @@
+[package]
+name = "ctcb-checksum"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+sha2 = { workspace = true }
+md-5 = { workspace = true }
+anyhow = { workspace = true }
+
+[dev-dependencies]
+tempfile = { workspace = true }

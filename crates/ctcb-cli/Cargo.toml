@@ -1,0 +1,32 @@
+[package]
+name = "ctcb-cli"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[[bin]]
+name = "ctcb"
+path = "src/main.rs"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+clap = { workspace = true }
+anyhow = { workspace = true }
+indicatif = { workspace = true }
+ctcb-core = { path = "../ctcb-core" }
+ctcb-checksum = { path = "../ctcb-checksum" }
+ctcb-archive = { path = "../ctcb-archive" }
+ctcb-dedup = { path = "../ctcb-dedup" }
+ctcb-download = { path = "../ctcb-download" }
+ctcb-strip = { path = "../ctcb-strip" }
+ctcb-manifest = { path = "../ctcb-manifest" }
+ctcb-split = { path = "../ctcb-split" }
+walkdir = { workspace = true }
+pyo3 = { workspace = true, optional = true }
+serde_json = { workspace = true }
+
+[features]
+default = []
+python = ["dep:pyo3"]
