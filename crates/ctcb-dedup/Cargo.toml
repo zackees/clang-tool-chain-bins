@@ -14,8 +14,8 @@ serde = { workspace = true }
 serde_json = { workspace = true }
 walkdir = { workspace = true }
 anyhow = { workspace = true }
-ctcb-checksum = { path = "../ctcb-checksum" }
-ctcb-core = { path = "../ctcb-core" }
+ctcb-checksum = { path = "../ctcb-checksum", version = "0.4.1" }
+ctcb-core = { path = "../ctcb-core", version = "0.4.1" }
 
 [dev-dependencies]
 tempfile = { workspace = true }

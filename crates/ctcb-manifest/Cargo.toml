@@ -12,7 +12,7 @@ description = "Two-tier manifest JSON management for clang toolchain binary buil
 serde = { workspace = true }
 serde_json = { workspace = true }
 anyhow = { workspace = true }
-ctcb-core = { path = "../ctcb-core" }
+ctcb-core = { path = "../ctcb-core", version = "0.4.1" }
 
 [dev-dependencies]
 tempfile = { workspace = true }

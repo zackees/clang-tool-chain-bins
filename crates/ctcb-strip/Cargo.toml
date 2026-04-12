@@ -11,7 +11,7 @@ description = "LLVM binary stripping and filtering for clang toolchain binary bu
 [dependencies]
 walkdir = { workspace = true }
 anyhow = { workspace = true }
-ctcb-core = { path = "../ctcb-core" }
+ctcb-core = { path = "../ctcb-core", version = "0.4.1" }
 
 [dev-dependencies]
 tempfile = { workspace = true }

@@ -14,5 +14,5 @@ tokio = { workspace = true }
 sha2 = { workspace = true }
 anyhow = { workspace = true }
 indicatif = { workspace = true }
-ctcb-core = { path = "../ctcb-core" }
+ctcb-core = { path = "../ctcb-core", version = "0.4.1" }
 futures-util = { workspace = true }
