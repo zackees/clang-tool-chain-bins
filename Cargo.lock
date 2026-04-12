@@ -222,7 +222,7 @@ dependencies = [
 
 [[package]]
 name = "ctcb-archive"
-version = "0.1.0"
+version = "0.4.0"
 dependencies = [
  "anyhow",
  "ctcb-core",
@@ -236,7 +236,7 @@ dependencies = [
 
 [[package]]
 name = "ctcb-checksum"
-version = "0.1.0"
+version = "0.4.0"
 dependencies = [
  "anyhow",
  "md-5",
@@ -246,7 +246,7 @@ dependencies = [
 
 [[package]]
 name = "ctcb-cli"
-version = "0.1.0"
+version = "0.4.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -266,7 +266,7 @@ dependencies = [
 
 [[package]]
 name = "ctcb-core"
-version = "0.1.0"
+version = "0.4.0"
 dependencies = [
  "anyhow",
  "serde",
@@ -276,7 +276,7 @@ dependencies = [
 
 [[package]]
 name = "ctcb-dedup"
-version = "0.1.0"
+version = "0.4.0"
 dependencies = [
  "anyhow",
  "ctcb-checksum",
@@ -290,7 +290,7 @@ dependencies = [
 
 [[package]]
 name = "ctcb-download"
-version = "0.1.0"
+version = "0.4.0"
 dependencies = [
  "anyhow",
  "ctcb-core",
@@ -303,7 +303,7 @@ dependencies = [
 
 [[package]]
 name = "ctcb-manifest"
-version = "0.1.0"
+version = "0.4.0"
 dependencies = [
  "anyhow",
  "ctcb-core",
@@ -314,7 +314,7 @@ dependencies = [
 
 [[package]]
 name = "ctcb-split"
-version = "0.1.0"
+version = "0.4.0"
 dependencies = [
  "anyhow",
  "ctcb-checksum",
@@ -326,7 +326,7 @@ dependencies = [
 
 [[package]]
 name = "ctcb-strip"
-version = "0.1.0"
+version = "0.4.0"
 dependencies = [
  "anyhow",
  "ctcb-core",

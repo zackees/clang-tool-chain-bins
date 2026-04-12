@@ -1,6 +1,6 @@
 [project]
 name = "clang-tool-chain-bins"
-version = "0.3.0"
+version = "0.4.0"
 description = "LLVM/Clang Toolchain Build Tools - Rust-powered toolchain packaging with Python bindings"
 readme = "README.md"
 requires-python = ">=3.10"

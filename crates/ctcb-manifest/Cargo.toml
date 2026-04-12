@@ -3,6 +3,10 @@ name = "ctcb-manifest"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Two-tier manifest JSON management for clang toolchain binary builder"
 
 [dependencies]
 serde = { workspace = true }
