@@ -6,14 +6,17 @@
     "parts": [
       {
         "href": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/iwyu/linux/x86_64/iwyu-0.25-linux-x86_64-fixed.tar.zst.part-aa",
+        "sha256": "1abab68f909788d441fc9b0a3e420ffc4d9e044c9ad0a9ca3b244f7021544992",
         "size": 99614720
       },
       {
         "href": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/iwyu/linux/x86_64/iwyu-0.25-linux-x86_64-fixed.tar.zst.part-ab",
+        "sha256": "3abc634af986ea50d92f5e09c26930b4a14ef17ef89e37a1a7ba1a80ca661b94",
         "size": 99614720
       },
       {
         "href": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/iwyu/linux/x86_64/iwyu-0.25-linux-x86_64-fixed.tar.zst.part-ac",
+        "sha256": "5d5b7768c9b8546d746d4467b5e72dd4fa0bfcf9180f51f4628e7e6b9f616c65",
         "size": 11841085
       }
     ]
