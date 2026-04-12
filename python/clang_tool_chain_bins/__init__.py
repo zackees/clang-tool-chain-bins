@@ -1,6 +1,6 @@
 """Clang Toolchain Binary Builder - Rust-powered toolchain packaging."""
 
-__version__ = "0.1.0"
+__version__ = "0.4.0"
 
 # Try to import native bindings (available when built with maturin)
 try:

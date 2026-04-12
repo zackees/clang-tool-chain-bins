@@ -3,6 +3,10 @@ name = "ctcb-archive"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Tar and zstd archive creation/extraction for clang toolchain binary builder"
 
 [dependencies]
 tar = { workspace = true }

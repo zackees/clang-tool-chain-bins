@@ -3,6 +3,10 @@ name = "ctcb-strip"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "LLVM binary stripping and filtering for clang toolchain binary builder"
 
 [dependencies]
 walkdir = { workspace = true }

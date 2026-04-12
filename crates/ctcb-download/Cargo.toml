@@ -3,6 +3,10 @@ name = "ctcb-download"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "HTTP download with progress for clang toolchain binary builder"
 
 [dependencies]
 reqwest = { workspace = true }
