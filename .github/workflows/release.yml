@@ -51,6 +51,12 @@ jobs:
         uses: astral-sh/setup-uv@v5
       - name: Build binary
         run: cargo build --release --target ${{ matrix.target }} -p ctcb-cli
+        if: ${{ !matrix.zig }}
+      - name: Build binary (cross-compile via zig)
+        run: |
+          export CC="zig cc -target aarch64-linux-gnu"
+          cargo build --release --target ${{ matrix.target }} -p ctcb-cli
+        if: ${{ matrix.zig }}
       - name: Build wheel
         run: |
           uv sync
