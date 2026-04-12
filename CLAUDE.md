@@ -8,7 +8,33 @@ This repository hosts pre-built binary distributions of LLVM/Clang toolchains, I
 
 The repository serves as both:
 1. **Binary hosting**: GitHub Pages site at https://zackees.github.io/clang-tool-chain-bins/
-2. **Build tools**: Python scripts for maintainers to generate and package toolchain archives
+2. **Build tools**: Rust CLI (`ctcb`) with Python bindings for maintainers to generate and package toolchain archives
+
+## Rust Workspace (Migration in Progress)
+
+Core logic is being migrated to Rust for performance. Python bindings via PyO3 (abi3-py310) built by maturin.
+
+```
+crates/
+├── ctcb-cli/       # Binary: 13 subcommands via clap + PyO3 bindings
+├── ctcb-core/      # Platform detection, config, formatting helpers
+├── ctcb-archive/   # tar create/extract, zstd compress/decompress
+├── ctcb-checksum/  # SHA256, MD5 generation and verification
+├── ctcb-dedup/     # MD5-based deduplication, hardlink structure
+├── ctcb-download/  # HTTP download with progress (reqwest + tokio)
+├── ctcb-strip/     # Binary stripping, essential-file filtering
+├── ctcb-manifest/  # Two-tier manifest JSON read/write
+└── ctcb-split/     # Archive splitting for GitHub LFS limits
+```
+
+### Rust Commands
+```bash
+cargo build --workspace          # Build
+cargo test --workspace           # Test (53 tests)
+cargo run -- expand --help       # Run a subcommand
+uv sync && uv run maturin develop  # Build Python bindings
+uv run pytest python/tests/ -v     # Python tests (8 tests)
+```
 
 ## LFS Policy
 

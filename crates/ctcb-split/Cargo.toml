@@ -1,0 +1,15 @@
+[package]
+name = "ctcb-split"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+anyhow = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+ctcb-core = { path = "../ctcb-core" }
+ctcb-checksum = { path = "../ctcb-checksum" }
+
+[dev-dependencies]
+tempfile = { workspace = true }

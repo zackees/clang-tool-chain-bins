@@ -1,75 +1,51 @@
 [project]
 name = "clang-tool-chain-bins"
 version = "0.3.0"
-description = "LLVM/Clang Toolchain Build Tools - Maintainer scripts for creating and managing LLVM/Clang toolchain binary archives"
+description = "LLVM/Clang Toolchain Build Tools - Rust-powered toolchain packaging with Python bindings"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 dependencies = [
     "fasteners>=0.19.0",
     "json5>=0.9.0",
     "zstandard>=0.22.0",
     "pyzstd>=0.15.0",
-    "zccache>=1.2.3; python_version >= '3.9'",
 ]
 
 [project.scripts]
-# Query/install frontend
+# Query/install frontend (legacy Python)
 clang-tool-chain-bins = "tools.cli:main"
 clang-tool-chain-bins-index = "tools.archive_index:main"
 clang-tool-chain-bins-publish = "tools.publish:main"
 
-# Main pipeline
-fetch-and-archive = "tools.fetch_and_archive:main"
-
-# Individual component scripts
-download-binaries = "tools.download_binaries:main"
-strip-binaries = "tools.strip_binaries:main"
-deduplicate-binaries = "tools.deduplicate_binaries:main"
-create-hardlink-archive = "tools.create_hardlink_archive:main"
-expand-archive = "tools.expand_archive:main"
-test-compression = "tools.test_compression:main"
-create-iwyu-archives = "tools.create_iwyu_archives:main"
-extract-mingw-sysroot = "tools.extract_mingw_sysroot:main"
+# Rust-backed CLI shims (delegate to ctcb binary)
+fetch-and-archive = "clang_tool_chain_bins.cli:fetch_and_archive"
+download-binaries = "clang_tool_chain_bins.cli:download_binaries"
+strip-binaries = "clang_tool_chain_bins.cli:strip_binaries"
+deduplicate-binaries = "clang_tool_chain_bins.cli:deduplicate_binaries"
+create-hardlink-archive = "clang_tool_chain_bins.cli:create_hardlink_archive"
+expand-archive = "clang_tool_chain_bins.cli:expand_archive"
+test-compression = "clang_tool_chain_bins.cli:test_compression"
+create-iwyu-archives = "clang_tool_chain_bins.cli:create_iwyu_archives"
+extract-mingw-sysroot = "clang_tool_chain_bins.cli:extract_mingw_sysroot"
+ctcb-emscripten = "clang_tool_chain_bins.cli:emscripten"
+ctcb-emscripten-docker = "clang_tool_chain_bins.cli:emscripten_docker"
+ctcb-nodejs = "clang_tool_chain_bins.cli:nodejs"
 
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["maturin>=1.7,<2.0"]
+build-backend = "maturin"
 
-[tool.hatch.build.targets.wheel]
-packages = ["tools", "clang_tool_chain_bins"]
-include = [
-    "clang_tool_chain_bins/**/*.py",
-    "tools/**/*.py",
-    "tools/data/**/*.json",
-    "README.md",
-]
-exclude = [
-    "tools/.gitignore",
-    "tools/*.md",
-    "tools/work/**",
-    "tools/work_nodejs/**",
-    "tools/__pycache__/**",
-]
+[tool.maturin]
+features = ["pyo3/extension-module", "python"]
+python-source = "python"
+module-name = "clang_tool_chain_bins._native"
+manifest-path = "crates/ctcb-cli/Cargo.toml"
 
-[tool.hatch.build.targets.sdist]
-include = [
-    "/clang_tool_chain_bins",
-    "/tools",
-    "/tests",
-    "/README.md",
-    "/TASK.md",
-    "/pyproject.toml",
-]
-exclude = [
-    "/.gitignore",
-    "/tools/.gitignore",
-    "/tools/*.md",
-    "/tools/work/**",
-    "/tools/work_nodejs/**",
-    "/assets/**/*.tar.zst",
-    "/dist/**",
-    "/tmp_extract/**",
-]
+[tool.pytest.ini_options]
+testpaths = ["python/tests"]
 
 [tool.uv]
-dev-dependencies = []
+dev-dependencies = [
+    "pytest>=7.0",
+    "maturin>=1.7",
+]
