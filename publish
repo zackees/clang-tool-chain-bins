@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Publish clang-tool-chain-bins by triggering remote CI builds,
+# downloading artifacts, and uploading to PyPI.
+#
+# Usage:
+#   ./publish              # trigger builds, download wheels, upload to PyPI
+#   ./publish --dry-run    # trigger builds, download wheels, don't upload
+#
+# Prerequisites:
+#   - gh CLI authenticated
+#   - PYPI_TOKEN env var set (or use trusted publishing via GitHub Actions)
+
+cd "$(dirname "$0")"
+
+VERSION=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml','rb'))['project']['version'])")
+REPO=$(gh repo view --json nameWithOwner -q .nameWithOwner)
+TAG="v${VERSION}"
+DRY_RUN=""
+
+if [[ "${1:-}" == "--dry-run" ]]; then
+    DRY_RUN="true"
+    echo "DRY RUN — will not upload to PyPI"
+fi
+
+echo "Publishing ${REPO} ${TAG}"
+
+# Verify clean and pushed
+if [[ -n "$(git status --porcelain)" ]]; then
+    echo "ERROR: working tree is dirty" >&2
+    exit 1
+fi
+
+LOCAL_SHA=$(git rev-parse HEAD)
+REMOTE_SHA=$(git rev-parse @{u})
+if [[ "$LOCAL_SHA" != "$REMOTE_SHA" ]]; then
+    echo "ERROR: local HEAD differs from upstream; push first" >&2
+    exit 1
+fi
+
+# Tag and push
+if git rev-parse "$TAG" >/dev/null 2>&1; then
+    echo "Tag $TAG already exists"
+else
+    echo "Creating tag $TAG"
+    git tag "$TAG"
+    git push origin "$TAG"
+fi
+
+echo "Tag pushed — release.yml will trigger automatically."
+echo "Monitor at: https://github.com/${REPO}/actions"
+echo ""
+
+if [[ -n "$DRY_RUN" ]]; then
+    echo "Dry run complete. The release workflow will:"
+    echo "  1. Build wheels for 5 targets (linux x64/arm64, windows x64, macos x64/arm64)"
+    echo "  2. Build sdist"
+    echo "  3. Create GitHub Release with binaries + wheels"
+    echo "  4. Publish to PyPI (if 'release' environment is configured)"
+    exit 0
+fi
+
+echo "Release workflow triggered. It will automatically:"
+echo "  1. Build wheels for 5 targets"
+echo "  2. Create GitHub Release"
+echo "  3. Publish to PyPI via trusted publishing"
+echo ""
+echo "To publish manually instead, download artifacts and run:"
+echo "  gh run download <run-id> --pattern 'wheel-*' --dir dist"
+echo "  gh run download <run-id> --pattern 'sdist' --dir dist"
+echo "  uv publish dist/*"

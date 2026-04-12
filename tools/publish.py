@@ -10,12 +10,18 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
+
 def _run(command: Sequence[str], *, env: dict[str, str] | None = None) -> None:
+    print(f"  $ {shlex.join(list(command))}")
     subprocess.run(list(command), check=True, env=env)
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Build and publish clang-tool-chain-bins to PyPI or TestPyPI.")
+    parser = argparse.ArgumentParser(
+        description="Build and publish clang-tool-chain-bins to PyPI or TestPyPI.\n\n"
+        "For cross-platform builds, use the `./publish` script which triggers\n"
+        "remote CI builds. This script builds a LOCAL wheel only (current platform).",
+    )
     parser.add_argument("--testpypi", action="store_true", help="Publish to TestPyPI instead of PyPI.")
     parser.add_argument("--skip-upload", action="store_true", help="Build and validate but do not upload.")
     parser.add_argument("--token-env", default="PYPI_TOKEN", help="Environment variable containing the PyPI token.")
@@ -29,8 +35,16 @@ def main(argv: Sequence[str] | None = None) -> int:
             if path.is_file():
                 path.unlink()
 
-    _run(["uv", "run", "--with", "build", "--with", "twine", "python", "-m", "build"])
-    _run(["uv", "run", "--with", "twine", "twine", "check", "dist/*"])
+    # Build wheel with maturin (includes Rust native extension)
+    _run(["uv", "run", "maturin", "build", "--release", "--out", "dist"])
+
+    # Build sdist
+    _run(["uv", "run", "maturin", "sdist", "--out", "dist"])
+
+    # List built artifacts
+    print("\nBuilt artifacts:")
+    for path in sorted(dist_dir.iterdir()):
+        print(f"  {path.name} ({path.stat().st_size / 1024:.0f} KB)")
 
     if args.skip_upload:
         return 0
@@ -40,14 +54,13 @@ def main(argv: Sequence[str] | None = None) -> int:
         upload_env["TWINE_USERNAME"] = "__token__"
         upload_env["TWINE_PASSWORD"] = token
     else:
-        print(f"{args.token_env} is not set; relying on Twine config or keyring.")
+        print(f"\n{args.token_env} is not set; relying on uv publish config or keyring.")
 
-    command = ["uv", "run", "--with", "twine", "twine", "upload", "--non-interactive"]
+    command = ["uv", "publish"]
     if args.testpypi:
-        command.extend(["--repository-url", "https://test.pypi.org/legacy/"])
-    command.append("dist/*")
+        command.extend(["--publish-url", "https://test.pypi.org/legacy/"])
 
-    print("Running:", shlex.join(command))
+    print(f"\nRunning: {shlex.join(command)}")
     _run(command, env=upload_env)
     return 0
 

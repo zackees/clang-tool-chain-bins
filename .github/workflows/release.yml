@@ -21,29 +21,31 @@ jobs:
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
             binary: ctcb
+            zig: false
           - os: ubuntu-latest
             target: aarch64-unknown-linux-gnu
             binary: ctcb
+            zig: true
           - os: windows-latest
             target: x86_64-pc-windows-msvc
             binary: ctcb.exe
-          - os: windows-latest
-            target: aarch64-pc-windows-msvc
-            binary: ctcb.exe
+            zig: false
           - os: macos-latest
             target: x86_64-apple-darwin
             binary: ctcb
+            zig: false
           - os: macos-latest
             target: aarch64-apple-darwin
             binary: ctcb
+            zig: false
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.target }}
       - uses: Swatinem/rust-cache@v2
-      - name: Install zig (Linux cross-compile)
-        if: matrix.target == 'aarch64-unknown-linux-gnu'
+      - name: Install zig (cross-compile)
+        if: matrix.zig
         uses: mlugg/setup-zig@v2
       - name: Install uv
         uses: astral-sh/setup-uv@v5
@@ -52,7 +54,7 @@ jobs:
       - name: Build wheel
         run: |
           uv sync
-          uv run maturin build --release --target ${{ matrix.target }} --out dist
+          uv run maturin build --release --target ${{ matrix.target }} ${{ matrix.zig && '--zig' || '' }} --out dist
         shell: bash
       - name: Upload binary
         uses: actions/upload-artifact@v4
@@ -65,9 +67,26 @@ jobs:
           name: wheel-${{ matrix.target }}
           path: dist/*.whl
 
+  # Build sdist (source distribution) on Linux
+  sdist:
+    name: Build sdist
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: Build sdist
+        run: |
+          uv sync
+          uv run maturin sdist --out dist
+      - name: Upload sdist
+        uses: actions/upload-artifact@v4
+        with:
+          name: sdist
+          path: dist/*.tar.gz
+
   release:
     name: Create Release
-    needs: build
+    needs: [build, sdist]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -78,7 +97,6 @@ jobs:
       - name: Prepare release assets
         run: |
           mkdir -p release
-          # Package binaries
           for dir in artifacts/binary-*; do
             target=$(basename "$dir" | sed 's/binary-//')
             if [[ "$target" == *windows* ]]; then
@@ -87,12 +105,36 @@ jobs:
               cp "$dir/ctcb" "release/ctcb-${target}"
             fi
           done
-          # Copy wheels
           cp artifacts/wheel-*/*.whl release/
-          # Generate checksums
+          cp artifacts/sdist/*.tar.gz release/
           cd release && sha256sum * > SHA256SUMS.txt
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: release/*
           generate_release_notes: true
+
+  publish:
+    name: Publish to PyPI
+    needs: [build, sdist]
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      id-token: write
+    steps:
+      - name: Download wheels
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+          pattern: wheel-*
+          merge-multiple: true
+      - name: Download sdist
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+          pattern: sdist
+          merge-multiple: true
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/
