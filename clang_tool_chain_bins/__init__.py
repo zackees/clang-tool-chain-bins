@@ -277,3 +277,31 @@ __all__ = [
     "resolve_one",
     "try_install",
 ]
+
+# Rust native bindings (available when built with maturin)
+try:
+    from clang_tool_chain_bins._native import (  # noqa: F401
+        create_tar_zst,
+        expand_archive,
+        generate_checksum_files,
+        lfs_media_url,
+        md5_file,
+        read_platform_manifest,
+        sha256_file,
+        sha256_verify,
+        update_platform_manifest,
+    )
+
+    __all__ += [
+        "expand_archive",
+        "create_tar_zst",
+        "sha256_file",
+        "md5_file",
+        "sha256_verify",
+        "generate_checksum_files",
+        "read_platform_manifest",
+        "update_platform_manifest",
+        "lfs_media_url",
+    ]
+except ImportError:
+    pass

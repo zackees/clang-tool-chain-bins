@@ -192,6 +192,29 @@ pub fn extract_tar_xz(archive: &Path, output_dir: &Path) -> Result<()> {
     Ok(())
 }
 
+/// Extract a tar.gz archive
+pub fn extract_tar_gz(archive: &Path, output_dir: &Path) -> Result<()> {
+    println!("Extracting {}...", archive.display());
+    fs::create_dir_all(output_dir)?;
+
+    let status = Command::new("tar")
+        .args([
+            "xzf",
+            &archive.to_string_lossy(),
+            "-C",
+            &output_dir.to_string_lossy(),
+        ])
+        .status()
+        .context("Failed to run tar")?;
+
+    if !status.success() {
+        bail!("tar extraction failed with exit code {:?}", status.code());
+    }
+
+    println!("Extracted to {}", output_dir.display());
+    Ok(())
+}
+
 /// Download and extract LLVM for a single platform.
 /// Returns the path to the extracted directory.
 pub fn download_platform(
