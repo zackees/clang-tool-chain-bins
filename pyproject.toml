@@ -37,12 +37,11 @@ build-backend = "maturin"
 
 [tool.maturin]
 features = ["pyo3/extension-module", "python"]
-python-source = "python"
 module-name = "clang_tool_chain_bins._native"
 manifest-path = "crates/ctcb-cli/Cargo.toml"
 
 [tool.pytest.ini_options]
-testpaths = ["python/tests"]
+testpaths = ["tests", "python/tests"]
 
 [tool.uv]
 dev-dependencies = [

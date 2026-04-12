@@ -33,11 +33,11 @@ pub const ESSENTIAL_BINARIES: &[&str] = &[
     "llvm-strip",
     "llvm-readelf",
     "llvm-readobj",
+    "llvm-dlltool",
+    "llvm-lib",
     // Additional utilities
     "llvm-as",
     "llvm-dis",
-    "clang-format",
-    "clang-tidy",
     "llvm-symbolizer",
     "llvm-config",
 ];
@@ -183,7 +183,8 @@ fn copy_essential_files(
                     || name.contains(".so.")
                     || name.ends_with(".dll")
                     || name.ends_with(".dylib");
-                let is_removable = REMOVE_LIB_EXTENSIONS.iter().any(|ext| name.ends_with(ext));
+                let is_removable = REMOVE_LIB_EXTENSIONS.iter().any(|ext| name.ends_with(ext))
+                    || name == "CMakeLists.txt";
 
                 if is_dynamic {
                     fs::copy(entry.path(), dst_lib.join(&name))?;

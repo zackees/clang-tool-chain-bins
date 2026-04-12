@@ -487,9 +487,16 @@ fn main() -> anyhow::Result<()> {
             no_strip,
             verbose,
         } => {
+            // Support combined format "win-x86_64" for backward compatibility
+            let (plat_str, arch_str) = if platform.contains('-') {
+                let parts: Vec<&str> = platform.splitn(2, '-').collect();
+                (parts[0].to_string(), parts[1].to_string())
+            } else {
+                (platform, arch)
+            };
             let target = ctcb_core::Target::new(
-                ctcb_core::Platform::from_str_loose(&platform)?,
-                ctcb_core::Arch::from_str_loose(&arch)?,
+                ctcb_core::Platform::from_str_loose(&plat_str)?,
+                ctcb_core::Arch::from_str_loose(&arch_str)?,
             );
             let config = ctcb_strip::StripConfig {
                 target,
@@ -1150,8 +1157,9 @@ fn main() -> anyhow::Result<()> {
                 if !status.success() {
                     anyhow::bail!("7z extraction failed");
                 }
+            } else if ext == "tar.gz" {
+                ctcb_download::extract_tar_gz(&download_path, &extract_dir)?;
             } else {
-                // tar.xz and tar.gz both handled by system tar
                 ctcb_download::extract_tar_xz(&download_path, &extract_dir)?;
             }
 
@@ -1167,7 +1175,7 @@ fn main() -> anyhow::Result<()> {
                 }
             }
             // Remove non-essential files
-            for pattern in &["README.md", "CHANGELOG.md", "LICENSE"] {
+            for pattern in &["README.md", "CHANGELOG.md"] {
                 let f = node_root.join(pattern);
                 if f.exists() {
                     std::fs::remove_file(&f)?;
