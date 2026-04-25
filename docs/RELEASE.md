@@ -95,10 +95,12 @@ GitHub / PyPI / crates.io.
 
 1. Go to https://github.com/zackees/clang-tool-chain-bins/settings/environments
 2. Click **New environment**, name it `pypi`
-3. Add **Required reviewers** (yourself) — gives you a manual approval
-   click before each PyPI publish, so a malicious tag push cannot
-   silently publish a poisoned wheel
-4. Optionally add **Deployment branches and tags** rule: only `v*` tags
+3. Under **Deployment branches and tags**, select **Selected branches
+   and tags** and add the rule `v*` — only tag pushes matching `v*` can
+   deploy to this environment
+4. Do **not** add Required reviewers — releases are fully automatic on
+   tag push. The safety net is the immutable-tag ruleset (step 4 below)
+   plus the branch ruleset that requires PRs into `main`
 5. Save
 
 ### 4. Branch + tag protection ruleset
