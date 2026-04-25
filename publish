@@ -1,25 +1,27 @@
 #!/usr/bin/env bash
+# Local pre-flight + tag-and-push. CI does the actual publishing
+# (PyPI, crates.io, GitHub Release) — see .github/workflows/release.yml.
 set -euo pipefail
 
 cd "$(dirname "$0")"
 
-VERSION=$(grep '^version' pyproject.toml | head -1 | sed 's/.*"\(.*\)".*/\1/')
-REPO=$(gh repo view --json nameWithOwner -q .nameWithOwner)
-TAG="v${VERSION}"
 DRY_RUN=""
-SKIP_RUST=""
-
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --dry-run) DRY_RUN="true"; shift ;;
-        --skip-rust) SKIP_RUST="true"; shift ;;
         *) echo "Unknown arg: $1" >&2; exit 1 ;;
     esac
 done
 
-echo "=== Publishing ${REPO} v${VERSION} ==="
+REPO=$(gh repo view --json nameWithOwner -q .nameWithOwner)
 
-# Check clean tree
+echo "=== Validating release metadata ==="
+python -c "from ci.release_checks import validate_release_metadata; validate_release_metadata(); print('OK')"
+
+VERSION=$(python -c "from ci.release_checks import read_workspace_version; print(read_workspace_version())")
+TAG="v${VERSION}"
+echo "=== Publishing ${REPO} ${TAG} ==="
+
 if [[ -n "$(git status --porcelain)" ]]; then
     echo "ERROR: working tree is dirty" >&2
     exit 1
@@ -32,63 +34,45 @@ if [[ "$LOCAL_SHA" != "$REMOTE_SHA" ]]; then
     exit 1
 fi
 
-# Check PyPI for existing version
-echo "Checking PyPI for existing version..."
+echo ""
+echo "=== Checking PyPI ==="
 HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "https://pypi.org/pypi/clang-tool-chain-bins/${VERSION}/json" 2>/dev/null || echo "000")
 if [[ "$HTTP_CODE" == "200" ]]; then
-    echo "WARNING: Version ${VERSION} already exists on PyPI"
+    echo "  Version ${VERSION} already on PyPI (CI will skip publish-pypi)"
 else
-    echo "Version ${VERSION} not yet on PyPI — good to publish"
+    echo "  Version ${VERSION} not on PyPI — CI will publish"
 fi
 
-# Publish Rust crates first (if not skipped)
-if [[ -z "$SKIP_RUST" ]]; then
-    echo ""
-    echo "=== Publishing Rust crates to crates.io ==="
-    CRATES=(ctcb-core ctcb-checksum ctcb-archive ctcb-dedup ctcb-download ctcb-strip ctcb-manifest ctcb-split ctcb-cli)
-    for crate in "${CRATES[@]}"; do
-        echo "  Publishing $crate..."
-        if [[ -n "$DRY_RUN" ]]; then
-            cargo publish -p "$crate" --no-verify --dry-run 2>&1 | tail -3 || true
-        else
-            cargo publish -p "$crate" --no-verify 2>&1 | tail -3
-            if [[ "$crate" != "${CRATES[-1]}" ]]; then
-                echo "  Waiting for crates.io to index..."
-                sleep 30
-            fi
-        fi
-    done
-fi
-
-# Tag and push to trigger release workflow
 echo ""
 echo "=== Tagging and pushing ==="
 if git rev-parse "$TAG" >/dev/null 2>&1; then
-    echo "Tag $TAG already exists"
+    echo "Tag $TAG already exists locally"
 else
-    echo "Creating tag $TAG"
     if [[ -z "$DRY_RUN" ]]; then
         git tag "$TAG"
-        git push origin "$TAG"
     else
-        echo "  (dry run — skipping tag)"
+        echo "  (dry run — skipping tag creation)"
     fi
+fi
+
+if [[ -z "$DRY_RUN" ]]; then
+    git push origin "$TAG"
+else
+    echo "  (dry run — skipping push)"
 fi
 
 echo ""
 echo "=== Release workflow triggered ==="
-echo "The release.yml workflow will:"
-echo "  1. Build wheels for 5 targets:"
-echo "     - x86_64-unknown-linux-gnu"
-echo "     - aarch64-unknown-linux-gnu (via zig)"
-echo "     - x86_64-pc-windows-msvc"
-echo "     - x86_64-apple-darwin"
-echo "     - aarch64-apple-darwin"
-echo "  2. Build sdist"
-echo "  3. Create GitHub Release with binaries + wheels + checksums"
-echo "  4. Publish to PyPI via trusted publishing"
+echo "Tag push triggers .github/workflows/release.yml, which will:"
+echo "  1. Preflight: validate version + check PyPI / crates.io for already-published"
+echo "  2. Build 5 platform binaries + wheels (with SLSA build attestations)"
+echo "  3. Build sdist (with attestation)"
+echo "  4. Publish to PyPI via OIDC trusted publisher (env: pypi)"
+echo "  5. Publish 9 ctcb-* crates to crates.io"
+echo "  6. Create GitHub Release with binaries + wheels + sdist + SHA256SUMS"
 echo ""
 echo "Monitor: https://github.com/${REPO}/actions"
+echo "Verify after: gh attestation verify <file> --repo ${REPO}"
 
 if [[ -n "$DRY_RUN" ]]; then
     echo ""
