@@ -128,8 +128,10 @@ jobs:
     # Mirrors zccache's build matrix (8 targets):
     #   linux gnu x86_64+aarch64, linux musl x86_64+aarch64,
     #   darwin x86_64+aarch64, windows x86_64+aarch64.
-    # Each target produces a Python wheel for PyPI. Native targets also
-    # produce a standalone `ctcb` binary for the GitHub Release page.
+    # Each target produces a Python wheel for PyPI. Every target also produces
+    # a standalone `ctcb` binary for the GitHub Release page.
+    # Cross-compile uses apt/musl-cross gcc + linker env var (same as zccache),
+    # NOT zig. setup-soldr provisions rustup + cached zccache state.
     name: Build (${{ matrix.target }})
     runs-on: ${{ matrix.os }}
     needs: [detect-bump, check-pypi]
@@ -138,92 +140,104 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # ----- Linux (gnu, manylinux wheels) -----
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
             binary: ctcb
             binary_ext: ""
-            zig: false           # native ubuntu host; maturin tags as manylinux automatically
-            upload_binary: true
           - os: ubuntu-latest
             target: aarch64-unknown-linux-gnu
             binary: ctcb
             binary_ext: ""
-            zig: true            # cross-compile arch via zig
-            upload_binary: true
-
-          # ----- Linux (musl, musllinux wheels) -----
+            linker: aarch64-linux-gnu-gcc
+            strip: aarch64-linux-gnu-strip
           - os: ubuntu-latest
             target: x86_64-unknown-linux-musl
             binary: ctcb
             binary_ext: ""
-            zig: true
-            upload_binary: true
           - os: ubuntu-latest
             target: aarch64-unknown-linux-musl
             binary: ctcb
             binary_ext: ""
-            zig: true
-            upload_binary: true
-
-          # ----- macOS -----
+            linker: aarch64-unknown-linux-musl-gcc
+            strip: aarch64-unknown-linux-musl-strip
           - os: macos-latest
             target: x86_64-apple-darwin
             binary: ctcb
             binary_ext: ""
-            zig: false
-            upload_binary: true
           - os: macos-latest
             target: aarch64-apple-darwin
             binary: ctcb
             binary_ext: ""
-            zig: false
-            upload_binary: true
-
-          # ----- Windows -----
           - os: windows-latest
             target: x86_64-pc-windows-msvc
             binary: ctcb.exe
             binary_ext: ".exe"
-            zig: false
-            upload_binary: true
           - os: windows-latest
             target: aarch64-pc-windows-msvc
             binary: ctcb.exe
             binary_ext: ".exe"
-            zig: false
-            upload_binary: true   # MSVC cross-compiles arm64 natively
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Setup Soldr (rustup + cached toolchain + zccache state)
+        uses: zackees/setup-soldr@v0
         with:
-          targets: ${{ matrix.target }}
-      - uses: Swatinem/rust-cache@v2
-      - name: Install zig (cross-compile)
-        if: matrix.zig
-        uses: mlugg/setup-zig@v2
-      - name: Install cargo-zigbuild
-        if: matrix.zig
-        run: cargo install --locked cargo-zigbuild
+          cache: true
+          cache-key-suffix: release-${{ matrix.target }}
+
+      - name: Ensure target stdlib is installed
+        shell: bash
+        run: rustup target add ${{ matrix.target }}
+
+      - name: Install musl tools (x86_64-linux-musl)
+        if: matrix.target == 'x86_64-unknown-linux-musl'
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y musl-tools
+
+      - name: Install musl cross-compiler (aarch64-linux-musl)
+        if: matrix.target == 'aarch64-unknown-linux-musl'
+        shell: bash
+        run: |
+          curl -fsSL -o aarch64-unknown-linux-musl.tar.xz \
+            https://github.com/cross-tools/musl-cross/releases/download/20250929/aarch64-unknown-linux-musl.tar.xz
+          tar xJf aarch64-unknown-linux-musl.tar.xz
+          echo "$PWD/aarch64-unknown-linux-musl/bin" >> "$GITHUB_PATH"
+
+      - name: Install GNU cross-compiler (aarch64-linux-gnu)
+        if: matrix.target == 'aarch64-unknown-linux-gnu'
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-aarch64-linux-gnu
+
+      - name: Configure cross-compile linker
+        if: matrix.linker != ''
+        shell: bash
+        run: |
+          TARGET_UPPER=$(echo "${{ matrix.target }}" | tr '[:lower:]-' '[:upper:]_')
+          echo "CARGO_TARGET_${TARGET_UPPER}_LINKER=${{ matrix.linker }}" >> "$GITHUB_ENV"
+
       - name: Install uv
         uses: astral-sh/setup-uv@v5
-      - name: Build standalone binary (zig)
-        if: matrix.zig
-        run: cargo zigbuild --release --target ${{ matrix.target }} -p ctcb-cli
-      - name: Build standalone binary (native)
-        if: ${{ !matrix.zig }}
-        run: cargo build --release --target ${{ matrix.target }} -p ctcb-cli
+
+      - name: Build standalone binary
+        shell: bash
+        run: soldr cargo build --release --target ${{ matrix.target }} -p ctcb-cli
+
       - name: Build wheel
+        shell: bash
         run: |
           uv sync
-          uv run maturin build --release --target ${{ matrix.target }} ${{ matrix.zig && '--zig' || '' }} --out dist
-        shell: bash
+          uv run maturin build --release --target ${{ matrix.target }} --out dist
+
       - name: Upload standalone binary
-        if: matrix.upload_binary
         uses: actions/upload-artifact@v4
         with:
           name: binary-${{ matrix.target }}
           path: target/${{ matrix.target }}/release/${{ matrix.binary }}
+
       - name: Upload wheel
         uses: actions/upload-artifact@v4
         with:
