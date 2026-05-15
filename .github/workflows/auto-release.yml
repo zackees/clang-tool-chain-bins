@@ -11,6 +11,11 @@ on:
         description: Optional tag to publish (e.g. 0.4.2 or v0.4.2). Leave empty to use pyproject.toml version.
         required: false
         type: string
+      dry_run:
+        description: Build everything but skip PyPI / crates.io / GitHub Release uploads.
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -103,10 +108,23 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
 
+  release-lint:
+    name: Release lint
+    runs-on: ubuntu-latest
+    needs: detect-bump
+    if: needs.detect-bump.outputs.should_release == 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Run release-lint
+        run: python ci/release_lint.py
+
   check-pypi:
     name: Check PyPI
     runs-on: ubuntu-latest
-    needs: detect-bump
+    needs: [detect-bump, release-lint]
     if: needs.detect-bump.outputs.should_release == 'true'
     outputs:
       pypi_complete: ${{ steps.pypi.outputs.pypi_complete }}
@@ -134,7 +152,7 @@ jobs:
     # NOT zig. setup-soldr provisions rustup + cached zccache state.
     name: Build (${{ matrix.target }})
     runs-on: ${{ matrix.os }}
-    needs: [detect-bump, check-pypi]
+    needs: [detect-bump, release-lint, check-pypi]
     if: needs.detect-bump.outputs.should_release == 'true'
     strategy:
       fail-fast: false
@@ -247,7 +265,7 @@ jobs:
   sdist:
     name: Build sdist
     runs-on: ubuntu-latest
-    needs: detect-bump
+    needs: [detect-bump, release-lint]
     if: needs.detect-bump.outputs.should_release == 'true'
     steps:
       - uses: actions/checkout@v4
@@ -264,7 +282,7 @@ jobs:
     name: Publish to PyPI
     runs-on: ubuntu-latest
     needs: [detect-bump, check-pypi, build, sdist]
-    if: needs.detect-bump.outputs.should_release == 'true' && needs.check-pypi.outputs.pypi_complete != 'true'
+    if: needs.detect-bump.outputs.should_release == 'true' && needs.check-pypi.outputs.pypi_complete != 'true' && inputs.dry_run != true
     environment: release
     permissions:
       id-token: write   # required for PyPI trusted publisher + PEP 740 sigstore signing
@@ -297,7 +315,7 @@ jobs:
     name: Publish to crates.io
     runs-on: ubuntu-latest
     needs: [detect-bump, build]
-    if: needs.detect-bump.outputs.should_release == 'true'
+    if: needs.detect-bump.outputs.should_release == 'true' && inputs.dry_run != true
     permissions:
       id-token: write       # for actions/attest-build-provenance sigstore signing
       attestations: write
@@ -305,19 +323,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
-      - name: Package all crates
-        run: |
-          set -e
-          for crate in ctcb-core ctcb-checksum ctcb-archive ctcb-dedup ctcb-download ctcb-strip ctcb-manifest ctcb-split ctcb-cli; do
-            echo "=== Packaging $crate ==="
-            cargo package -p "$crate" --allow-dirty --no-verify
-          done
-          ls -la target/package/*.crate
-      - name: Attest crate artifacts (GitHub provenance)
-        uses: actions/attest-build-provenance@v2
-        with:
-          subject-path: 'target/package/*.crate'
       - name: Publish crates in dependency order
+        # Cannot package all crates up-front because cargo resolves
+        # inter-crate version deps against crates.io. We publish each crate
+        # so the next one in the chain can resolve it. `cargo publish`
+        # leaves the .crate file in target/package/ for later attestation.
         env:
           CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
         run: |
@@ -339,6 +349,14 @@ jobs:
               sleep 30
             fi
           done
+      - name: Attest crate artifacts (GitHub provenance)
+        # cargo publish leaves <crate>-<version>.crate in target/package/.
+        # Attesting after publish is fine — the bytes are identical to what
+        # was uploaded, and the attestation lives in the GitHub attestation
+        # log, not crates.io. Consumers verify with `gh attestation verify`.
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: 'target/package/*.crate'
 
   release:
     name: Create GitHub Release
@@ -347,6 +365,7 @@ jobs:
     if: |
       always()
       && needs.detect-bump.outputs.should_release == 'true'
+      && inputs.dry_run != true
       && needs.build.result == 'success'
       && needs.sdist.result == 'success'
       && (needs.publish-pypi.result == 'success' || needs.publish-pypi.result == 'skipped')
