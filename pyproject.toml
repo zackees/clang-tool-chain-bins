@@ -1,6 +1,6 @@
 [project]
 name = "clang-tool-chain-bins"
-version = "0.4.1"
+version = "0.4.2"
 description = "LLVM/Clang Toolchain Build Tools - Rust-powered toolchain packaging with Python bindings"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -12,10 +12,9 @@ dependencies = [
 ]
 
 [project.scripts]
-# Query/install frontend (legacy Python)
-clang-tool-chain-bins = "tools.cli:main"
-clang-tool-chain-bins-index = "tools.archive_index:main"
-clang-tool-chain-bins-publish = "tools.publish:main"
+# Query/install frontend (Python, runtime modules live in clang_tool_chain_bins._impl)
+clang-tool-chain-bins = "clang_tool_chain_bins._impl.cli:main"
+clang-tool-chain-bins-index = "clang_tool_chain_bins._impl.archive_index:main"
 
 # Rust-backed CLI shims (delegate to ctcb binary)
 fetch-and-archive = "clang_tool_chain_bins.cli:fetch_and_archive"
@@ -39,6 +38,9 @@ build-backend = "maturin"
 features = ["pyo3/extension-module", "python"]
 module-name = "clang_tool_chain_bins._native"
 manifest-path = "crates/ctcb-cli/Cargo.toml"
+include = [
+    { path = "clang_tool_chain_bins/_impl/data/*.json", format = ["sdist", "wheel"] },
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests", "python/tests"]

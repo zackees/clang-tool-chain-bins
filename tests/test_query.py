@@ -50,7 +50,10 @@ class QueryTests(unittest.TestCase):
             self.assertIn("installed", match)
             self.assertIn("tool_name", match)
             self.assertTrue(match["url"].startswith("http"))
-            self.assertEqual(match["source_urls"], [match["archive_url"]])
+            if match.get("parts"):
+                self.assertEqual(len(match["source_urls"]), len(match["parts"]))
+            else:
+                self.assertEqual(match["source_urls"], [match["archive_url"]])
             self.assertTrue(match["local_cache_path"].endswith(".tar.zst"))
             self.assertFalse(match["installed"])
 

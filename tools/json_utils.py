@@ -1,24 +1,7 @@
-from __future__ import annotations
+"""Backward-compat shim. Implementation lives in clang_tool_chain_bins._impl.json_utils."""
 
-import json
-from typing import TYPE_CHECKING, Any, TextIO
+import sys as _sys
 
-import json5
+from clang_tool_chain_bins._impl import json_utils as _module
 
-if TYPE_CHECKING:
-    from pathlib import Path
-
-
-def loads(text: str) -> Any:
-    try:
-        return json.loads(text)
-    except json.JSONDecodeError:
-        return json5.loads(text)
-
-
-def load(handle: TextIO) -> Any:
-    return loads(handle.read())
-
-
-def load_path(path: Path) -> Any:
-    return loads(path.read_text(encoding="utf-8"))
+_sys.modules[__name__] = _module
