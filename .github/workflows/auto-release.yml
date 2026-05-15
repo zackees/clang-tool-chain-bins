@@ -222,6 +222,14 @@ jobs:
             https://github.com/cross-tools/musl-cross/releases/download/20250929/aarch64-unknown-linux-musl.tar.xz
           tar xJf aarch64-unknown-linux-musl.tar.xz
           echo "$PWD/aarch64-unknown-linux-musl/bin" >> "$GITHUB_PATH"
+          # The cc crate (used by ring, zstd-sys, etc.) looks up the C
+          # compiler via the target triple, which expects
+          # "aarch64-linux-musl-gcc" — but musl-cross ships the binary as
+          # "aarch64-unknown-linux-musl-gcc". Set CC/CXX explicitly so cc
+          # picks the right tool.
+          echo "CC_aarch64_unknown_linux_musl=aarch64-unknown-linux-musl-gcc" >> "$GITHUB_ENV"
+          echo "CXX_aarch64_unknown_linux_musl=aarch64-unknown-linux-musl-g++" >> "$GITHUB_ENV"
+          echo "AR_aarch64_unknown_linux_musl=aarch64-unknown-linux-musl-ar" >> "$GITHUB_ENV"
 
       - name: Install GNU cross-compiler (aarch64-linux-gnu)
         if: matrix.target == 'aarch64-unknown-linux-gnu'
@@ -241,8 +249,13 @@ jobs:
         uses: astral-sh/setup-uv@v5
 
       - name: Build standalone binary
+        # --bin ctcb skips the [lib] cdylib build. The cdylib needs the
+        # Python extension linker config that maturin sets up in the next
+        # step; trying to build it here with plain cargo + host clang
+        # fails on cross-compile targets (linker mismatch on linux gnu/musl,
+        # missing lld on macOS).
         shell: bash
-        run: soldr cargo build --release --target ${{ matrix.target }} -p ctcb-cli
+        run: soldr cargo build --release --target ${{ matrix.target }} -p ctcb-cli --bin ctcb
 
       - name: Build wheel
         shell: bash
