@@ -2,6 +2,8 @@ name: CI
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
   pull_request:
     branches: [main]
 
@@ -59,6 +61,28 @@ jobs:
           uv run maturin develop --release
       - name: Run Python tests
         run: uv run pytest python/tests/ -v
+
+  manifests:
+    name: Manifest integrity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: Install pytest only (no Rust build needed)
+        run: uv sync --no-install-project
+      - name: Validate binary archive manifests
+        run: uv run --no-project --with pytest pytest tests/test_manifest_integrity.py -v
+
+  release-lint:
+    name: Release lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Validate workspace + crate versions before release time
+        run: python ci/release_lint.py
 
   build-wheels:
     name: Build wheel (${{ matrix.target }})

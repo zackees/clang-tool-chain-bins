@@ -11,6 +11,11 @@ on:
         description: Optional tag to publish (e.g. 0.4.2 or v0.4.2). Leave empty to use pyproject.toml version.
         required: false
         type: string
+      dry_run:
+        description: Build everything but skip PyPI / crates.io / GitHub Release uploads.
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -103,10 +108,23 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
 
+  release-lint:
+    name: Release lint
+    runs-on: ubuntu-latest
+    needs: detect-bump
+    if: needs.detect-bump.outputs.should_release == 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Run release-lint
+        run: python ci/release_lint.py
+
   check-pypi:
     name: Check PyPI
     runs-on: ubuntu-latest
-    needs: detect-bump
+    needs: [detect-bump, release-lint]
     if: needs.detect-bump.outputs.should_release == 'true'
     outputs:
       pypi_complete: ${{ steps.pypi.outputs.pypi_complete }}
@@ -125,9 +143,16 @@ jobs:
           fi
 
   build:
+    # Mirrors zccache's build matrix (8 targets):
+    #   linux gnu x86_64+aarch64, linux musl x86_64+aarch64,
+    #   darwin x86_64+aarch64, windows x86_64+aarch64.
+    # Each target produces a Python wheel for PyPI. Every target also produces
+    # a standalone `ctcb` binary for the GitHub Release page.
+    # Cross-compile uses apt/musl-cross gcc + linker env var (same as zccache),
+    # NOT zig. setup-soldr provisions rustup + cached zccache state.
     name: Build (${{ matrix.target }})
     runs-on: ${{ matrix.os }}
-    needs: [detect-bump, check-pypi]
+    needs: [detect-bump, release-lint, check-pypi]
     if: needs.detect-bump.outputs.should_release == 'true'
     strategy:
       fail-fast: false
@@ -136,48 +161,101 @@ jobs:
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
             binary: ctcb
-            zig: false
+            binary_ext: ""
           - os: ubuntu-latest
             target: aarch64-unknown-linux-gnu
             binary: ctcb
-            zig: true
-          - os: windows-latest
-            target: x86_64-pc-windows-msvc
-            binary: ctcb.exe
-            zig: false
+            binary_ext: ""
+            linker: aarch64-linux-gnu-gcc
+            strip: aarch64-linux-gnu-strip
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-musl
+            binary: ctcb
+            binary_ext: ""
+          - os: ubuntu-latest
+            target: aarch64-unknown-linux-musl
+            binary: ctcb
+            binary_ext: ""
+            linker: aarch64-unknown-linux-musl-gcc
+            strip: aarch64-unknown-linux-musl-strip
           - os: macos-latest
             target: x86_64-apple-darwin
             binary: ctcb
-            zig: false
+            binary_ext: ""
           - os: macos-latest
             target: aarch64-apple-darwin
             binary: ctcb
-            zig: false
+            binary_ext: ""
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            binary: ctcb.exe
+            binary_ext: ".exe"
+          - os: windows-latest
+            target: aarch64-pc-windows-msvc
+            binary: ctcb.exe
+            binary_ext: ".exe"
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Setup Soldr (rustup + cached toolchain + zccache state)
+        uses: zackees/setup-soldr@v0
         with:
-          targets: ${{ matrix.target }}
-      - uses: Swatinem/rust-cache@v2
-      - name: Install zig (cross-compile)
-        if: matrix.zig
-        uses: mlugg/setup-zig@v2
+          cache: true
+          cache-key-suffix: release-${{ matrix.target }}
+
+      - name: Ensure target stdlib is installed
+        shell: bash
+        run: rustup target add ${{ matrix.target }}
+
+      - name: Install musl tools (x86_64-linux-musl)
+        if: matrix.target == 'x86_64-unknown-linux-musl'
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y musl-tools
+
+      - name: Install musl cross-compiler (aarch64-linux-musl)
+        if: matrix.target == 'aarch64-unknown-linux-musl'
+        shell: bash
+        run: |
+          curl -fsSL -o aarch64-unknown-linux-musl.tar.xz \
+            https://github.com/cross-tools/musl-cross/releases/download/20250929/aarch64-unknown-linux-musl.tar.xz
+          tar xJf aarch64-unknown-linux-musl.tar.xz
+          echo "$PWD/aarch64-unknown-linux-musl/bin" >> "$GITHUB_PATH"
+
+      - name: Install GNU cross-compiler (aarch64-linux-gnu)
+        if: matrix.target == 'aarch64-unknown-linux-gnu'
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-aarch64-linux-gnu
+
+      - name: Configure cross-compile linker
+        if: matrix.linker != ''
+        shell: bash
+        run: |
+          TARGET_UPPER=$(echo "${{ matrix.target }}" | tr '[:lower:]-' '[:upper:]_')
+          echo "CARGO_TARGET_${TARGET_UPPER}_LINKER=${{ matrix.linker }}" >> "$GITHUB_ENV"
+
       - name: Install uv
         uses: astral-sh/setup-uv@v5
-      - name: Build binary
-        if: ${{ !matrix.zig }}
-        run: cargo build --release --target ${{ matrix.target }} -p ctcb-cli
+
+      - name: Build standalone binary
+        shell: bash
+        run: soldr cargo build --release --target ${{ matrix.target }} -p ctcb-cli
+
       - name: Build wheel
+        shell: bash
         run: |
           uv sync
-          uv run maturin build --release --target ${{ matrix.target }} ${{ matrix.zig && '--zig' || '' }} --out dist
-        shell: bash
-      - name: Upload binary
-        if: ${{ !matrix.zig }}
+          uv run maturin build --release --target ${{ matrix.target }} --out dist
+
+      - name: Upload standalone binary
         uses: actions/upload-artifact@v4
         with:
           name: binary-${{ matrix.target }}
           path: target/${{ matrix.target }}/release/${{ matrix.binary }}
+
       - name: Upload wheel
         uses: actions/upload-artifact@v4
         with:
@@ -187,7 +265,7 @@ jobs:
   sdist:
     name: Build sdist
     runs-on: ubuntu-latest
-    needs: detect-bump
+    needs: [detect-bump, release-lint]
     if: needs.detect-bump.outputs.should_release == 'true'
     steps:
       - uses: actions/checkout@v4
@@ -204,7 +282,7 @@ jobs:
     name: Publish to PyPI
     runs-on: ubuntu-latest
     needs: [detect-bump, check-pypi, build, sdist]
-    if: needs.detect-bump.outputs.should_release == 'true' && needs.check-pypi.outputs.pypi_complete != 'true'
+    if: needs.detect-bump.outputs.should_release == 'true' && needs.check-pypi.outputs.pypi_complete != 'true' && inputs.dry_run != true
     environment: release
     permissions:
       id-token: write   # required for PyPI trusted publisher + PEP 740 sigstore signing
@@ -237,7 +315,7 @@ jobs:
     name: Publish to crates.io
     runs-on: ubuntu-latest
     needs: [detect-bump, build]
-    if: needs.detect-bump.outputs.should_release == 'true'
+    if: needs.detect-bump.outputs.should_release == 'true' && inputs.dry_run != true
     permissions:
       id-token: write       # for actions/attest-build-provenance sigstore signing
       attestations: write
@@ -245,19 +323,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
-      - name: Package all crates
-        run: |
-          set -e
-          for crate in ctcb-core ctcb-checksum ctcb-archive ctcb-dedup ctcb-download ctcb-strip ctcb-manifest ctcb-split ctcb-cli; do
-            echo "=== Packaging $crate ==="
-            cargo package -p "$crate" --allow-dirty --no-verify
-          done
-          ls -la target/package/*.crate
-      - name: Attest crate artifacts (GitHub provenance)
-        uses: actions/attest-build-provenance@v2
-        with:
-          subject-path: 'target/package/*.crate'
       - name: Publish crates in dependency order
+        # Cannot package all crates up-front because cargo resolves
+        # inter-crate version deps against crates.io. We publish each crate
+        # so the next one in the chain can resolve it. `cargo publish`
+        # leaves the .crate file in target/package/ for later attestation.
         env:
           CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
         run: |
@@ -279,6 +349,14 @@ jobs:
               sleep 30
             fi
           done
+      - name: Attest crate artifacts (GitHub provenance)
+        # cargo publish leaves <crate>-<version>.crate in target/package/.
+        # Attesting after publish is fine — the bytes are identical to what
+        # was uploaded, and the attestation lives in the GitHub attestation
+        # log, not crates.io. Consumers verify with `gh attestation verify`.
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: 'target/package/*.crate'
 
   release:
     name: Create GitHub Release
@@ -287,6 +365,7 @@ jobs:
     if: |
       always()
       && needs.detect-bump.outputs.should_release == 'true'
+      && inputs.dry_run != true
       && needs.build.result == 'success'
       && needs.sdist.result == 'success'
       && (needs.publish-pypi.result == 'success' || needs.publish-pypi.result == 'skipped')
