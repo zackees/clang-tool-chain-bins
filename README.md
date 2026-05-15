@@ -1,5 +1,7 @@
 # clang-tool-chain-bins
 
+[![CI](https://github.com/zackees/clang-tool-chain-bins/actions/workflows/ci.yml/badge.svg)](https://github.com/zackees/clang-tool-chain-bins/actions/workflows/ci.yml)
+
 `clang-tool-chain-bins` is the package and CLI for querying and installing the archived LLVM, Clang, MSVC-adjacent, and related tool bundles managed in this repository.
 
 It is designed for machine consumption first:
