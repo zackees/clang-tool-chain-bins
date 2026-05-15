@@ -202,6 +202,15 @@ jobs:
         with:
           cache: true
           cache-key-suffix: release-${{ matrix.target }}
+          # platform-default tells soldr NOT to inject rust-lld as the
+          # global linker. Without this, soldr's SOLDR_LINKER=fast default
+          # forces rust-lld for every target, which produces
+          # "incompatible with elf64-x86-64" errors on linux gnu/musl
+          # aarch64 crosses (host x86_64 rust-lld can't link aarch64 .o)
+          # and "invalid linker name in argument '-fuse-ld=lld'" on macOS
+          # (system clang has no lld). With platform-default, our
+          # CARGO_TARGET_<X>_LINKER env vars take effect.
+          linker: platform-default
 
       - name: Ensure target stdlib is installed
         shell: bash
