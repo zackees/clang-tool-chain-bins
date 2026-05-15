@@ -4,8 +4,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Literal
 
-from tools import install as install_impl
-from tools import query as query_impl
+from ._impl import install as install_impl
+from ._impl import query as query_impl
 
 OperationName = Literal["install", "ensure", "tryinstall"]
 
