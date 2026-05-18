@@ -202,15 +202,13 @@ jobs:
         with:
           cache: true
           cache-key-suffix: release-${{ matrix.target }}
-          # platform-default tells soldr NOT to inject rust-lld as the
-          # global linker. Without this, soldr's SOLDR_LINKER=fast default
-          # forces rust-lld for every target, which produces
-          # "incompatible with elf64-x86-64" errors on linux gnu/musl
-          # aarch64 crosses (host x86_64 rust-lld can't link aarch64 .o)
-          # and "invalid linker name in argument '-fuse-ld=lld'" on macOS
-          # (system clang has no lld). With platform-default, our
-          # CARGO_TARGET_<X>_LINKER env vars take effect.
-          linker: platform-default
+          # Use soldr's default `linker: fast`. When fast doesn't work for
+          # a cross-compile target (e.g. host x86_64 rust-lld can't link
+          # aarch64 .o files; macOS clang has no lld), the build steps
+          # below detect the failure and retry once with platform-default,
+          # emitting a yellow GH Actions warning instead of failing. See
+          # the soldr bug filed at
+          # https://github.com/zackees/setup-soldr/issues for context.
 
       - name: Ensure target stdlib is installed
         shell: bash
@@ -257,20 +255,66 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v5
 
-      - name: Build standalone binary
-        # --bin ctcb skips the [lib] cdylib build. The cdylib needs the
-        # Python extension linker config that maturin sets up in the next
-        # step; trying to build it here with plain cargo + host clang
-        # fails on cross-compile targets (linker mismatch on linux gnu/musl,
-        # missing lld on macOS).
+      - name: Build standalone binary (soldr fast → fallback to platform-default)
+        # First try with soldr's default `fast` linker. If it fails (cdylib
+        # link rejects cross-arch .o files or missing lld on macOS), retry
+        # once with SOLDR_LINKER=platform-default after clearing the env
+        # vars setup-soldr wrote and re-applying the workflow's intended
+        # cross linker. Successful fallback emits a yellow warning instead
+        # of failing the build.
         shell: bash
-        run: soldr cargo build --release --target ${{ matrix.target }} -p ctcb-cli --bin ctcb
+        run: |
+          set +e
+          soldr cargo build --release --target ${{ matrix.target }} -p ctcb-cli --bin ctcb
+          rc=$?
+          if [ "$rc" -eq 0 ]; then exit 0; fi
 
-      - name: Build wheel
+          echo "::group::soldr 'fast' linker failed (exit $rc) — retrying with platform-default"
+          TARGET_UPPER=$(echo "${{ matrix.target }}" | tr '[:lower:]-' '[:upper:]_')
+          unset "CARGO_TARGET_${TARGET_UPPER}_RUSTFLAGS"
+          if [ -n "${{ matrix.linker }}" ]; then
+            export "CARGO_TARGET_${TARGET_UPPER}_LINKER=${{ matrix.linker }}"
+          else
+            unset "CARGO_TARGET_${TARGET_UPPER}_LINKER"
+          fi
+          SOLDR_LINKER=platform-default soldr cargo build --release --target ${{ matrix.target }} -p ctcb-cli --bin ctcb
+          rc2=$?
+          echo "::endgroup::"
+          if [ "$rc2" -eq 0 ]; then
+            echo "::warning title=soldr-linker-fallback::soldr 'fast' linker failed for target ${{ matrix.target }}, retried with 'platform-default' and succeeded. Set 'linker: platform-default' on the setup-soldr step to silence this warning. Performance-only issue, not correctness."
+            exit 0
+          fi
+          exit $rc2
+
+      - name: Build wheel (soldr fast → fallback to platform-default)
+        # maturin invokes cargo directly (no soldr wrapper), but soldr's
+        # env vars in $GITHUB_ENV still apply. Same fallback shape as the
+        # binary step: try once, retry with the env scrubbed if the first
+        # attempt fails, warn on successful fallback.
         shell: bash
         run: |
           uv sync
+          set +e
           uv run maturin build --release --target ${{ matrix.target }} --out dist
+          rc=$?
+          if [ "$rc" -eq 0 ]; then exit 0; fi
+
+          echo "::group::maturin failed under soldr 'fast' linker (exit $rc) — retrying with platform-default env"
+          TARGET_UPPER=$(echo "${{ matrix.target }}" | tr '[:lower:]-' '[:upper:]_')
+          unset "CARGO_TARGET_${TARGET_UPPER}_RUSTFLAGS"
+          if [ -n "${{ matrix.linker }}" ]; then
+            export "CARGO_TARGET_${TARGET_UPPER}_LINKER=${{ matrix.linker }}"
+          else
+            unset "CARGO_TARGET_${TARGET_UPPER}_LINKER"
+          fi
+          SOLDR_LINKER=platform-default uv run maturin build --release --target ${{ matrix.target }} --out dist
+          rc2=$?
+          echo "::endgroup::"
+          if [ "$rc2" -eq 0 ]; then
+            echo "::warning title=soldr-linker-fallback::maturin failed for target ${{ matrix.target }} under soldr's 'fast' linker, retried with 'platform-default' and succeeded. Set 'linker: platform-default' on the setup-soldr step to silence this warning. Performance-only issue, not correctness."
+            exit 0
+          fi
+          exit $rc2
 
       - name: Upload standalone binary
         uses: actions/upload-artifact@v4
