@@ -231,6 +231,18 @@ jobs:
             https://github.com/cross-tools/musl-cross/releases/download/20250929/aarch64-unknown-linux-musl.tar.xz
           tar xJf aarch64-unknown-linux-musl.tar.xz
           echo "$PWD/aarch64-unknown-linux-musl/bin" >> "$GITHUB_PATH"
+          # cc-rs (used by zstd-sys, ring, ... build.rs scripts) strips
+          # "-unknown-" from the target triple when looking up the cross
+          # compiler, so it searches for "aarch64-linux-musl-gcc". The
+          # cross-tools archive ships the binaries with the full triple
+          # ("aarch64-unknown-linux-musl-gcc"), so cc-rs falls back to the
+          # host x86_64 gcc, builds dynamic-link C objects against
+          # glibc's libgcc_s.so.1, and maturin then can't repair the
+          # aarch64 wheel ("libgcc_s.so.1 => not found"). Set cc-rs's
+          # explicit per-target overrides so it finds the musl tools.
+          echo "CC_aarch64_unknown_linux_musl=aarch64-unknown-linux-musl-gcc" >> "$GITHUB_ENV"
+          echo "CXX_aarch64_unknown_linux_musl=aarch64-unknown-linux-musl-g++" >> "$GITHUB_ENV"
+          echo "AR_aarch64_unknown_linux_musl=aarch64-unknown-linux-musl-ar" >> "$GITHUB_ENV"
 
       - name: Install GNU cross-compiler (aarch64-linux-gnu)
         if: matrix.target == 'aarch64-unknown-linux-gnu'
