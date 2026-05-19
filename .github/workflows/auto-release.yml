@@ -202,6 +202,15 @@ jobs:
         with:
           cache: true
           cache-key-suffix: release-${{ matrix.target }}
+          # Opt out of soldr's `fast` linker default. `fast` injects
+          # `-fuse-ld=lld` which Clang on macOS rejects ("invalid linker
+          # name"), failing the cdylib link step of ctcb-cli. The
+          # platform-default value tells setup-soldr to leave the linker
+          # choice to cargo/rust-toolchain.toml. See
+          # https://github.com/zackees/clang-tool-chain-bins/issues (release
+          # pipeline hardening) and the soldr 'fast' linker note in the
+          # action description.
+          linker: platform-default
 
       - name: Ensure target stdlib is installed
         shell: bash
