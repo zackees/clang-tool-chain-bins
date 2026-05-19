@@ -12,8 +12,8 @@ description = "Archive splitting for Git LFS limits for clang toolchain binary b
 anyhow = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
-ctcb-core = { path = "../ctcb-core", version = "0.4.2" }
-ctcb-checksum = { path = "../ctcb-checksum", version = "0.4.2" }
+ctcb-core = { path = "../ctcb-core", version = "0.4.3" }
+ctcb-checksum = { path = "../ctcb-checksum", version = "0.4.3" }
 
 [dev-dependencies]
 tempfile = { workspace = true }
