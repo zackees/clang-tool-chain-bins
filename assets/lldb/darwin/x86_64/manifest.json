@@ -1,4 +1,7 @@
 {
-  "latest": null,
-  "versions": {}
+  "latest": "19.1.7",
+  "19.1.7": {
+    "href": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/lldb/darwin/x86_64/lldb-19.1.7-darwin-x86_64.tar.zst",
+    "sha256": "6926b2584212b44fc1e17fa5e6b2d91c4b99f39b96c033eb18a6754317f7e8ee"
+  }
 }
