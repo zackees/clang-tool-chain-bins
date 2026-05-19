@@ -20,6 +20,7 @@ Unlike the Clang toolchain, LLDB has minimal binaries, so no deduplication is ne
 
 import hashlib
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -336,6 +337,31 @@ def extract_lldb_binaries(llvm_root: Path, output_dir: Path, platform: str) -> i
             # Support files are optional (platform-specific)
             print(f"  - {support_file:20s} (not found - platform-specific)")
 
+    # macOS: bin/lldb references @rpath/liblldb.<version>.dylib at runtime; the
+    # actual dylib lives in lib/ alongside its symlink chain (liblldb.dylib ->
+    # liblldb.<major>.dylib -> liblldb.<version>.dylib). Copy all liblldb*
+    # entries from lib/ with symlinks preserved so dyld can resolve them.
+    if platform == "darwin":
+        src_lib = llvm_root / "lib"
+        if src_lib.exists():
+            output_lib = output_dir / "lib"
+            output_lib.mkdir(parents=True, exist_ok=True)
+            print(f"\nCopying darwin liblldb* from: {src_lib}")
+            for entry in sorted(src_lib.glob("liblldb*")):
+                dest = output_lib / entry.name
+                if entry.is_symlink():
+                    target = os.readlink(entry)
+                    if dest.exists() or dest.is_symlink():
+                        dest.unlink()
+                    os.symlink(target, dest)
+                    print(f"  [OK] {entry.name:35s} -> {target} (symlink)")
+                    extracted_count += 1
+                elif entry.is_file():
+                    shutil.copy2(entry, dest)
+                    size_mb = dest.stat().st_size / (1024 * 1024)
+                    print(f"  [OK] {entry.name:35s} ({size_mb:6.1f} MB)")
+                    extracted_count += 1
+
     if extracted_count == 0:
         raise RuntimeError(f"No LLDB binaries found in {bin_dir}")
 
@@ -381,6 +407,14 @@ def create_tar_archive(source_dir: Path, output_tar: Path) -> Path:
         bin_dir = source_dir / "bin"
         if bin_dir.exists():
             tar.add(bin_dir, arcname="bin", filter=tar_filter)
+
+        # Add lib/ directory (darwin liblldb*.dylib + symlink chain — see
+        # extract_lldb_binaries' darwin branch). tarfile preserves symlinks
+        # natively as link entries, so the symlink chain survives the archive.
+        lib_dir = source_dir / "lib"
+        if lib_dir.exists():
+            print("  Adding lib/ directory...")
+            tar.add(lib_dir, arcname="lib", filter=tar_filter)
 
         # Add python/ directory (if exists - for LLDB with Python support)
         python_dir = source_dir / "python"
