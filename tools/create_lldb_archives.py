@@ -37,7 +37,7 @@ LLDB_BINARIES = {
 # Additional LLDB support files (DLLs, shared libraries)
 LLDB_SUPPORT_FILES = {
     "liblldb.dll",  # Windows: LLDB shared library
-    "liblldb.so",   # Linux: LLDB shared library
+    "liblldb.so",  # Linux: LLDB shared library
     "liblldb.dylib",  # macOS: LLDB shared library
     "python310.dll",  # Python 3.10 runtime (required by liblldb for scripting support)
 }
@@ -51,12 +51,30 @@ LLVM_VERSIONS = {
 
 # Official LLVM download URLs
 LLVM_DOWNLOAD_URLS = {
-    ("win", "x86_64"): "https://github.com/llvm/llvm-project/releases/download/llvmorg-{version}/LLVM-{version}-win64.exe",
-    ("win", "arm64"): "https://github.com/llvm/llvm-project/releases/download/llvmorg-{version}/LLVM-{version}-woa64.exe",
-    ("linux", "x86_64"): "https://github.com/llvm/llvm-project/releases/download/llvmorg-{version}/LLVM-{version}-Linux-X64.tar.xz",
-    ("linux", "arm64"): "https://github.com/llvm/llvm-project/releases/download/llvmorg-{version}/clang+llvm-{version}-aarch64-linux-gnu.tar.xz",
-    ("darwin", "x86_64"): "https://github.com/llvm/llvm-project/releases/download/llvmorg-{version}/LLVM-{version}-macOS-X64.tar.xz",
-    ("darwin", "arm64"): "https://github.com/llvm/llvm-project/releases/download/llvmorg-{version}/LLVM-{version}-macOS-ARM64.tar.xz",
+    (
+        "win",
+        "x86_64",
+    ): "https://github.com/llvm/llvm-project/releases/download/llvmorg-{version}/LLVM-{version}-win64.exe",
+    (
+        "win",
+        "arm64",
+    ): "https://github.com/llvm/llvm-project/releases/download/llvmorg-{version}/LLVM-{version}-woa64.exe",
+    (
+        "linux",
+        "x86_64",
+    ): "https://github.com/llvm/llvm-project/releases/download/llvmorg-{version}/LLVM-{version}-Linux-X64.tar.xz",
+    (
+        "linux",
+        "arm64",
+    ): "https://github.com/llvm/llvm-project/releases/download/llvmorg-{version}/clang+llvm-{version}-aarch64-linux-gnu.tar.xz",
+    (
+        "darwin",
+        "x86_64",
+    ): "https://github.com/llvm/llvm-project/releases/download/llvmorg-{version}/LLVM-{version}-macOS-X64.tar.xz",
+    (
+        "darwin",
+        "arm64",
+    ): "https://github.com/llvm/llvm-project/releases/download/llvmorg-{version}/LLVM-{version}-macOS-ARM64.tar.xz",
 }
 
 
@@ -103,7 +121,7 @@ def download_llvm_if_needed(platform: str, arch: str, version: str, work_dir: Pa
     try:
         urllib.request.urlretrieve(url, download_path, reporthook=show_progress)
         print()  # New line after progress
-        print(f"[OK] Downloaded: {download_path.stat().st_size / (1024*1024):.2f} MB")
+        print(f"[OK] Downloaded: {download_path.stat().st_size / (1024 * 1024):.2f} MB")
         return download_path
     except Exception as e:
         if download_path.exists():
@@ -138,8 +156,7 @@ def extract_llvm_archive(archive_path: Path, extract_dir: Path, platform: str) -
             )
         except (subprocess.CalledProcessError, FileNotFoundError) as e:
             raise RuntimeError(
-                "7z is required to extract Windows .exe installer.\n"
-                "Install 7z: https://www.7-zip.org/"
+                "7z is required to extract Windows .exe installer.\nInstall 7z: https://www.7-zip.org/"
             ) from e
 
     elif archive_path.suffix == ".xz" or archive_path.name.endswith(".tar.xz"):
@@ -390,7 +407,7 @@ def create_tar_archive(source_dir: Path, output_tar: Path) -> Path:
                 tar.add(item, arcname=item.name, filter=tar_filter)
 
     size = output_tar.stat().st_size
-    print(f"[OK] Created: {output_tar} ({size / (1024*1024):.2f} MB)")
+    print(f"[OK] Created: {output_tar} ({size / (1024 * 1024):.2f} MB)")
 
     return output_tar
 
@@ -443,7 +460,7 @@ def compress_with_zstd(tar_file: Path, output_zst: Path, level: int = 22) -> Pat
     print("\n" + "=" * 70)
     print(f"COMPRESSING WITH ZSTD LEVEL {level}")
     print("=" * 70)
-    print(f"Input:  {tar_file} ({tar_file.stat().st_size / (1024*1024):.2f} MB)")
+    print(f"Input:  {tar_file} ({tar_file.stat().st_size / (1024 * 1024):.2f} MB)")
     print(f"Output: {output_zst}")
     print()
 
@@ -475,10 +492,10 @@ def compress_with_zstd(tar_file: Path, output_zst: Path, level: int = 22) -> Pat
     ratio = original_size / compressed_size if compressed_size > 0 else 0
 
     print(f"[OK] Compressed in {elapsed:.1f}s")
-    print(f"  Original:   {original_size / (1024*1024):.2f} MB")
-    print(f"  Compressed: {compressed_size / (1024*1024):.2f} MB")
+    print(f"  Original:   {original_size / (1024 * 1024):.2f} MB")
+    print(f"  Compressed: {compressed_size / (1024 * 1024):.2f} MB")
     print(f"  Ratio:      {ratio:.2f}:1")
-    print(f"  Reduction:  {(1 - compressed_size/original_size) * 100:.1f}%")
+    print(f"  Reduction:  {(1 - compressed_size / original_size) * 100:.1f}%")
 
     return output_zst
 
@@ -589,7 +606,7 @@ def process_platform_arch(
 
     print("\n[SUCCESS] Archive created successfully!")
     print(f"Archive: {zst_file}")
-    print(f"Size: {zst_file.stat().st_size / (1024*1024):.2f} MB")
+    print(f"Size: {zst_file.stat().st_size / (1024 * 1024):.2f} MB")
     print(f"SHA256: {sha256}")
 
     return {
@@ -635,6 +652,15 @@ def main() -> None:
         help="Python modules directory (output from extract_python_for_lldb.py)",
     )
     parser.add_argument("--zstd-level", type=int, default=22, help="Zstd compression level (default: 22)")
+    parser.add_argument(
+        "--version",
+        help=(
+            "Override the LLVM version for the selected platform(s). "
+            "Use this when a platform must pin to a version different from LLVM_VERSIONS — "
+            "e.g. darwin/x86_64 is pinned to 19.1.7 because upstream LLVM dropped "
+            "macOS x86_64 prebuilts after 19.x."
+        ),
+    )
 
     args = parser.parse_args()
 
@@ -660,8 +686,8 @@ def main() -> None:
     # Process each platform/arch combination
     results = {}
     for platform in platforms:
-        # Get version for this platform
-        version = LLVM_VERSIONS.get(platform)
+        # Get version for this platform: explicit --version wins over LLVM_VERSIONS default.
+        version = args.version or LLVM_VERSIONS.get(platform)
         if not version:
             print(f"Warning: No LLVM version defined for platform {platform}, skipping")
             continue
@@ -697,7 +723,7 @@ def main() -> None:
         for arch, info in arches.items():
             print(f"\n{platform}/{arch}:")
             print(f"  File: {info['filename']}")
-            print(f"  Size: {info['size'] / (1024*1024):.2f} MB")
+            print(f"  Size: {info['size'] / (1024 * 1024):.2f} MB")
             print(f"  SHA256: {info['sha256']}")
 
     # Save results to JSON for manifest updates
