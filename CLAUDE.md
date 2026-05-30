@@ -38,20 +38,26 @@ uv run pytest python/tests/ -v     # Python tests (8 tests)
 
 ## LFS Policy
 
-**DO NOT use Git LFS** -- it costs money for bandwidth. All archives should be
-stored directly in git. Archives larger than 99 MB must be split into parts (each <99 MB).
+**All archives use Git LFS.** The earlier non-LFS policy (split into <99 MB parts
+to avoid LFS bandwidth costs) was reversed during the LFS migration tracked in
+issue #30. LFS bandwidth cost is accepted in exchange for faster clones, simpler
+archive shape (no `.part-*` reassembly), and removal of the 99 MB-per-blob ceiling.
 
-Current `.gitattributes` still has some LFS patterns from legacy usage.
-**New archives should NEVER be added to LFS.** Instead, split large archives:
+How `.gitattributes` enforces this:
 
-```bash
-# Split an archive >99 MB into parts
-split -b 95M archive.tar.zst archive.tar.zst.part-
-# Creates: archive.tar.zst.part-aa, archive.tar.zst.part-ab, etc.
-
-# Reassemble on download
-cat archive.tar.zst.part-* > archive.tar.zst
 ```
+assets/**/*.tar.zst       filter=lfs diff=lfs merge=lfs -text
+assets/**/*.tar.zst.part-* filter=lfs diff=lfs merge=lfs -text
+```
+
+The migration is per-archive. For each non-LFS archive: update `.gitattributes`
+if needed, `git rm --cached <file>` then `git add <file>` to re-stage through the
+LFS filter. The manifest `href` is auto-computed by
+`clang_tool_chain_bins/_impl/download_sources.py` from the `.gitattributes`
+classification, so manifests update automatically when the tooling is re-run.
+
+Split `.part-*` archives are being reassembled into single LFS objects as part
+of this migration — LFS removes the constraint that motivated splitting.
 
 ## Project Structure
 
