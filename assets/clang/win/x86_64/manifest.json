@@ -1,7 +1,7 @@
 {
   "latest": "21.1.5",
   "21.1.5": {
-    "href": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang/win/x86_64/llvm-21.1.5-win-x86_64.tar.zst",
+    "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang/win/x86_64/llvm-21.1.5-win-x86_64.tar.zst",
     "sha256": "8d6dd1cbc2261f8e6fa657b48f10a6e44223441d4b5487f056838cb8c2403a77",
     "notes": "LLVM 21.1.5 with integrated MinGW-w64 headers and sysroot for GNU ABI compilation on Windows"
   }
