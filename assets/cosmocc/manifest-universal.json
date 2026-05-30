@@ -1,0 +1,9 @@
+{
+  "latest": "4.0.2",
+  "versions": {
+    "4.0.2": {
+      "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/cosmocc/cosmocc-universal-4.0.2.tar.zst",
+      "sha256": "ade991cb32e14dfe52ba6e1dc164665f91f0142b09b802c647aa62074d70dec8"
+    }
+  }
+}

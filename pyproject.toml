@@ -1,0 +1,52 @@
+[project]
+name = "clang-tool-chain-bins"
+version = "0.4.3"
+description = "LLVM/Clang Toolchain Build Tools - Rust-powered toolchain packaging with Python bindings"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fasteners>=0.19.0",
+    "json5>=0.9.0",
+    "zstandard>=0.22.0",
+    "pyzstd>=0.15.0",
+]
+
+[project.scripts]
+# Query/install frontend (Python, runtime modules live in clang_tool_chain_bins._impl)
+clang-tool-chain-bins = "clang_tool_chain_bins._impl.cli:main"
+clang-tool-chain-bins-index = "clang_tool_chain_bins._impl.archive_index:main"
+
+# Rust-backed CLI shims (delegate to ctcb binary)
+fetch-and-archive = "clang_tool_chain_bins.cli:fetch_and_archive"
+download-binaries = "clang_tool_chain_bins.cli:download_binaries"
+strip-binaries = "clang_tool_chain_bins.cli:strip_binaries"
+deduplicate-binaries = "clang_tool_chain_bins.cli:deduplicate_binaries"
+create-hardlink-archive = "clang_tool_chain_bins.cli:create_hardlink_archive"
+expand-archive = "clang_tool_chain_bins.cli:expand_archive"
+test-compression = "clang_tool_chain_bins.cli:test_compression"
+create-iwyu-archives = "clang_tool_chain_bins.cli:create_iwyu_archives"
+extract-mingw-sysroot = "clang_tool_chain_bins.cli:extract_mingw_sysroot"
+ctcb-emscripten = "clang_tool_chain_bins.cli:emscripten"
+ctcb-emscripten-docker = "clang_tool_chain_bins.cli:emscripten_docker"
+ctcb-nodejs = "clang_tool_chain_bins.cli:nodejs"
+
+[build-system]
+requires = ["maturin>=1.7,<2.0"]
+build-backend = "maturin"
+
+[tool.maturin]
+features = ["pyo3/extension-module", "python"]
+module-name = "clang_tool_chain_bins._native"
+manifest-path = "crates/ctcb-cli/Cargo.toml"
+include = [
+    { path = "clang_tool_chain_bins/_impl/data/*.json", format = ["sdist", "wheel"] },
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "python/tests"]
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=7.0",
+    "maturin>=1.7",
+]

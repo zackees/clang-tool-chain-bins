@@ -1,0 +1,21 @@
+[package]
+name = "ctcb-dedup"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "File deduplication via hardlinks for clang toolchain binary builder"
+
+[dependencies]
+md-5 = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+walkdir = { workspace = true }
+anyhow = { workspace = true }
+ctcb-checksum = { path = "../ctcb-checksum", version = "0.4.3" }
+ctcb-core = { path = "../ctcb-core", version = "0.4.3" }
+
+[dev-dependencies]
+tempfile = { workspace = true }

@@ -1,0 +1,501 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Repository Overview
+
+This repository hosts pre-built binary distributions of LLVM/Clang toolchains, Include-What-You-Use (IWYU), MinGW sysroot, and Emscripten for multiple platforms. The binaries are ultra-compressed using zstd level 22 compression with hard-link deduplication, achieving ~94% size reduction.
+
+The repository serves as both:
+1. **Binary hosting**: GitHub Pages site at https://zackees.github.io/clang-tool-chain-bins/
+2. **Build tools**: Rust CLI (`ctcb`) with Python bindings for maintainers to generate and package toolchain archives
+
+## Rust Workspace (Migration in Progress)
+
+Core logic is being migrated to Rust for performance. Python bindings via PyO3 (abi3-py310) built by maturin.
+
+```
+crates/
+├── ctcb-cli/       # Binary: 13 subcommands via clap + PyO3 bindings
+├── ctcb-core/      # Platform detection, config, formatting helpers
+├── ctcb-archive/   # tar create/extract, zstd compress/decompress
+├── ctcb-checksum/  # SHA256, MD5 generation and verification
+├── ctcb-dedup/     # MD5-based deduplication, hardlink structure
+├── ctcb-download/  # HTTP download with progress (reqwest + tokio)
+├── ctcb-strip/     # Binary stripping, essential-file filtering
+├── ctcb-manifest/  # Two-tier manifest JSON read/write
+└── ctcb-split/     # Archive splitting for GitHub LFS limits
+```
+
+### Rust Commands
+```bash
+cargo build --workspace          # Build
+cargo test --workspace           # Test (53 tests)
+cargo run -- expand --help       # Run a subcommand
+uv sync && uv run maturin develop  # Build Python bindings
+uv run pytest python/tests/ -v     # Python tests (8 tests)
+```
+
+## LFS Policy
+
+**All archives use Git LFS.** The earlier non-LFS policy (split into <99 MB parts
+to avoid LFS bandwidth costs) was reversed during the LFS migration tracked in
+issue #30. LFS bandwidth cost is accepted in exchange for faster clones, simpler
+archive shape (no `.part-*` reassembly), and removal of the 99 MB-per-blob ceiling.
+
+How `.gitattributes` enforces this:
+
+```
+assets/**/*.tar.zst       filter=lfs diff=lfs merge=lfs -text
+assets/**/*.tar.zst.part-* filter=lfs diff=lfs merge=lfs -text
+```
+
+The migration is per-archive. For each non-LFS archive: update `.gitattributes`
+if needed, `git rm --cached <file>` then `git add <file>` to re-stage through the
+LFS filter. The manifest `href` is auto-computed by
+`clang_tool_chain_bins/_impl/download_sources.py` from the `.gitattributes`
+classification, so manifests update automatically when the tooling is re-run.
+
+Split `.part-*` archives are being reassembled into single LFS objects as part
+of this migration — LFS removes the constraint that motivated splitting.
+
+## Project Structure
+
+```
+clang-tool-chain-bins/
+├── assets/                    # Binary distributions (Git LFS)
+│   ├── clang/                # LLVM/Clang archives by platform/arch
+│   ├── iwyu/                 # Include-What-You-Use archives
+│   ├── mingw/                # MinGW sysroot for Windows GNU ABI
+│   └── emscripten/           # Emscripten WebAssembly toolchain
+├── tools/                     # Maintainer scripts for building archives
+│   ├── fetch_and_archive.py              # Main pipeline for LLVM/Clang
+│   ├── fetch_and_archive_emscripten.py   # Emscripten via emsdk
+│   ├── fetch_and_archive_emscripten_docker.py  # Emscripten via Docker
+│   ├── create_iwyu_archives.py           # IWYU packaging
+│   ├── extract_mingw_sysroot.py          # MinGW sysroot extraction
+│   ├── extract_libunwind_docker.py       # libunwind extraction via Docker (Linux)
+│   └── [component scripts]               # Individual pipeline steps
+├── index.html                 # GitHub Pages main page
+├── index.css                  # Styling
+└── pyproject.toml            # Package configuration with entry points
+```
+
+## Common Development Commands
+
+### Building Archives (Maintainer Only)
+
+**LLVM/Clang archives:**
+```bash
+# Install dependencies
+uv sync
+
+# Generate archive for a platform
+uv run fetch-and-archive --platform win --arch x86_64
+uv run fetch-and-archive --platform linux --arch x86_64
+uv run fetch-and-archive --platform linux --arch arm64
+uv run fetch-and-archive --platform darwin --arch x86_64
+uv run fetch-and-archive --platform darwin --arch arm64
+
+# Or use existing binaries (skip download)
+uv run fetch-and-archive --platform win --arch x86_64 --source-dir ./extracted
+```
+
+**IWYU archives:**
+```bash
+uv run create-iwyu-archives
+```
+
+**Windows IWYU DLL Dependencies:**
+
+Before creating the Windows IWYU archive, you must copy the required runtime DLLs to `assets/iwyu/win/x86_64/bin/`. The IWYU executable depends on these DLLs to run:
+
+```bash
+# Required DLLs for Windows IWYU (copy to assets/iwyu/win/x86_64/bin/)
+# From tools/work/x86_64/llvm-mingw-*/bin/ (LLVM runtime):
+#   - libclang-cpp.dll     (~45-57 MB, Clang C++ library)
+#   - libLLVM-21.dll       (~73-136 MB, LLVM core library)
+#   - libffi-8.dll         (~34-87 KB, Foreign function interface)
+#   - libwinpthread-1.dll  (~65-376 KB, POSIX threads)
+#
+# From tools/work/x86_64/mingw64/bin/ (GCC runtime):
+#   - libgcc_s_seh-1.dll   (~143-150 KB, GCC support library)
+#   - libstdc++-6.dll      (~2.3-2.5 MB, C++ standard library)
+#
+# From MSYS2/mingw64 packages (additional dependencies):
+#   - libiconv-2.dll       (~1.1 MB, character encoding)
+#   - liblzma-5.dll        (~189 KB, LZMA compression)
+#   - libxml2-16.dll       (~1.3 MB, XML parsing)
+#   - libzstd.dll          (~1.2 MB, Zstd compression)
+#   - zlib1.dll            (~121 KB, zlib compression)
+
+# After copying DLLs, recreate the archive:
+uv run create-iwyu-archives --platform win --arch x86_64
+```
+
+**DLL Source Locations:**
+- `tools/work/x86_64/llvm-mingw-20251104-ucrt-x86_64/bin/` - LLVM DLLs
+- `tools/work/x86_64/mingw64/bin/` - MinGW GCC runtime DLLs
+- MSYS2 packages: `pacman -S mingw-w64-x86_64-libiconv mingw-w64-x86_64-xz mingw-w64-x86_64-libxml2 mingw-w64-x86_64-zstd mingw-w64-x86_64-zlib`
+
+**MinGW sysroot:**
+```bash
+uv run extract-mingw-sysroot --arch x86_64 --work-dir work --output-dir assets/mingw/win
+```
+
+**Emscripten archives:**
+```bash
+# Via Docker (Linux only, recommended for Linux builds)
+uv run python tools/fetch_and_archive_emscripten_docker.py --platform linux --arch x86_64
+
+# Via native emsdk (all platforms)
+uv run python tools/fetch_and_archive_emscripten.py --platform win --arch x86_64
+```
+
+### Testing Archives
+
+```bash
+# Extract an archive
+uv run expand-archive assets/clang/win/x86_64/llvm-21.1.5-win-x86_64.tar.zst ./test-install
+
+# Verify checksums
+sha256sum -c assets/clang/win/x86_64/llvm-21.1.5-win-x86_64.tar.zst.sha256
+```
+
+### Git LFS Operations (LEGACY -- DO NOT USE FOR NEW ARCHIVES)
+
+> **DEPRECATED**: Git LFS costs money. New archives should be stored directly in git
+> (split into <99 MB parts if needed). See [LFS Policy](#lfs-policy) above.
+
+Some existing archives still use Git LFS. Commands for working with legacy LFS files:
+
+```bash
+# Verify LFS is tracking files correctly
+git lfs ls-files
+
+# Pull LFS objects
+git lfs pull
+
+# Push LFS objects
+git lfs push origin main
+```
+
+**NOTE**: Legacy LFS archive URLs in manifests use the GitHub LFS media server format:
+```
+https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/refs/heads/main/assets/...
+```
+
+New non-LFS archives use regular GitHub raw URLs instead.
+
+### Local Development Server
+
+```bash
+# Serve the GitHub Pages site locally (requires Python)
+python -m http.server 8000
+# Visit http://localhost:8000
+```
+
+## Archive Build Pipeline
+
+The `fetch_and_archive.py` script orchestrates a multi-step pipeline:
+
+1. **Download**: Fetch official LLVM releases from GitHub (or use `--source-dir`)
+2. **Extract**: Handle `.exe` (Windows) or `.tar.xz` (Linux/macOS)
+3. **Strip**: Remove non-essential files (docs, examples, static libs)
+   - Keeps only essential binaries (compilers, linkers, binary utilities)
+   - See `ESSENTIAL_BINARIES` set in `fetch_and_archive.py:72-97`
+4. **Deduplicate**: Find identical binaries by MD5 hash (~571 MB savings)
+5. **Hard-link**: Create hard-linked directory structure
+5a. **Integrate libunwind** (Linux only): Extract headers and libraries via Docker
+5a2. **Integrate sysroot** (Linux only): Extract libc dev headers via Docker
+5a3. **Integrate sysroot** (macOS only): Extract SDK headers from local Xcode/CLT
+5b. **Integrate MinGW** (Windows only): Copy MinGW headers and sysroot
+6. **Archive**: TAR with native hard-link support (stores links as metadata)
+7. **Compress**: zstd level 22 (ultra-compression, ~17:1 ratio)
+8. **Checksum**: Generate SHA256 and MD5 files
+9. **Manifest**: Update `manifest.json` with version and checksum
+10. **Place**: Move to `assets/{tool}/{platform}/{arch}/`
+
+**Result**: ~52 MB archive from ~900 MB original (Windows x86_64 example)
+
+**Docker requirement**: Building Linux archives now requires Docker for libunwind extraction.
+
+## Manifest System
+
+Each toolchain has a two-tier manifest structure:
+
+**Root manifest** (`assets/{tool}/manifest.json`):
+```json
+{
+  "platforms": [
+    {
+      "platform": "win",
+      "architectures": [
+        {"arch": "x86_64", "manifest_path": "win/x86_64/manifest.json"}
+      ]
+    }
+  ]
+}
+```
+
+**Platform manifest** (`assets/{tool}/{platform}/{arch}/manifest.json`):
+```json
+{
+  "latest": "21.1.5",
+  "versions": {
+    "21.1.5": {
+      "version": "21.1.5",
+      "href": "https://media.githubusercontent.com/media/.../llvm-21.1.5-win-x86_64.tar.zst",
+      "sha256": "3c21e45edeee591fe8ead5427d25b62ddb26c409575b41db03d6777c77bba44f"
+    }
+  }
+}
+```
+
+## Supported Platforms
+
+| Tool | Windows x64 | Windows ARM64 | Linux x64 | Linux ARM64 | macOS x64 | macOS ARM64 |
+|------|-------------|---------------|-----------|-------------|-----------|-------------|
+| **LLVM/Clang** | ✅ | ⚠️ Untested | ✅ | ✅ | ✅ | ✅ |
+| **LLVM MinGW** | ✅ | - | - | - | - | - |
+| **IWYU** | ✅ | - | ✅ | ✅ | ✅ | ✅ |
+| **MinGW Sysroot** | ✅ (deprecated) | - | - | - | - | - |
+| **Emscripten** | ✅ | - | ✅ | ✅ | ✅ | ✅ |
+
+## Windows GNU ABI Support
+
+For Windows platforms, the Clang archive now includes integrated MinGW headers and sysroot (as of LLVM 19.1.7, November 2025):
+
+**What's included:**
+- **LLVM/Clang binaries**: Compiler, linker, binary utilities
+- **MinGW headers**: Windows API headers, C/C++ standard library headers
+- **Sysroot**: Import libraries and runtime DLLs for GNU ABI
+- **Compiler-rt**: Clang resource headers (intrinsics) and runtime libraries
+
+This integration eliminates the need for a separate MinGW sysroot download.
+
+**Archive structure:**
+```
+win_hardlinked/
+├── bin/                          # LLVM/Clang binaries
+│   ├── clang.exe
+│   ├── clang++.exe
+│   └── ...
+├── include/                      # MinGW C/C++/Windows headers
+│   ├── GL/
+│   ├── windows.h
+│   └── ...
+├── x86_64-w64-mingw32/          # MinGW sysroot
+│   ├── lib/                     # Import libraries (.a files)
+│   └── bin/                     # Runtime DLLs
+└── lib/
+    └── clang/
+        └── 19/                  # Clang resource headers
+            ├── include/         # Compiler intrinsics (mm_malloc.h, etc.)
+            └── lib/            # compiler-rt libraries
+```
+
+This structure enables GNU ABI compilation on Windows without additional downloads.
+
+### Legacy MinGW Archive
+
+The separate MinGW archive (`assets/mingw/win/`) is deprecated as of November 2025.
+It remains available for backward compatibility with older versions of clang-tool-chain.
+
+## Linux libunwind Bundling
+
+For Linux platforms, the Clang archives include bundled libunwind headers and shared libraries. This eliminates the need to install `libunwind-dev` on the system.
+
+**What's bundled:**
+- **Headers**: `libunwind.h`, `libunwind-common.h`, `libunwind-x86_64.h` (or `aarch64`), `libunwind-dynamic.h`, `libunwind-ptrace.h`, `unwind.h`
+- **Libraries**: `libunwind.so.*`, `libunwind-x86_64.so.*` (or `aarch64`)
+
+**Archive structure (Linux):**
+```
+linux_hardlinked/
+├── bin/                              # LLVM/Clang binaries
+│   ├── clang
+│   ├── clang++
+│   └── ...
+├── include/                          # libunwind headers
+│   ├── libunwind.h
+│   ├── libunwind-common.h
+│   ├── libunwind-x86_64.h            # or libunwind-aarch64.h
+│   ├── libunwind-dynamic.h
+│   ├── libunwind-ptrace.h
+│   └── unwind.h
+├── sysroot/                          # Bundled libc development headers
+│   └── usr/include/
+│       ├── stdio.h, stdlib.h, ...    # Common C headers
+│       ├── sys/                      # POSIX system headers (socket.h, etc.)
+│       ├── netinet/                  # Network headers (in.h, tcp.h, etc.)
+│       ├── linux/, asm-generic/      # Kernel headers
+│       └── x86_64-linux-gnu/         # Multiarch (bits/, asm/, gnu/)
+└── lib/
+    ├── clang/21/                     # Clang resource headers
+    │   └── include/
+    ├── libunwind.so -> libunwind.so.8
+    ├── libunwind.so.8 -> libunwind.so.8.0.1
+    ├── libunwind.so.8.0.1            # Actual library
+    ├── libunwind-x86_64.so -> libunwind-x86_64.so.8
+    ├── libunwind-x86_64.so.8 -> libunwind-x86_64.so.8.0.1
+    └── libunwind-x86_64.so.8.0.1     # Platform library
+```
+
+**Size impact:** ~300-500 KB total (headers ~20 KB + libraries ~300 KB)
+
+### Docker-Based Extraction
+
+The libunwind extraction uses Docker to run an Ubuntu 22.04 container:
+
+```bash
+# The fetch_and_archive.py script automatically runs this for Linux builds:
+docker run --rm --platform linux/amd64 \
+    -v /path/to/output:/output \
+    ubuntu:22.04 \
+    bash -c "apt-get update && apt-get install -y libunwind-dev && ..."
+```
+
+**Requirements:**
+- Docker installed and running
+- Internet connection (to pull Ubuntu image if not cached)
+
+**Standalone extraction script:**
+```bash
+# Extract libunwind headers/libraries separately
+uv run python tools/extract_libunwind_docker.py --arch x86_64 --output-dir ./libunwind_output
+uv run python tools/extract_libunwind_docker.py --arch arm64 --output-dir ./libunwind_output
+```
+
+**Why Docker?**
+- Consistent, reproducible extraction across any host OS
+- No need to install libunwind-dev on the build machine
+- Uses Ubuntu 22.04 (Jammy) packages for well-tested, stable libunwind version
+
+## macOS Sysroot Header Bundling
+
+For macOS platforms, the Clang archives include bundled SDK headers (from the macOS SDK `usr/include/`). This provides a fallback when Xcode Command Line Tools are not installed.
+
+**What's bundled:**
+- **Headers**: All C/POSIX headers from the macOS SDK (stdio.h, stdlib.h, sys/, netinet/, mach/, etc.)
+
+**Archive structure (macOS):**
+```
+darwin_hardlinked/
+├── bin/                              # LLVM/Clang binaries
+│   ├── clang
+│   ├── clang++
+│   └── ...
+├── sysroot/                          # Bundled macOS SDK headers
+│   └── usr/include/
+│       ├── stdio.h, stdlib.h, ...    # Common C headers
+│       ├── sys/                      # POSIX system headers
+│       ├── netinet/                  # Network headers
+│       ├── mach/                     # Mach kernel headers
+│       └── dispatch/                 # Grand Central Dispatch headers
+└── lib/
+    └── clang/21/                     # Clang resource headers
+        └── include/
+```
+
+**Extraction**: Headers are copied from the locally installed macOS SDK during archive building (requires Xcode or Command Line Tools on the build machine). Unlike Linux, this does not use Docker.
+
+**Fallback behavior**: The `MacOSSysrootTransformer` only activates when `MacOSSDKTransformer` could not find a system SDK (no `-isysroot` in args). If the system SDK is found via `xcrun`, the bundled headers are not used.
+
+## Key Architecture Decisions
+
+### Hard-Link Deduplication
+LLVM contains many duplicate binaries (e.g., `clang.exe` == `clang++.exe`). Instead of storing duplicates, we:
+1. Create hard links in the directory structure
+2. TAR automatically preserves these as link entries (metadata only)
+3. Decompression restores hard links on NTFS/ext4/APFS
+
+**Savings**: ~571 MB for Windows x64
+
+### Git LFS for Binaries (LEGACY)
+Some existing archives are tracked with Git LFS. **New archives should NOT use LFS** (see [LFS Policy](#lfs-policy)). Split archives >99 MB into parts instead.
+
+### Zstd Level 22
+We use maximum compression (level 22) because:
+- Compression is one-time cost for maintainers
+- Decompression remains fast (~1 second regardless of level)
+- Achieves ~94% size reduction vs ~88% at level 10
+
+### Emscripten Docker Approach
+Emscripten packaging has two methods:
+1. **Docker** (`fetch_and_archive_emscripten_docker.py`): For Linux archives, uses official Docker images
+2. **Native emsdk** (`fetch_and_archive_emscripten.py`): For all platforms, requires Python with full stdlib
+
+Use Docker for reproducible Linux builds. Use native emsdk for Windows/macOS.
+
+## Updating LLVM Version
+
+To add a new LLVM version:
+
+1. Update version in `tools/fetch_and_archive.py:41`:
+   ```python
+   LLVM_VERSION = "21.1.6"  # Update this
+   ```
+
+2. Generate archives for all platforms:
+   ```bash
+   uv run fetch-and-archive --platform win --arch x86_64
+   uv run fetch-and-archive --platform linux --arch x86_64
+   uv run fetch-and-archive --platform linux --arch arm64
+   uv run fetch-and-archive --platform darwin --arch x86_64
+   uv run fetch-and-archive --platform darwin --arch arm64
+   ```
+
+3. Each script automatically updates its platform manifest (`manifest.json`)
+
+4. Commit and push:
+   ```bash
+   git add assets/
+   git commit -m "feat: Add LLVM 21.1.6 for all platforms"
+   git push origin main
+   # NOTE: Do NOT use Git LFS for new archives. Split >99 MB files instead.
+   ```
+
+5. Update `index.html` if needed to reflect new versions
+
+## GitHub Pages Deployment
+
+The site automatically deploys from the `main` branch. Any changes to `index.html`, `index.css`, or `assets/` trigger a rebuild.
+
+**Important**: Ensure `.nojekyll` file exists to prevent Jekyll processing.
+
+## Entry Points (pyproject.toml)
+
+The package defines CLI entry points:
+
+- `fetch-and-archive`: Main LLVM/Clang pipeline
+- `download-binaries`: Download step only
+- `strip-binaries`: Strip unnecessary files
+- `deduplicate-binaries`: Find duplicates
+- `create-hardlink-archive`: Create TAR with hard links
+- `expand-archive`: Extract `.tar.zst` archives
+- `test-compression`: Compare compression methods
+- `create-iwyu-archives`: Build IWYU archives
+- `extract-mingw-sysroot`: Extract MinGW sysroot
+
+## Important Notes
+
+- **End users**: Do NOT need these tools. The main `clang-tool-chain` project downloads binaries automatically.
+- **Maintainers**: Use these scripts only when updating binary distributions.
+- **Compression time**: zstd-22 takes ~3-4 minutes per archive (vs ~1 second for zstd-3).
+- **Windows 7z requirement**: Extracting Windows `.exe` installers requires 7-Zip. Use `--source-dir` to skip download.
+- **MSYS2 Python**: May have `_ctypes` issues. Use Docker for Emscripten on Windows when possible.
+
+## Dependencies
+
+Runtime (for building archives):
+- Python 3.8+
+- `zstandard` (Python module)
+- `pyzstd` (for Emscripten Docker script)
+- 7-Zip (Windows only, for extracting `.exe` installers)
+- Docker (optional, for Emscripten Linux builds)
+
+System tools (usually pre-installed):
+- `tar` with xz support (Linux/macOS)
+- `git` with LFS support
+- `sha256sum` (or `shasum` on macOS)

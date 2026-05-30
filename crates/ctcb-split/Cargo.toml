@@ -1,0 +1,19 @@
+[package]
+name = "ctcb-split"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Archive splitting for Git LFS limits for clang toolchain binary builder"
+
+[dependencies]
+anyhow = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+ctcb-core = { path = "../ctcb-core", version = "0.4.3" }
+ctcb-checksum = { path = "../ctcb-checksum", version = "0.4.3" }
+
+[dev-dependencies]
+tempfile = { workspace = true }

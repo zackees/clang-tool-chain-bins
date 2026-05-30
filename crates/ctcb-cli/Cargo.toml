@@ -1,0 +1,36 @@
+[package]
+name = "ctcb-cli"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "CLI and Python bindings for clang toolchain binary builder"
+
+[[bin]]
+name = "ctcb"
+path = "src/main.rs"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+clap = { workspace = true }
+anyhow = { workspace = true }
+indicatif = { workspace = true }
+ctcb-core = { path = "../ctcb-core", version = "0.4.3" }
+ctcb-checksum = { path = "../ctcb-checksum", version = "0.4.3" }
+ctcb-archive = { path = "../ctcb-archive", version = "0.4.3" }
+ctcb-dedup = { path = "../ctcb-dedup", version = "0.4.3" }
+ctcb-download = { path = "../ctcb-download", version = "0.4.3" }
+ctcb-strip = { path = "../ctcb-strip", version = "0.4.3" }
+ctcb-manifest = { path = "../ctcb-manifest", version = "0.4.3" }
+ctcb-split = { path = "../ctcb-split", version = "0.4.3" }
+walkdir = { workspace = true }
+pyo3 = { workspace = true, optional = true }
+serde_json = { workspace = true }
+
+[features]
+default = []
+python = ["dep:pyo3"]

@@ -1,0 +1,39 @@
+{
+  "platforms": [
+    {
+      "platform": "win",
+      "architectures": [
+        {
+          "arch": "x86_64",
+          "manifest_url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/emscripten/win/x86_64/manifest.json"
+        }
+      ]
+    },
+    {
+      "platform": "linux",
+      "architectures": [
+        {
+          "arch": "x86_64",
+          "manifest_url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/emscripten/linux/x86_64/manifest.json"
+        },
+        {
+          "arch": "arm64",
+          "manifest_url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/emscripten/linux/arm64/manifest.json"
+        }
+      ]
+    },
+    {
+      "platform": "darwin",
+      "architectures": [
+        {
+          "arch": "x86_64",
+          "manifest_url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/emscripten/darwin/x86_64/manifest.json"
+        },
+        {
+          "arch": "arm64",
+          "manifest_url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/emscripten/darwin/arm64/manifest.json"
+        }
+      ]
+    }
+  ]
+}

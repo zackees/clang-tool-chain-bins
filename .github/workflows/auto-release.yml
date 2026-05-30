@@ -1,0 +1,428 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Optional tag to publish (e.g. 0.4.2 or v0.4.2). Leave empty to use pyproject.toml version.
+        required: false
+        type: string
+      dry_run:
+        description: Build everything but skip PyPI / crates.io / GitHub Release uploads.
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  detect-bump:
+    name: Detect version bump
+    runs-on: ubuntu-latest
+    outputs:
+      should_release: ${{ steps.check.outputs.should_release }}
+      version: ${{ steps.check.outputs.version }}
+      tag: ${{ steps.check.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT_NAME: ${{ github.event_name }}
+          REF_TYPE: ${{ github.ref_type }}
+          INPUT_TAG: ${{ inputs.tag }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          read_version() {
+            python3 - <<'PY'
+          import tomllib
+          from pathlib import Path
+          data = tomllib.loads(Path("pyproject.toml").read_text(encoding="utf-8"))
+          print(data["project"]["version"])
+          PY
+          }
+
+          VERSION="$(read_version)"
+          echo "current pyproject.toml version: $VERSION"
+
+          # workflow_dispatch: use input tag or current version
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            TAG="${INPUT_TAG:-v$VERSION}"
+            [[ "$TAG" =~ ^v ]] || TAG="v$TAG"
+            echo "manual dispatch — proceeding with tag $TAG"
+            echo "should_release=true" >> "$GITHUB_OUTPUT"
+            echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+            echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # tag push: trust the tag
+          if [ "$REF_TYPE" = "tag" ]; then
+            TAG="${GITHUB_REF_NAME}"
+            NORMALIZED="${TAG#v}"
+            if [ "$NORMALIZED" != "$VERSION" ]; then
+              echo "tag $TAG does not match pyproject version $VERSION" >&2
+              exit 1
+            fi
+            echo "tag push $TAG — proceeding"
+            echo "should_release=true" >> "$GITHUB_OUTPUT"
+            echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+            echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # push to main: proceed only if version changed
+          OLD_VERSION="$(git show HEAD^:pyproject.toml 2>/dev/null \
+            | python3 -c "import sys, tomllib; print(tomllib.loads(sys.stdin.read())['project']['version'])" 2>/dev/null \
+            || echo "")"
+          if [ -z "$OLD_VERSION" ] || [ "$VERSION" = "$OLD_VERSION" ]; then
+            echo "no version change ($VERSION) — skipping"
+            echo "should_release=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "version bumped: $OLD_VERSION -> $VERSION"
+
+          # skip if a release already exists
+          for CANDIDATE in "$VERSION" "v$VERSION"; do
+            if gh api "repos/${GITHUB_REPOSITORY}/releases/tags/$CANDIDATE" >/dev/null 2>&1; then
+              echo "release $CANDIDATE already exists — skipping"
+              echo "should_release=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          done
+
+          echo "should_release=true" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
+
+  release-lint:
+    name: Release lint
+    runs-on: ubuntu-latest
+    needs: detect-bump
+    if: needs.detect-bump.outputs.should_release == 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Run release-lint
+        run: python ci/release_lint.py
+
+  check-pypi:
+    name: Check PyPI
+    runs-on: ubuntu-latest
+    needs: [detect-bump, release-lint]
+    if: needs.detect-bump.outputs.should_release == 'true'
+    outputs:
+      pypi_complete: ${{ steps.pypi.outputs.pypi_complete }}
+    steps:
+      - id: pypi
+        env:
+          VERSION: ${{ needs.detect-bump.outputs.version }}
+        run: |
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "https://pypi.org/pypi/clang-tool-chain-bins/${VERSION}/json")
+          if [ "$HTTP_CODE" = "200" ]; then
+            echo "pypi already has $VERSION"
+            echo "pypi_complete=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "pypi missing $VERSION (http $HTTP_CODE)"
+            echo "pypi_complete=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  build:
+    # Mirrors zccache's build matrix (8 targets):
+    #   linux gnu x86_64+aarch64, linux musl x86_64+aarch64,
+    #   darwin x86_64+aarch64, windows x86_64+aarch64.
+    # Each target produces a Python wheel for PyPI. Every target also produces
+    # a standalone `ctcb` binary for the GitHub Release page.
+    # Cross-compile uses apt/musl-cross gcc + linker env var (same as zccache),
+    # NOT zig. setup-soldr provisions rustup + cached zccache state.
+    name: Build (${{ matrix.target }})
+    runs-on: ${{ matrix.os }}
+    needs: [detect-bump, release-lint, check-pypi]
+    if: needs.detect-bump.outputs.should_release == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            binary: ctcb
+            binary_ext: ""
+          - os: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            binary: ctcb
+            binary_ext: ""
+            linker: aarch64-linux-gnu-gcc
+            strip: aarch64-linux-gnu-strip
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-musl
+            binary: ctcb
+            binary_ext: ""
+          - os: ubuntu-latest
+            target: aarch64-unknown-linux-musl
+            binary: ctcb
+            binary_ext: ""
+            linker: aarch64-unknown-linux-musl-gcc
+            strip: aarch64-unknown-linux-musl-strip
+          - os: macos-latest
+            target: x86_64-apple-darwin
+            binary: ctcb
+            binary_ext: ""
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            binary: ctcb
+            binary_ext: ""
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            binary: ctcb.exe
+            binary_ext: ".exe"
+          - os: windows-latest
+            target: aarch64-pc-windows-msvc
+            binary: ctcb.exe
+            binary_ext: ".exe"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Soldr (rustup + cached toolchain + zccache state)
+        uses: zackees/setup-soldr@v0
+        with:
+          cache: true
+          cache-key-suffix: release-${{ matrix.target }}
+          # Opt out of soldr's `fast` linker default. `fast` injects
+          # `-fuse-ld=lld` which Clang on macOS rejects ("invalid linker
+          # name"), failing the cdylib link step of ctcb-cli. The
+          # platform-default value tells setup-soldr to leave the linker
+          # choice to cargo/rust-toolchain.toml. See
+          # https://github.com/zackees/clang-tool-chain-bins/issues (release
+          # pipeline hardening) and the soldr 'fast' linker note in the
+          # action description.
+          linker: platform-default
+
+      - name: Ensure target stdlib is installed
+        shell: bash
+        run: rustup target add ${{ matrix.target }}
+
+      - name: Install musl tools (x86_64-linux-musl)
+        if: matrix.target == 'x86_64-unknown-linux-musl'
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y musl-tools
+
+      - name: Install musl cross-compiler (aarch64-linux-musl)
+        if: matrix.target == 'aarch64-unknown-linux-musl'
+        shell: bash
+        run: |
+          curl -fsSL -o aarch64-unknown-linux-musl.tar.xz \
+            https://github.com/cross-tools/musl-cross/releases/download/20250929/aarch64-unknown-linux-musl.tar.xz
+          tar xJf aarch64-unknown-linux-musl.tar.xz
+          echo "$PWD/aarch64-unknown-linux-musl/bin" >> "$GITHUB_PATH"
+          # cc-rs (used by zstd-sys, ring, ... build.rs scripts) strips
+          # "-unknown-" from the target triple when looking up the cross
+          # compiler, so it searches for "aarch64-linux-musl-gcc". The
+          # cross-tools archive ships the binaries with the full triple
+          # ("aarch64-unknown-linux-musl-gcc"), so cc-rs falls back to the
+          # host x86_64 gcc, builds dynamic-link C objects against
+          # glibc's libgcc_s.so.1, and maturin then can't repair the
+          # aarch64 wheel ("libgcc_s.so.1 => not found"). Set cc-rs's
+          # explicit per-target overrides so it finds the musl tools.
+          echo "CC_aarch64_unknown_linux_musl=aarch64-unknown-linux-musl-gcc" >> "$GITHUB_ENV"
+          echo "CXX_aarch64_unknown_linux_musl=aarch64-unknown-linux-musl-g++" >> "$GITHUB_ENV"
+          echo "AR_aarch64_unknown_linux_musl=aarch64-unknown-linux-musl-ar" >> "$GITHUB_ENV"
+
+      - name: Install GNU cross-compiler (aarch64-linux-gnu)
+        if: matrix.target == 'aarch64-unknown-linux-gnu'
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-aarch64-linux-gnu
+
+      - name: Configure cross-compile linker
+        if: matrix.linker != ''
+        shell: bash
+        run: |
+          TARGET_UPPER=$(echo "${{ matrix.target }}" | tr '[:lower:]-' '[:upper:]_')
+          echo "CARGO_TARGET_${TARGET_UPPER}_LINKER=${{ matrix.linker }}" >> "$GITHUB_ENV"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Build standalone binary
+        shell: bash
+        run: soldr cargo build --release --target ${{ matrix.target }} -p ctcb-cli
+
+      - name: Build wheel
+        shell: bash
+        run: |
+          uv sync
+          uv run maturin build --release --target ${{ matrix.target }} --out dist
+
+      - name: Upload standalone binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: binary-${{ matrix.target }}
+          path: target/${{ matrix.target }}/release/${{ matrix.binary }}
+
+      - name: Upload wheel
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel-${{ matrix.target }}
+          path: dist/*.whl
+
+  sdist:
+    name: Build sdist
+    runs-on: ubuntu-latest
+    needs: [detect-bump, release-lint]
+    if: needs.detect-bump.outputs.should_release == 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: |
+          uv sync
+          uv run maturin sdist --out dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sdist
+          path: dist/*.tar.gz
+
+  publish-pypi:
+    name: Publish to PyPI
+    runs-on: ubuntu-latest
+    needs: [detect-bump, check-pypi, build, sdist]
+    if: needs.detect-bump.outputs.should_release == 'true' && needs.check-pypi.outputs.pypi_complete != 'true' && inputs.dry_run != true
+    environment: release
+    permissions:
+      id-token: write   # required for PyPI trusted publisher + PEP 740 sigstore signing
+      attestations: write  # store the attestations in the GitHub attestation log
+      contents: read
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          pattern: wheel-*
+          merge-multiple: true
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          pattern: sdist
+          merge-multiple: true
+      - name: Attest wheels and sdist (GitHub provenance)
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: 'dist/*'
+      - name: Publish to PyPI (with PEP 740 attestations)
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/
+          skip-existing: true
+          print-hash: true
+          attestations: true
+
+  publish-crates:
+    name: Publish to crates.io
+    runs-on: ubuntu-latest
+    needs: [detect-bump, build]
+    if: needs.detect-bump.outputs.should_release == 'true' && inputs.dry_run != true
+    permissions:
+      id-token: write       # for actions/attest-build-provenance sigstore signing
+      attestations: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Publish crates in dependency order
+        # Cannot package all crates up-front because cargo resolves
+        # inter-crate version deps against crates.io. We publish each crate
+        # so the next one in the chain can resolve it. `cargo publish`
+        # leaves the .crate file in target/package/ for later attestation.
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: |
+          set -e
+          for crate in ctcb-core ctcb-checksum ctcb-archive ctcb-dedup ctcb-download ctcb-strip ctcb-manifest ctcb-split ctcb-cli; do
+            echo "=== Publishing $crate ==="
+            if cargo publish -p "$crate" --no-verify 2>&1 | tee /tmp/out.log; then
+              echo "$crate published"
+            else
+              if grep -q "already exists" /tmp/out.log; then
+                echo "$crate version already on crates.io — skipping"
+              else
+                echo "publish of $crate failed" >&2
+                exit 1
+              fi
+            fi
+            if [ "$crate" != "ctcb-cli" ]; then
+              echo "waiting 30s for crates.io to index..."
+              sleep 30
+            fi
+          done
+      - name: Attest crate artifacts (GitHub provenance)
+        # cargo publish leaves <crate>-<version>.crate in target/package/.
+        # Attesting after publish is fine — the bytes are identical to what
+        # was uploaded, and the attestation lives in the GitHub attestation
+        # log, not crates.io. Consumers verify with `gh attestation verify`.
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: 'target/package/*.crate'
+
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [detect-bump, build, sdist, publish-pypi, publish-crates]
+    if: |
+      always()
+      && needs.detect-bump.outputs.should_release == 'true'
+      && inputs.dry_run != true
+      && needs.build.result == 'success'
+      && needs.sdist.result == 'success'
+      && (needs.publish-pypi.result == 'success' || needs.publish-pypi.result == 'skipped')
+      && (needs.publish-crates.result == 'success' || needs.publish-crates.result == 'skipped')
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - name: Prepare release assets
+        run: |
+          mkdir -p release
+          for dir in artifacts/binary-*; do
+            target=$(basename "$dir" | sed 's/binary-//')
+            if [[ "$target" == *windows* ]]; then
+              cp "$dir/ctcb.exe" "release/ctcb-${target}.exe"
+            else
+              cp "$dir/ctcb" "release/ctcb-${target}"
+            fi
+          done
+          cp artifacts/wheel-*/*.whl release/
+          cp artifacts/sdist/*.tar.gz release/
+          cd release && sha256sum * > SHA256SUMS.txt
+      - name: Create / push tag (push-to-main path)
+        if: github.ref_type != 'tag'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.detect-bump.outputs.tag }}
+        run: |
+          if ! git rev-parse "refs/tags/$TAG" >/dev/null 2>&1; then
+            git tag "$TAG"
+            git push origin "$TAG"
+          fi
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.detect-bump.outputs.tag }}
+          files: release/*
+          generate_release_notes: true
+          fail_on_unmatched_files: true

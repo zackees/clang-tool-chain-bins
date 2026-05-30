@@ -1,0 +1,18 @@
+[package]
+name = "ctcb-download"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "HTTP download with progress for clang toolchain binary builder"
+
+[dependencies]
+reqwest = { workspace = true }
+tokio = { workspace = true }
+sha2 = { workspace = true }
+anyhow = { workspace = true }
+indicatif = { workspace = true }
+ctcb-core = { path = "../ctcb-core", version = "0.4.3" }
+futures-util = { workspace = true }
