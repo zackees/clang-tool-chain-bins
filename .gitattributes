@@ -9,8 +9,10 @@ assets/clang/linux/**/*.tar.zst.part* !filter !diff !merge binary
 # Windows clang archives are under 99MB, stored directly in git (not LFS)
 # to avoid LFS bandwidth limits. No splitting needed.
 assets/clang/win/**/*.tar.zst !filter !diff !merge text=auto
-# Clang-extra archives stored directly in git (not LFS)
+# Clang-extra archives — being migrated to LFS per issue #30 (one platform at a time)
 assets/clang-extra/**/*.tar.zst !filter !diff !merge binary
+# Migrated to LFS:
+assets/clang-extra/win/**/*.tar.zst filter=lfs diff=lfs merge=lfs -text
 # IWYU split parts stored directly in git (not LFS)
 assets/iwyu/**/*.tar.zst.part* !filter !diff !merge binary
 # Emscripten split parts stored directly in git (not LFS)
