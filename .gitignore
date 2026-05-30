@@ -140,3 +140,7 @@ cython_debug/
 # uv
 uv.lock
 work/
+
+# Claude Code local runtime state
+.claude/worktrees/
+.claude/scheduled_tasks.lock
