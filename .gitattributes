@@ -12,8 +12,8 @@ assets/mingw/**/*.tar.zst filter=lfs diff=lfs merge=lfs -text
 assets/nodejs/**/*.tar.zst filter=lfs diff=lfs merge=lfs -text
 # LLDB archives — LFS (migrated per #30)
 assets/lldb/**/*.tar.zst filter=lfs diff=lfs merge=lfs -text
-# IWYU split parts stored directly in git (not LFS)
-assets/iwyu/**/*.tar.zst.part* !filter !diff !merge binary
+# IWYU archives — LFS (migrated per #30; split parts removed in favor of single LFS objects)
+assets/iwyu/**/*.tar.zst filter=lfs diff=lfs merge=lfs -text
 # Emscripten split parts stored directly in git (not LFS)
 assets/emscripten/linux/**/*.tar.zst.part* !filter !diff !merge binary
 assets/emscripten/win/**/*.tar.zst.part* !filter !diff !merge binary
