@@ -10,6 +10,8 @@ assets/clang-extra/**/*.tar.zst filter=lfs diff=lfs merge=lfs -text
 assets/valgrind/**/*.tar.zst filter=lfs diff=lfs merge=lfs -text
 assets/mingw/**/*.tar.zst filter=lfs diff=lfs merge=lfs -text
 assets/nodejs/**/*.tar.zst filter=lfs diff=lfs merge=lfs -text
+# LLDB archives — LFS (migrated per #30)
+assets/lldb/**/*.tar.zst filter=lfs diff=lfs merge=lfs -text
 # IWYU split parts stored directly in git (not LFS)
 assets/iwyu/**/*.tar.zst.part* !filter !diff !merge binary
 # Emscripten split parts stored directly in git (not LFS)
