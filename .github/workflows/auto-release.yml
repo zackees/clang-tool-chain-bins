@@ -198,7 +198,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Setup Soldr (rustup + cached toolchain + zccache state)
-        uses: zackees/setup-soldr@v0.9.55
+        uses: zackees/setup-soldr@v0.9.56
         with:
           cache: true
           cache-key-suffix: release-${{ matrix.target }}
