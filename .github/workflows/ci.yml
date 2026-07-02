@@ -56,11 +56,20 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v5
       - name: Install maturin and build
+        # --no-install-project + --no-sync: build/install the extension via the
+        # maturin CLI directly instead of routing the editable install through
+        # the PEP 517 backend. soldr's compile daemon fails to start on macOS
+        # runners (soldr backend, 0.7.98), and the backend build would be a
+        # redundant second compile anyway. Backend coverage is preserved by the
+        # ubuntu-only "PEP 517 backend smoke" step below.
         run: |
-          uv sync
-          uv run maturin develop --release
+          uv sync --no-install-project
+          uv run --no-sync maturin develop --release
       - name: Run Python tests
-        run: uv run pytest python/tests/ -v
+        run: uv run --no-sync pytest python/tests/ -v
+      - name: PEP 517 backend smoke (soldr builds the wheel)
+        if: matrix.os == 'ubuntu-latest'
+        run: uv build --wheel
 
   manifests:
     name: Manifest integrity
@@ -118,9 +127,13 @@ jobs:
         if: matrix.zig
         uses: mlugg/setup-zig@v2
       - name: Build wheel
+        # --no-install-project: the wheel is built by the maturin CLI below
+        # (which ignores [build-system]); installing the project editable via
+        # the soldr PEP 517 backend first is a wasted compile and fails on
+        # macOS runners (soldr daemon does not start there — soldr 0.7.98).
         run: |
-          uv sync
-          uv run maturin build --release --target ${{ matrix.target }} ${{ matrix.zig && '--zig' || '' }} --out dist
+          uv sync --no-install-project
+          uv run --no-sync maturin build --release --target ${{ matrix.target }} ${{ matrix.zig && '--zig' || '' }} --out dist
         shell: bash
       - name: Upload wheel
         uses: actions/upload-artifact@v4
