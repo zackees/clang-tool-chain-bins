@@ -266,10 +266,14 @@ jobs:
         run: soldr cargo build --release --target ${{ matrix.target }} -p ctcb-cli
 
       - name: Build wheel
+        # --no-install-project + --no-sync: the wheel is built by the maturin
+        # CLI (which ignores [build-system]); installing the project editable
+        # via the soldr PEP 517 backend first is a wasted compile and the
+        # backend's daemon does not start on macOS runners (soldr 0.7.98).
         shell: bash
         run: |
-          uv sync
-          uv run maturin build --release --target ${{ matrix.target }} --out dist
+          uv sync --no-install-project
+          uv run --no-sync maturin build --release --target ${{ matrix.target }} --out dist
 
       - name: Upload standalone binary
         uses: actions/upload-artifact@v4
@@ -291,9 +295,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
+      # --no-install-project: maturin sdist needs no compiled project install.
       - run: |
-          uv sync
-          uv run maturin sdist --out dist
+          uv sync --no-install-project
+          uv run --no-sync maturin sdist --out dist
       - uses: actions/upload-artifact@v4
         with:
           name: sdist

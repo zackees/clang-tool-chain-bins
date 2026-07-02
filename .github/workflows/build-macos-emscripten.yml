@@ -32,16 +32,21 @@ jobs:
         run: curl -LsSf https://astral.sh/uv/install.sh | sh
 
       - name: Install dependencies
+        # --no-install-project: the tools/ scripts only need the Python deps,
+        # not the compiled clang_tool_chain_bins package. Installing the
+        # project would route through the soldr PEP 517 backend, which has no
+        # intel-mac wheel (macos-15-large lane) and whose compile daemon does
+        # not start on macOS runners (soldr 0.7.98).
         run: |
-          uv sync
+          uv sync --no-install-project
 
       - name: Build Emscripten archive
         run: |
-          uv run python tools/fetch_and_archive_emscripten.py --platform darwin --arch ${{ inputs.arch }}
+          uv run --no-sync python tools/fetch_and_archive_emscripten.py --platform darwin --arch ${{ inputs.arch }}
 
       - name: Verify archive structure
         run: |
-          uv run python3 << 'EOF'
+          uv run --no-sync python3 << 'EOF'
           import tarfile
           import pyzstd
           import io

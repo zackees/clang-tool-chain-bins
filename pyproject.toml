@@ -31,8 +31,8 @@ ctcb-emscripten-docker = "clang_tool_chain_bins.cli:emscripten_docker"
 ctcb-nodejs = "clang_tool_chain_bins.cli:nodejs"
 
 [build-system]
-requires = ["maturin>=1.7,<2.0"]
-build-backend = "maturin"
+requires = ["soldr>=0.7.98"]
+build-backend = "soldr"
 
 [tool.maturin]
 features = ["pyo3/extension-module", "python"]

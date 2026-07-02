@@ -37,8 +37,13 @@ jobs:
         run: curl -LsSf https://astral.sh/uv/install.sh | sh
 
       - name: Install dependencies
+        # --no-install-project: tools/fetch_and_archive.py only needs the
+        # Python deps, not the compiled clang_tool_chain_bins package.
+        # Installing the project would route through the soldr PEP 517
+        # backend, which has no intel-mac wheel (macos-15-large lane) and
+        # whose compile daemon does not start on macOS runners (soldr 0.7.98).
         run: |
-          uv sync
+          uv sync --no-install-project
 
       - name: Check for pre-built binary
         id: check_binary
@@ -125,7 +130,7 @@ jobs:
           # Run the fetch_and_archive tool with custom version and source directory
           echo ""
           echo "Running fetch_and_archive tool..."
-          uv run python tools/fetch_and_archive.py \
+          uv run --no-sync python tools/fetch_and_archive.py \
             --platform darwin \
             --arch "$ARCH" \
             --version "$VERSION" \
