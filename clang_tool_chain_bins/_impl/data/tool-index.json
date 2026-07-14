@@ -112,91 +112,209 @@
     {
       "arch": "arm64",
       "component": "clang-extra",
-      "download_kind": "raw",
-      "file_count": 5,
+      "download_kind": "lfs",
+      "file_count": 366,
       "filename": "clang-extra-21.1.6-darwin-arm64.tar.zst",
       "index_path": "clang-extra\\darwin\\arm64\\clang-extra-21.1.6-darwin-arm64.tar.zst.json",
       "parts": [],
       "platform": "darwin",
       "probe_urls": [
-        "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/arm64/clang-extra-21.1.6-darwin-arm64.tar.zst"
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/arm64/clang-extra-21.1.6-darwin-arm64.tar.zst"
       ],
+      "provenance": {
+        "build_options": {
+          "mode": "prebuilt-extraction"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "a832a5222e489298337fbb5876f8dcaf072c5cca",
+        "llvm_project_tag": "llvmorg-21.1.6",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.6",
+        "method": "extracted",
+        "target": {
+          "arch": "arm64",
+          "platform": "darwin"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
       "relative_path": "clang-extra\\darwin\\arm64\\clang-extra-21.1.6-darwin-arm64.tar.zst",
-      "sha256": "78ba5dc377392082ff05323aed5efaa5e5d5c84bbeb6e0b241964225195fab52",
-      "tool_count": 5,
-      "url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/arm64/clang-extra-21.1.6-darwin-arm64.tar.zst",
+      "sha256": "a668593eada9da5222b4c9d40fb84f72772cf4db1e9ca1cc91d82b38ec73a7a0",
+      "tool_count": 6,
+      "url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/arm64/clang-extra-21.1.6-darwin-arm64.tar.zst",
       "version": "21.1.6"
     },
     {
       "arch": "x86_64",
       "component": "clang-extra",
-      "download_kind": "raw",
-      "file_count": 6,
+      "download_kind": "lfs",
+      "file_count": 291,
       "filename": "clang-extra-21.1.6-darwin-x86_64.tar.zst",
       "index_path": "clang-extra\\darwin\\x86_64\\clang-extra-21.1.6-darwin-x86_64.tar.zst.json",
       "parts": [],
       "platform": "darwin",
       "probe_urls": [
-        "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/x86_64/clang-extra-21.1.6-darwin-x86_64.tar.zst"
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/x86_64/clang-extra-21.1.6-darwin-x86_64.tar.zst"
       ],
+      "provenance": {
+        "build_options": {
+          "LLVM_ENABLE_PROJECTS": "clang;clang-tools-extra",
+          "LLVM_TARGETS_TO_BUILD": "X86",
+          "build_type": "Release",
+          "generator": "Ninja"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "a832a5222e489298337fbb5876f8dcaf072c5cca",
+        "llvm_project_tag": "llvmorg-21.1.6",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.6",
+        "method": "forge",
+        "target": {
+          "arch": "x86_64",
+          "platform": "darwin"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
       "relative_path": "clang-extra\\darwin\\x86_64\\clang-extra-21.1.6-darwin-x86_64.tar.zst",
-      "sha256": "b436f9e260c4697a49e6aa9b5cc8e7e6c5139d42a13ba8b4884204c960955d45",
-      "tool_count": 5,
-      "url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/x86_64/clang-extra-21.1.6-darwin-x86_64.tar.zst",
+      "sha256": "9b87a73523cc9d9e9fb1781b552418fc48f4f77616f44d092a074d62a13c1934",
+      "tool_count": 6,
+      "url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/x86_64/clang-extra-21.1.6-darwin-x86_64.tar.zst",
       "version": "21.1.6"
     },
     {
       "arch": "arm64",
       "component": "clang-extra",
-      "download_kind": "raw",
-      "file_count": 5,
+      "download_kind": "lfs",
+      "file_count": 415,
       "filename": "clang-extra-21.1.5-linux-arm64.tar.zst",
       "index_path": "clang-extra\\linux\\arm64\\clang-extra-21.1.5-linux-arm64.tar.zst.json",
       "parts": [],
       "platform": "linux",
       "probe_urls": [
-        "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/arm64/clang-extra-21.1.5-linux-arm64.tar.zst"
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/arm64/clang-extra-21.1.5-linux-arm64.tar.zst"
       ],
+      "provenance": {
+        "build_options": {
+          "mode": "prebuilt-extraction"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "8e2cd28cd4ba46613a46467b0c91b1cabead26cd",
+        "llvm_project_tag": "llvmorg-21.1.5",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.5",
+        "method": "extracted",
+        "target": {
+          "arch": "arm64",
+          "platform": "linux"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
       "relative_path": "clang-extra\\linux\\arm64\\clang-extra-21.1.5-linux-arm64.tar.zst",
-      "sha256": "32bdd014a4e100b24cd0e6e3ef52cbb7e90b2d73bf10f9c83c0b270d8602a5a0",
-      "tool_count": 0,
-      "url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/arm64/clang-extra-21.1.5-linux-arm64.tar.zst",
+      "sha256": "fa48034cf7e29879ee3f0d89925aa3ef6d5dc068fb5e4d0af32af8a92f0f5643",
+      "tool_count": 7,
+      "url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/arm64/clang-extra-21.1.5-linux-arm64.tar.zst",
       "version": "21.1.5"
     },
     {
       "arch": "x86_64",
       "component": "clang-extra",
-      "download_kind": "raw",
-      "file_count": 5,
+      "download_kind": "lfs",
+      "file_count": 431,
       "filename": "clang-extra-21.1.5-linux-x86_64.tar.zst",
       "index_path": "clang-extra\\linux\\x86_64\\clang-extra-21.1.5-linux-x86_64.tar.zst.json",
       "parts": [],
       "platform": "linux",
       "probe_urls": [
-        "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/x86_64/clang-extra-21.1.5-linux-x86_64.tar.zst"
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/x86_64/clang-extra-21.1.5-linux-x86_64.tar.zst"
       ],
+      "provenance": {
+        "build_options": {
+          "mode": "prebuilt-extraction"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "8e2cd28cd4ba46613a46467b0c91b1cabead26cd",
+        "llvm_project_tag": "llvmorg-21.1.5",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.5",
+        "method": "extracted",
+        "target": {
+          "arch": "x86_64",
+          "platform": "linux"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
       "relative_path": "clang-extra\\linux\\x86_64\\clang-extra-21.1.5-linux-x86_64.tar.zst",
-      "sha256": "1d4d89fdd80f57fd862ce6f0a261389fa90b43ecba7143f0baa968566d155869",
-      "tool_count": 5,
-      "url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/x86_64/clang-extra-21.1.5-linux-x86_64.tar.zst",
+      "sha256": "e02a9fbf7e0ef2ae466ef90f7ac1fff03a165dfb707ddf3f4249e4be7360933e",
+      "tool_count": 7,
+      "url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/x86_64/clang-extra-21.1.5-linux-x86_64.tar.zst",
       "version": "21.1.5"
     },
     {
       "arch": "x86_64",
       "component": "clang-extra",
-      "download_kind": "raw",
-      "file_count": 5,
+      "download_kind": "lfs",
+      "file_count": 346,
       "filename": "clang-extra-21.1.5-win-x86_64.tar.zst",
       "index_path": "clang-extra\\win\\x86_64\\clang-extra-21.1.5-win-x86_64.tar.zst.json",
       "parts": [],
       "platform": "win",
       "probe_urls": [
-        "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/x86_64/clang-extra-21.1.5-win-x86_64.tar.zst"
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/x86_64/clang-extra-21.1.5-win-x86_64.tar.zst"
       ],
+      "provenance": {
+        "build_options": {
+          "mode": "prebuilt-extraction"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "8e2cd28cd4ba46613a46467b0c91b1cabead26cd",
+        "llvm_project_tag": "llvmorg-21.1.5",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.5",
+        "method": "extracted",
+        "target": {
+          "arch": "x86_64",
+          "platform": "win"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
       "relative_path": "clang-extra\\win\\x86_64\\clang-extra-21.1.5-win-x86_64.tar.zst",
-      "sha256": "aaf5bc0194f440cbba72aa8d41434f3d1f403739a8791c674edae6e3a49d2401",
-      "tool_count": 5,
-      "url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/x86_64/clang-extra-21.1.5-win-x86_64.tar.zst",
+      "sha256": "342b91b880a52c47223ac25a5a9652c56c6460fee93738ffd069b62ba07837c7",
+      "tool_count": 6,
+      "url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/x86_64/clang-extra-21.1.5-win-x86_64.tar.zst",
       "version": "21.1.5"
     },
     {
@@ -591,7 +709,7 @@
     }
   ],
   "schema_version": 1,
-  "tool_count": 684,
+  "tool_count": 696,
   "tools": [
     {
       "arch": "mingw-x86_64",
@@ -4584,17 +4702,40 @@
       "arch": "arm64",
       "archive_filename": "clang-extra-21.1.6-darwin-arm64.tar.zst",
       "archive_path": "clang-extra\\darwin\\arm64\\clang-extra-21.1.6-darwin-arm64.tar.zst",
-      "archive_sha256": "78ba5dc377392082ff05323aed5efaa5e5d5c84bbeb6e0b241964225195fab52",
-      "archive_url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/arm64/clang-extra-21.1.6-darwin-arm64.tar.zst",
+      "archive_sha256": "a668593eada9da5222b4c9d40fb84f72772cf4db1e9ca1cc91d82b38ec73a7a0",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/arm64/clang-extra-21.1.6-darwin-arm64.tar.zst",
       "component": "clang-extra",
-      "download_kind": "raw",
+      "download_kind": "lfs",
       "file_name": "clang-format",
       "parts": [],
       "path_in_archive": "bin/clang-format",
       "platform": "darwin",
       "probe_urls": [
-        "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/arm64/clang-extra-21.1.6-darwin-arm64.tar.zst"
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/arm64/clang-extra-21.1.6-darwin-arm64.tar.zst"
       ],
+      "provenance": {
+        "build_options": {
+          "mode": "prebuilt-extraction"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "a832a5222e489298337fbb5876f8dcaf072c5cca",
+        "llvm_project_tag": "llvmorg-21.1.6",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.6",
+        "method": "extracted",
+        "target": {
+          "arch": "arm64",
+          "platform": "darwin"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
       "size": 3812896,
       "tool_name": "clang-format",
       "tool_sha256": "d7556aecb8d38c6b6d9f0af578341baba435a872ba26524a9d47b0a084e4a7c6",
@@ -4605,17 +4746,43 @@
       "arch": "x86_64",
       "archive_filename": "clang-extra-21.1.6-darwin-x86_64.tar.zst",
       "archive_path": "clang-extra\\darwin\\x86_64\\clang-extra-21.1.6-darwin-x86_64.tar.zst",
-      "archive_sha256": "b436f9e260c4697a49e6aa9b5cc8e7e6c5139d42a13ba8b4884204c960955d45",
-      "archive_url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/x86_64/clang-extra-21.1.6-darwin-x86_64.tar.zst",
+      "archive_sha256": "9b87a73523cc9d9e9fb1781b552418fc48f4f77616f44d092a074d62a13c1934",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/x86_64/clang-extra-21.1.6-darwin-x86_64.tar.zst",
       "component": "clang-extra",
-      "download_kind": "raw",
+      "download_kind": "lfs",
       "file_name": "clang-format",
       "parts": [],
       "path_in_archive": "bin/clang-format",
       "platform": "darwin",
       "probe_urls": [
-        "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/x86_64/clang-extra-21.1.6-darwin-x86_64.tar.zst"
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/x86_64/clang-extra-21.1.6-darwin-x86_64.tar.zst"
       ],
+      "provenance": {
+        "build_options": {
+          "LLVM_ENABLE_PROJECTS": "clang;clang-tools-extra",
+          "LLVM_TARGETS_TO_BUILD": "X86",
+          "build_type": "Release",
+          "generator": "Ninja"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "a832a5222e489298337fbb5876f8dcaf072c5cca",
+        "llvm_project_tag": "llvmorg-21.1.6",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.6",
+        "method": "forge",
+        "target": {
+          "arch": "x86_64",
+          "platform": "darwin"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
       "size": 3734296,
       "tool_name": "clang-format",
       "tool_sha256": "567113552b1cf8386a5f165dc2ff3efb834124d910cb7df4fe81ca85ed396541",
@@ -4623,20 +4790,87 @@
       "version": "21.1.6"
     },
     {
-      "arch": "x86_64",
-      "archive_filename": "clang-extra-21.1.5-linux-x86_64.tar.zst",
-      "archive_path": "clang-extra\\linux\\x86_64\\clang-extra-21.1.5-linux-x86_64.tar.zst",
-      "archive_sha256": "1d4d89fdd80f57fd862ce6f0a261389fa90b43ecba7143f0baa968566d155869",
-      "archive_url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/x86_64/clang-extra-21.1.5-linux-x86_64.tar.zst",
+      "arch": "arm64",
+      "archive_filename": "clang-extra-21.1.5-linux-arm64.tar.zst",
+      "archive_path": "clang-extra\\linux\\arm64\\clang-extra-21.1.5-linux-arm64.tar.zst",
+      "archive_sha256": "fa48034cf7e29879ee3f0d89925aa3ef6d5dc068fb5e4d0af32af8a92f0f5643",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/arm64/clang-extra-21.1.5-linux-arm64.tar.zst",
       "component": "clang-extra",
-      "download_kind": "raw",
+      "download_kind": "lfs",
       "file_name": "clang-format",
       "parts": [],
       "path_in_archive": "bin/clang-format",
       "platform": "linux",
       "probe_urls": [
-        "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/x86_64/clang-extra-21.1.5-linux-x86_64.tar.zst"
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/arm64/clang-extra-21.1.5-linux-arm64.tar.zst"
       ],
+      "provenance": {
+        "build_options": {
+          "mode": "prebuilt-extraction"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "8e2cd28cd4ba46613a46467b0c91b1cabead26cd",
+        "llvm_project_tag": "llvmorg-21.1.5",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.5",
+        "method": "extracted",
+        "target": {
+          "arch": "arm64",
+          "platform": "linux"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
+      "size": 6340120,
+      "tool_name": "clang-format",
+      "tool_sha256": "ab7b910e6d4b76297ea2d57a7228fb37548159537501917f8a97cc65789e1294",
+      "tool_type": "file",
+      "version": "21.1.5"
+    },
+    {
+      "arch": "x86_64",
+      "archive_filename": "clang-extra-21.1.5-linux-x86_64.tar.zst",
+      "archive_path": "clang-extra\\linux\\x86_64\\clang-extra-21.1.5-linux-x86_64.tar.zst",
+      "archive_sha256": "e02a9fbf7e0ef2ae466ef90f7ac1fff03a165dfb707ddf3f4249e4be7360933e",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/x86_64/clang-extra-21.1.5-linux-x86_64.tar.zst",
+      "component": "clang-extra",
+      "download_kind": "lfs",
+      "file_name": "clang-format",
+      "parts": [],
+      "path_in_archive": "bin/clang-format",
+      "platform": "linux",
+      "probe_urls": [
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/x86_64/clang-extra-21.1.5-linux-x86_64.tar.zst"
+      ],
+      "provenance": {
+        "build_options": {
+          "mode": "prebuilt-extraction"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "8e2cd28cd4ba46613a46467b0c91b1cabead26cd",
+        "llvm_project_tag": "llvmorg-21.1.5",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.5",
+        "method": "extracted",
+        "target": {
+          "arch": "x86_64",
+          "platform": "linux"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
       "size": 6436016,
       "tool_name": "clang-format",
       "tool_sha256": "e5d839dd2c925776c188d8cc1d0141b0921858e538dba13a0e9f10d44d2e753e",
@@ -4647,17 +4881,40 @@
       "arch": "x86_64",
       "archive_filename": "clang-extra-21.1.5-win-x86_64.tar.zst",
       "archive_path": "clang-extra\\win\\x86_64\\clang-extra-21.1.5-win-x86_64.tar.zst",
-      "archive_sha256": "aaf5bc0194f440cbba72aa8d41434f3d1f403739a8791c674edae6e3a49d2401",
-      "archive_url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/x86_64/clang-extra-21.1.5-win-x86_64.tar.zst",
+      "archive_sha256": "342b91b880a52c47223ac25a5a9652c56c6460fee93738ffd069b62ba07837c7",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/x86_64/clang-extra-21.1.5-win-x86_64.tar.zst",
       "component": "clang-extra",
-      "download_kind": "raw",
+      "download_kind": "lfs",
       "file_name": "clang-format.exe",
       "parts": [],
       "path_in_archive": "bin/clang-format.exe",
       "platform": "win",
       "probe_urls": [
-        "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/x86_64/clang-extra-21.1.5-win-x86_64.tar.zst"
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/x86_64/clang-extra-21.1.5-win-x86_64.tar.zst"
       ],
+      "provenance": {
+        "build_options": {
+          "mode": "prebuilt-extraction"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "8e2cd28cd4ba46613a46467b0c91b1cabead26cd",
+        "llvm_project_tag": "llvmorg-21.1.5",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.5",
+        "method": "extracted",
+        "target": {
+          "arch": "x86_64",
+          "platform": "win"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
       "size": 3869696,
       "tool_name": "clang-format",
       "tool_sha256": "f4d5213631e1dad8ae4c1495f9aff2a9d54166143ecd8f0fcd1e174568ea98c9",
@@ -4710,17 +4967,40 @@
       "arch": "arm64",
       "archive_filename": "clang-extra-21.1.6-darwin-arm64.tar.zst",
       "archive_path": "clang-extra\\darwin\\arm64\\clang-extra-21.1.6-darwin-arm64.tar.zst",
-      "archive_sha256": "78ba5dc377392082ff05323aed5efaa5e5d5c84bbeb6e0b241964225195fab52",
-      "archive_url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/arm64/clang-extra-21.1.6-darwin-arm64.tar.zst",
+      "archive_sha256": "a668593eada9da5222b4c9d40fb84f72772cf4db1e9ca1cc91d82b38ec73a7a0",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/arm64/clang-extra-21.1.6-darwin-arm64.tar.zst",
       "component": "clang-extra",
-      "download_kind": "raw",
+      "download_kind": "lfs",
       "file_name": "clang-query",
       "parts": [],
       "path_in_archive": "bin/clang-query",
       "platform": "darwin",
       "probe_urls": [
-        "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/arm64/clang-extra-21.1.6-darwin-arm64.tar.zst"
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/arm64/clang-extra-21.1.6-darwin-arm64.tar.zst"
       ],
+      "provenance": {
+        "build_options": {
+          "mode": "prebuilt-extraction"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "a832a5222e489298337fbb5876f8dcaf072c5cca",
+        "llvm_project_tag": "llvmorg-21.1.6",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.6",
+        "method": "extracted",
+        "target": {
+          "arch": "arm64",
+          "platform": "darwin"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
       "size": 42020128,
       "tool_name": "clang-query",
       "tool_sha256": "8dec2116089234b9aa3b3b1d81803bdb9fa9843782f7e5f525767e45c1b8d0ff",
@@ -4731,17 +5011,43 @@
       "arch": "x86_64",
       "archive_filename": "clang-extra-21.1.6-darwin-x86_64.tar.zst",
       "archive_path": "clang-extra\\darwin\\x86_64\\clang-extra-21.1.6-darwin-x86_64.tar.zst",
-      "archive_sha256": "b436f9e260c4697a49e6aa9b5cc8e7e6c5139d42a13ba8b4884204c960955d45",
-      "archive_url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/x86_64/clang-extra-21.1.6-darwin-x86_64.tar.zst",
+      "archive_sha256": "9b87a73523cc9d9e9fb1781b552418fc48f4f77616f44d092a074d62a13c1934",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/x86_64/clang-extra-21.1.6-darwin-x86_64.tar.zst",
       "component": "clang-extra",
-      "download_kind": "raw",
+      "download_kind": "lfs",
       "file_name": "clang-query",
       "parts": [],
       "path_in_archive": "bin/clang-query",
       "platform": "darwin",
       "probe_urls": [
-        "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/x86_64/clang-extra-21.1.6-darwin-x86_64.tar.zst"
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/x86_64/clang-extra-21.1.6-darwin-x86_64.tar.zst"
       ],
+      "provenance": {
+        "build_options": {
+          "LLVM_ENABLE_PROJECTS": "clang;clang-tools-extra",
+          "LLVM_TARGETS_TO_BUILD": "X86",
+          "build_type": "Release",
+          "generator": "Ninja"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "a832a5222e489298337fbb5876f8dcaf072c5cca",
+        "llvm_project_tag": "llvmorg-21.1.6",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.6",
+        "method": "forge",
+        "target": {
+          "arch": "x86_64",
+          "platform": "darwin"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
       "size": 39164360,
       "tool_name": "clang-query",
       "tool_sha256": "d6db5f76d6a9052cb82749013eaac66cc90e59db923e447bacfaafea97318c26",
@@ -4749,20 +5055,87 @@
       "version": "21.1.6"
     },
     {
-      "arch": "x86_64",
-      "archive_filename": "clang-extra-21.1.5-linux-x86_64.tar.zst",
-      "archive_path": "clang-extra\\linux\\x86_64\\clang-extra-21.1.5-linux-x86_64.tar.zst",
-      "archive_sha256": "1d4d89fdd80f57fd862ce6f0a261389fa90b43ecba7143f0baa968566d155869",
-      "archive_url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/x86_64/clang-extra-21.1.5-linux-x86_64.tar.zst",
+      "arch": "arm64",
+      "archive_filename": "clang-extra-21.1.5-linux-arm64.tar.zst",
+      "archive_path": "clang-extra\\linux\\arm64\\clang-extra-21.1.5-linux-arm64.tar.zst",
+      "archive_sha256": "fa48034cf7e29879ee3f0d89925aa3ef6d5dc068fb5e4d0af32af8a92f0f5643",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/arm64/clang-extra-21.1.5-linux-arm64.tar.zst",
       "component": "clang-extra",
-      "download_kind": "raw",
+      "download_kind": "lfs",
       "file_name": "clang-query",
       "parts": [],
       "path_in_archive": "bin/clang-query",
       "platform": "linux",
       "probe_urls": [
-        "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/x86_64/clang-extra-21.1.5-linux-x86_64.tar.zst"
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/arm64/clang-extra-21.1.5-linux-arm64.tar.zst"
       ],
+      "provenance": {
+        "build_options": {
+          "mode": "prebuilt-extraction"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "8e2cd28cd4ba46613a46467b0c91b1cabead26cd",
+        "llvm_project_tag": "llvmorg-21.1.5",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.5",
+        "method": "extracted",
+        "target": {
+          "arch": "arm64",
+          "platform": "linux"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
+      "size": 67348184,
+      "tool_name": "clang-query",
+      "tool_sha256": "b9a9490e8e864e28f05c8ad5f31bab7c36c44b7fd99ceedd4b3e54268aefa500",
+      "tool_type": "file",
+      "version": "21.1.5"
+    },
+    {
+      "arch": "x86_64",
+      "archive_filename": "clang-extra-21.1.5-linux-x86_64.tar.zst",
+      "archive_path": "clang-extra\\linux\\x86_64\\clang-extra-21.1.5-linux-x86_64.tar.zst",
+      "archive_sha256": "e02a9fbf7e0ef2ae466ef90f7ac1fff03a165dfb707ddf3f4249e4be7360933e",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/x86_64/clang-extra-21.1.5-linux-x86_64.tar.zst",
+      "component": "clang-extra",
+      "download_kind": "lfs",
+      "file_name": "clang-query",
+      "parts": [],
+      "path_in_archive": "bin/clang-query",
+      "platform": "linux",
+      "probe_urls": [
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/x86_64/clang-extra-21.1.5-linux-x86_64.tar.zst"
+      ],
+      "provenance": {
+        "build_options": {
+          "mode": "prebuilt-extraction"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "8e2cd28cd4ba46613a46467b0c91b1cabead26cd",
+        "llvm_project_tag": "llvmorg-21.1.5",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.5",
+        "method": "extracted",
+        "target": {
+          "arch": "x86_64",
+          "platform": "linux"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
       "size": 72505376,
       "tool_name": "clang-query",
       "tool_sha256": "e8c042584f8b031b1091990483fe69b1382a56776139e59b74a242e4c4b7a95e",
@@ -4773,17 +5146,40 @@
       "arch": "x86_64",
       "archive_filename": "clang-extra-21.1.5-win-x86_64.tar.zst",
       "archive_path": "clang-extra\\win\\x86_64\\clang-extra-21.1.5-win-x86_64.tar.zst",
-      "archive_sha256": "aaf5bc0194f440cbba72aa8d41434f3d1f403739a8791c674edae6e3a49d2401",
-      "archive_url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/x86_64/clang-extra-21.1.5-win-x86_64.tar.zst",
+      "archive_sha256": "342b91b880a52c47223ac25a5a9652c56c6460fee93738ffd069b62ba07837c7",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/x86_64/clang-extra-21.1.5-win-x86_64.tar.zst",
       "component": "clang-extra",
-      "download_kind": "raw",
+      "download_kind": "lfs",
       "file_name": "clang-query.exe",
       "parts": [],
       "path_in_archive": "bin/clang-query.exe",
       "platform": "win",
       "probe_urls": [
-        "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/x86_64/clang-extra-21.1.5-win-x86_64.tar.zst"
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/x86_64/clang-extra-21.1.5-win-x86_64.tar.zst"
       ],
+      "provenance": {
+        "build_options": {
+          "mode": "prebuilt-extraction"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "8e2cd28cd4ba46613a46467b0c91b1cabead26cd",
+        "llvm_project_tag": "llvmorg-21.1.5",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.5",
+        "method": "extracted",
+        "target": {
+          "arch": "x86_64",
+          "platform": "win"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
       "size": 31934976,
       "tool_name": "clang-query",
       "tool_sha256": "e6655d69c7b7c005c54c5d629b188c47b95d5670a0be589d3afab57bb86e3a21",
@@ -5004,17 +5400,40 @@
       "arch": "arm64",
       "archive_filename": "clang-extra-21.1.6-darwin-arm64.tar.zst",
       "archive_path": "clang-extra\\darwin\\arm64\\clang-extra-21.1.6-darwin-arm64.tar.zst",
-      "archive_sha256": "78ba5dc377392082ff05323aed5efaa5e5d5c84bbeb6e0b241964225195fab52",
-      "archive_url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/arm64/clang-extra-21.1.6-darwin-arm64.tar.zst",
+      "archive_sha256": "a668593eada9da5222b4c9d40fb84f72772cf4db1e9ca1cc91d82b38ec73a7a0",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/arm64/clang-extra-21.1.6-darwin-arm64.tar.zst",
       "component": "clang-extra",
-      "download_kind": "raw",
+      "download_kind": "lfs",
       "file_name": "clang-tidy",
       "parts": [],
       "path_in_archive": "bin/clang-tidy",
       "platform": "darwin",
       "probe_urls": [
-        "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/arm64/clang-extra-21.1.6-darwin-arm64.tar.zst"
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/arm64/clang-extra-21.1.6-darwin-arm64.tar.zst"
       ],
+      "provenance": {
+        "build_options": {
+          "mode": "prebuilt-extraction"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "a832a5222e489298337fbb5876f8dcaf072c5cca",
+        "llvm_project_tag": "llvmorg-21.1.6",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.6",
+        "method": "extracted",
+        "target": {
+          "arch": "arm64",
+          "platform": "darwin"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
       "size": 107520048,
       "tool_name": "clang-tidy",
       "tool_sha256": "38ea53a5c9ec94544ac0eb1dad1acdbbbb8611cc9e591ee9a2f7de63f4f0e791",
@@ -5025,17 +5444,43 @@
       "arch": "x86_64",
       "archive_filename": "clang-extra-21.1.6-darwin-x86_64.tar.zst",
       "archive_path": "clang-extra\\darwin\\x86_64\\clang-extra-21.1.6-darwin-x86_64.tar.zst",
-      "archive_sha256": "b436f9e260c4697a49e6aa9b5cc8e7e6c5139d42a13ba8b4884204c960955d45",
-      "archive_url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/x86_64/clang-extra-21.1.6-darwin-x86_64.tar.zst",
+      "archive_sha256": "9b87a73523cc9d9e9fb1781b552418fc48f4f77616f44d092a074d62a13c1934",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/x86_64/clang-extra-21.1.6-darwin-x86_64.tar.zst",
       "component": "clang-extra",
-      "download_kind": "raw",
+      "download_kind": "lfs",
       "file_name": "clang-tidy",
       "parts": [],
       "path_in_archive": "bin/clang-tidy",
       "platform": "darwin",
       "probe_urls": [
-        "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/x86_64/clang-extra-21.1.6-darwin-x86_64.tar.zst"
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/x86_64/clang-extra-21.1.6-darwin-x86_64.tar.zst"
       ],
+      "provenance": {
+        "build_options": {
+          "LLVM_ENABLE_PROJECTS": "clang;clang-tools-extra",
+          "LLVM_TARGETS_TO_BUILD": "X86",
+          "build_type": "Release",
+          "generator": "Ninja"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "a832a5222e489298337fbb5876f8dcaf072c5cca",
+        "llvm_project_tag": "llvmorg-21.1.6",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.6",
+        "method": "forge",
+        "target": {
+          "arch": "x86_64",
+          "platform": "darwin"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
       "size": 77122776,
       "tool_name": "clang-tidy",
       "tool_sha256": "02f71c27e80c9d198b1676b69e209eac646be12cccfe306882ca8ceb83e2f292",
@@ -5043,20 +5488,87 @@
       "version": "21.1.6"
     },
     {
-      "arch": "x86_64",
-      "archive_filename": "clang-extra-21.1.5-linux-x86_64.tar.zst",
-      "archive_path": "clang-extra\\linux\\x86_64\\clang-extra-21.1.5-linux-x86_64.tar.zst",
-      "archive_sha256": "1d4d89fdd80f57fd862ce6f0a261389fa90b43ecba7143f0baa968566d155869",
-      "archive_url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/x86_64/clang-extra-21.1.5-linux-x86_64.tar.zst",
+      "arch": "arm64",
+      "archive_filename": "clang-extra-21.1.5-linux-arm64.tar.zst",
+      "archive_path": "clang-extra\\linux\\arm64\\clang-extra-21.1.5-linux-arm64.tar.zst",
+      "archive_sha256": "fa48034cf7e29879ee3f0d89925aa3ef6d5dc068fb5e4d0af32af8a92f0f5643",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/arm64/clang-extra-21.1.5-linux-arm64.tar.zst",
       "component": "clang-extra",
-      "download_kind": "raw",
+      "download_kind": "lfs",
       "file_name": "clang-tidy",
       "parts": [],
       "path_in_archive": "bin/clang-tidy",
       "platform": "linux",
       "probe_urls": [
-        "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/x86_64/clang-extra-21.1.5-linux-x86_64.tar.zst"
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/arm64/clang-extra-21.1.5-linux-arm64.tar.zst"
       ],
+      "provenance": {
+        "build_options": {
+          "mode": "prebuilt-extraction"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "8e2cd28cd4ba46613a46467b0c91b1cabead26cd",
+        "llvm_project_tag": "llvmorg-21.1.5",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.5",
+        "method": "extracted",
+        "target": {
+          "arch": "arm64",
+          "platform": "linux"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
+      "size": 162485384,
+      "tool_name": "clang-tidy",
+      "tool_sha256": "87bc6e3d4ff215dafcba102ed0f87e7641175648858ddc43550c33559fd6a6a1",
+      "tool_type": "file",
+      "version": "21.1.5"
+    },
+    {
+      "arch": "x86_64",
+      "archive_filename": "clang-extra-21.1.5-linux-x86_64.tar.zst",
+      "archive_path": "clang-extra\\linux\\x86_64\\clang-extra-21.1.5-linux-x86_64.tar.zst",
+      "archive_sha256": "e02a9fbf7e0ef2ae466ef90f7ac1fff03a165dfb707ddf3f4249e4be7360933e",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/x86_64/clang-extra-21.1.5-linux-x86_64.tar.zst",
+      "component": "clang-extra",
+      "download_kind": "lfs",
+      "file_name": "clang-tidy",
+      "parts": [],
+      "path_in_archive": "bin/clang-tidy",
+      "platform": "linux",
+      "probe_urls": [
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/x86_64/clang-extra-21.1.5-linux-x86_64.tar.zst"
+      ],
+      "provenance": {
+        "build_options": {
+          "mode": "prebuilt-extraction"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "8e2cd28cd4ba46613a46467b0c91b1cabead26cd",
+        "llvm_project_tag": "llvmorg-21.1.5",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.5",
+        "method": "extracted",
+        "target": {
+          "arch": "x86_64",
+          "platform": "linux"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
       "size": 172210016,
       "tool_name": "clang-tidy",
       "tool_sha256": "b9d54ac6d7e7bd800f0b775cdaba32327ea0e7e76bc991f6f940541f88b263c6",
@@ -5067,17 +5579,40 @@
       "arch": "x86_64",
       "archive_filename": "clang-extra-21.1.5-win-x86_64.tar.zst",
       "archive_path": "clang-extra\\win\\x86_64\\clang-extra-21.1.5-win-x86_64.tar.zst",
-      "archive_sha256": "aaf5bc0194f440cbba72aa8d41434f3d1f403739a8791c674edae6e3a49d2401",
-      "archive_url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/x86_64/clang-extra-21.1.5-win-x86_64.tar.zst",
+      "archive_sha256": "342b91b880a52c47223ac25a5a9652c56c6460fee93738ffd069b62ba07837c7",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/x86_64/clang-extra-21.1.5-win-x86_64.tar.zst",
       "component": "clang-extra",
-      "download_kind": "raw",
+      "download_kind": "lfs",
       "file_name": "clang-tidy.exe",
       "parts": [],
       "path_in_archive": "bin/clang-tidy.exe",
       "platform": "win",
       "probe_urls": [
-        "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/x86_64/clang-extra-21.1.5-win-x86_64.tar.zst"
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/x86_64/clang-extra-21.1.5-win-x86_64.tar.zst"
       ],
+      "provenance": {
+        "build_options": {
+          "mode": "prebuilt-extraction"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "8e2cd28cd4ba46613a46467b0c91b1cabead26cd",
+        "llvm_project_tag": "llvmorg-21.1.5",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.5",
+        "method": "extracted",
+        "target": {
+          "arch": "x86_64",
+          "platform": "win"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
       "size": 56003072,
       "tool_name": "clang-tidy",
       "tool_sha256": "00a5b9665a8ba76aef58b2b3e9dc28b4120d458b0a341d8bb477a68a62f3dd71",
@@ -5104,6 +5639,229 @@
       "tool_sha256": "b80b0f873432a14cdd6c6ad34a1cff63c933b3de87596c5bdba77a9f40a49e8f",
       "tool_type": "file",
       "version": "20251104"
+    },
+    {
+      "arch": "arm64",
+      "archive_filename": "clang-extra-21.1.6-darwin-arm64.tar.zst",
+      "archive_path": "clang-extra\\darwin\\arm64\\clang-extra-21.1.6-darwin-arm64.tar.zst",
+      "archive_sha256": "a668593eada9da5222b4c9d40fb84f72772cf4db1e9ca1cc91d82b38ec73a7a0",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/arm64/clang-extra-21.1.6-darwin-arm64.tar.zst",
+      "component": "clang-extra",
+      "download_kind": "lfs",
+      "file_name": "clangd",
+      "parts": [],
+      "path_in_archive": "bin/clangd",
+      "platform": "darwin",
+      "probe_urls": [
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/arm64/clang-extra-21.1.6-darwin-arm64.tar.zst"
+      ],
+      "provenance": {
+        "build_options": {
+          "mode": "prebuilt-extraction"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "a832a5222e489298337fbb5876f8dcaf072c5cca",
+        "llvm_project_tag": "llvmorg-21.1.6",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.6",
+        "method": "extracted",
+        "target": {
+          "arch": "arm64",
+          "platform": "darwin"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
+      "size": 58428896,
+      "tool_name": "clangd",
+      "tool_sha256": "b03fb31978f7238229e29004f6f8a366d2009cbe9c2086d0d6abb5d7b297a88b",
+      "tool_type": "file",
+      "version": "21.1.6"
+    },
+    {
+      "arch": "x86_64",
+      "archive_filename": "clang-extra-21.1.6-darwin-x86_64.tar.zst",
+      "archive_path": "clang-extra\\darwin\\x86_64\\clang-extra-21.1.6-darwin-x86_64.tar.zst",
+      "archive_sha256": "9b87a73523cc9d9e9fb1781b552418fc48f4f77616f44d092a074d62a13c1934",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/x86_64/clang-extra-21.1.6-darwin-x86_64.tar.zst",
+      "component": "clang-extra",
+      "download_kind": "lfs",
+      "file_name": "clangd",
+      "parts": [],
+      "path_in_archive": "bin/clangd",
+      "platform": "darwin",
+      "probe_urls": [
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/x86_64/clang-extra-21.1.6-darwin-x86_64.tar.zst"
+      ],
+      "provenance": {
+        "build_options": {
+          "LLVM_ENABLE_PROJECTS": "clang;clang-tools-extra",
+          "LLVM_TARGETS_TO_BUILD": "X86",
+          "build_type": "Release",
+          "generator": "Ninja"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "a832a5222e489298337fbb5876f8dcaf072c5cca",
+        "llvm_project_tag": "llvmorg-21.1.6",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.6",
+        "method": "forge",
+        "target": {
+          "arch": "x86_64",
+          "platform": "darwin"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
+      "size": 58535376,
+      "tool_name": "clangd",
+      "tool_sha256": "9f4ff95171aa35a0e89815eb1a22de0059dd6c52da15d3ba1a66a5d0dc9b64c3",
+      "tool_type": "file",
+      "version": "21.1.6"
+    },
+    {
+      "arch": "arm64",
+      "archive_filename": "clang-extra-21.1.5-linux-arm64.tar.zst",
+      "archive_path": "clang-extra\\linux\\arm64\\clang-extra-21.1.5-linux-arm64.tar.zst",
+      "archive_sha256": "fa48034cf7e29879ee3f0d89925aa3ef6d5dc068fb5e4d0af32af8a92f0f5643",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/arm64/clang-extra-21.1.5-linux-arm64.tar.zst",
+      "component": "clang-extra",
+      "download_kind": "lfs",
+      "file_name": "clangd",
+      "parts": [],
+      "path_in_archive": "bin/clangd",
+      "platform": "linux",
+      "probe_urls": [
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/arm64/clang-extra-21.1.5-linux-arm64.tar.zst"
+      ],
+      "provenance": {
+        "build_options": {
+          "mode": "prebuilt-extraction"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "8e2cd28cd4ba46613a46467b0c91b1cabead26cd",
+        "llvm_project_tag": "llvmorg-21.1.5",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.5",
+        "method": "extracted",
+        "target": {
+          "arch": "arm64",
+          "platform": "linux"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
+      "size": 95086552,
+      "tool_name": "clangd",
+      "tool_sha256": "5f450cf0a2f9fbb66aca2bd9bdc43fb75f1ff9eae208328e8bab1cfc0e7e7af8",
+      "tool_type": "file",
+      "version": "21.1.5"
+    },
+    {
+      "arch": "x86_64",
+      "archive_filename": "clang-extra-21.1.5-linux-x86_64.tar.zst",
+      "archive_path": "clang-extra\\linux\\x86_64\\clang-extra-21.1.5-linux-x86_64.tar.zst",
+      "archive_sha256": "e02a9fbf7e0ef2ae466ef90f7ac1fff03a165dfb707ddf3f4249e4be7360933e",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/x86_64/clang-extra-21.1.5-linux-x86_64.tar.zst",
+      "component": "clang-extra",
+      "download_kind": "lfs",
+      "file_name": "clangd",
+      "parts": [],
+      "path_in_archive": "bin/clangd",
+      "platform": "linux",
+      "probe_urls": [
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/x86_64/clang-extra-21.1.5-linux-x86_64.tar.zst"
+      ],
+      "provenance": {
+        "build_options": {
+          "mode": "prebuilt-extraction"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "8e2cd28cd4ba46613a46467b0c91b1cabead26cd",
+        "llvm_project_tag": "llvmorg-21.1.5",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.5",
+        "method": "extracted",
+        "target": {
+          "arch": "x86_64",
+          "platform": "linux"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
+      "size": 100539280,
+      "tool_name": "clangd",
+      "tool_sha256": "26a89213310f41bc4b63184726aa1f1995703aef69de1d00b41a562d7e6afe69",
+      "tool_type": "file",
+      "version": "21.1.5"
+    },
+    {
+      "arch": "x86_64",
+      "archive_filename": "clang-extra-21.1.5-win-x86_64.tar.zst",
+      "archive_path": "clang-extra\\win\\x86_64\\clang-extra-21.1.5-win-x86_64.tar.zst",
+      "archive_sha256": "342b91b880a52c47223ac25a5a9652c56c6460fee93738ffd069b62ba07837c7",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/x86_64/clang-extra-21.1.5-win-x86_64.tar.zst",
+      "component": "clang-extra",
+      "download_kind": "lfs",
+      "file_name": "clangd.exe",
+      "parts": [],
+      "path_in_archive": "bin/clangd.exe",
+      "platform": "win",
+      "probe_urls": [
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/x86_64/clang-extra-21.1.5-win-x86_64.tar.zst"
+      ],
+      "provenance": {
+        "build_options": {
+          "mode": "prebuilt-extraction"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "8e2cd28cd4ba46613a46467b0c91b1cabead26cd",
+        "llvm_project_tag": "llvmorg-21.1.5",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.5",
+        "method": "extracted",
+        "target": {
+          "arch": "x86_64",
+          "platform": "win"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
+      "size": 45101568,
+      "tool_name": "clangd",
+      "tool_sha256": "ceef318729b3e3f75925d3cadd232cc52a679b77112e3f2f883733d3b9348f7f",
+      "tool_type": "file",
+      "version": "21.1.5"
     },
     {
       "arch": "arm64",
@@ -5403,17 +6161,40 @@
       "arch": "arm64",
       "archive_filename": "clang-extra-21.1.6-darwin-arm64.tar.zst",
       "archive_path": "clang-extra\\darwin\\arm64\\clang-extra-21.1.6-darwin-arm64.tar.zst",
-      "archive_sha256": "78ba5dc377392082ff05323aed5efaa5e5d5c84bbeb6e0b241964225195fab52",
-      "archive_url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/arm64/clang-extra-21.1.6-darwin-arm64.tar.zst",
+      "archive_sha256": "a668593eada9da5222b4c9d40fb84f72772cf4db1e9ca1cc91d82b38ec73a7a0",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/arm64/clang-extra-21.1.6-darwin-arm64.tar.zst",
       "component": "clang-extra",
-      "download_kind": "raw",
+      "download_kind": "lfs",
       "file_name": "git-clang-format",
       "parts": [],
       "path_in_archive": "bin/git-clang-format",
       "platform": "darwin",
       "probe_urls": [
-        "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/arm64/clang-extra-21.1.6-darwin-arm64.tar.zst"
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/arm64/clang-extra-21.1.6-darwin-arm64.tar.zst"
       ],
+      "provenance": {
+        "build_options": {
+          "mode": "prebuilt-extraction"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "a832a5222e489298337fbb5876f8dcaf072c5cca",
+        "llvm_project_tag": "llvmorg-21.1.6",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.6",
+        "method": "extracted",
+        "target": {
+          "arch": "arm64",
+          "platform": "darwin"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
       "size": 28325,
       "tool_name": "git-clang-format",
       "tool_sha256": "e190438d9e396d629eabd6a83c855969e81f4bdd2a211532c40cdeab9145a421",
@@ -5424,17 +6205,43 @@
       "arch": "x86_64",
       "archive_filename": "clang-extra-21.1.6-darwin-x86_64.tar.zst",
       "archive_path": "clang-extra\\darwin\\x86_64\\clang-extra-21.1.6-darwin-x86_64.tar.zst",
-      "archive_sha256": "b436f9e260c4697a49e6aa9b5cc8e7e6c5139d42a13ba8b4884204c960955d45",
-      "archive_url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/x86_64/clang-extra-21.1.6-darwin-x86_64.tar.zst",
+      "archive_sha256": "9b87a73523cc9d9e9fb1781b552418fc48f4f77616f44d092a074d62a13c1934",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/x86_64/clang-extra-21.1.6-darwin-x86_64.tar.zst",
       "component": "clang-extra",
-      "download_kind": "raw",
+      "download_kind": "lfs",
       "file_name": "git-clang-format",
       "parts": [],
       "path_in_archive": "bin/git-clang-format",
       "platform": "darwin",
       "probe_urls": [
-        "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/x86_64/clang-extra-21.1.6-darwin-x86_64.tar.zst"
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/x86_64/clang-extra-21.1.6-darwin-x86_64.tar.zst"
       ],
+      "provenance": {
+        "build_options": {
+          "LLVM_ENABLE_PROJECTS": "clang;clang-tools-extra",
+          "LLVM_TARGETS_TO_BUILD": "X86",
+          "build_type": "Release",
+          "generator": "Ninja"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "a832a5222e489298337fbb5876f8dcaf072c5cca",
+        "llvm_project_tag": "llvmorg-21.1.6",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.6",
+        "method": "forge",
+        "target": {
+          "arch": "x86_64",
+          "platform": "darwin"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
       "size": 28325,
       "tool_name": "git-clang-format",
       "tool_sha256": "e190438d9e396d629eabd6a83c855969e81f4bdd2a211532c40cdeab9145a421",
@@ -5442,20 +6249,87 @@
       "version": "21.1.6"
     },
     {
-      "arch": "x86_64",
-      "archive_filename": "clang-extra-21.1.5-linux-x86_64.tar.zst",
-      "archive_path": "clang-extra\\linux\\x86_64\\clang-extra-21.1.5-linux-x86_64.tar.zst",
-      "archive_sha256": "1d4d89fdd80f57fd862ce6f0a261389fa90b43ecba7143f0baa968566d155869",
-      "archive_url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/x86_64/clang-extra-21.1.5-linux-x86_64.tar.zst",
+      "arch": "arm64",
+      "archive_filename": "clang-extra-21.1.5-linux-arm64.tar.zst",
+      "archive_path": "clang-extra\\linux\\arm64\\clang-extra-21.1.5-linux-arm64.tar.zst",
+      "archive_sha256": "fa48034cf7e29879ee3f0d89925aa3ef6d5dc068fb5e4d0af32af8a92f0f5643",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/arm64/clang-extra-21.1.5-linux-arm64.tar.zst",
       "component": "clang-extra",
-      "download_kind": "raw",
+      "download_kind": "lfs",
       "file_name": "git-clang-format",
       "parts": [],
       "path_in_archive": "bin/git-clang-format",
       "platform": "linux",
       "probe_urls": [
-        "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/x86_64/clang-extra-21.1.5-linux-x86_64.tar.zst"
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/arm64/clang-extra-21.1.5-linux-arm64.tar.zst"
       ],
+      "provenance": {
+        "build_options": {
+          "mode": "prebuilt-extraction"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "8e2cd28cd4ba46613a46467b0c91b1cabead26cd",
+        "llvm_project_tag": "llvmorg-21.1.5",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.5",
+        "method": "extracted",
+        "target": {
+          "arch": "arm64",
+          "platform": "linux"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
+      "size": 28325,
+      "tool_name": "git-clang-format",
+      "tool_sha256": "e190438d9e396d629eabd6a83c855969e81f4bdd2a211532c40cdeab9145a421",
+      "tool_type": "file",
+      "version": "21.1.5"
+    },
+    {
+      "arch": "x86_64",
+      "archive_filename": "clang-extra-21.1.5-linux-x86_64.tar.zst",
+      "archive_path": "clang-extra\\linux\\x86_64\\clang-extra-21.1.5-linux-x86_64.tar.zst",
+      "archive_sha256": "e02a9fbf7e0ef2ae466ef90f7ac1fff03a165dfb707ddf3f4249e4be7360933e",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/x86_64/clang-extra-21.1.5-linux-x86_64.tar.zst",
+      "component": "clang-extra",
+      "download_kind": "lfs",
+      "file_name": "git-clang-format",
+      "parts": [],
+      "path_in_archive": "bin/git-clang-format",
+      "platform": "linux",
+      "probe_urls": [
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/x86_64/clang-extra-21.1.5-linux-x86_64.tar.zst"
+      ],
+      "provenance": {
+        "build_options": {
+          "mode": "prebuilt-extraction"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "8e2cd28cd4ba46613a46467b0c91b1cabead26cd",
+        "llvm_project_tag": "llvmorg-21.1.5",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.5",
+        "method": "extracted",
+        "target": {
+          "arch": "x86_64",
+          "platform": "linux"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
       "size": 28325,
       "tool_name": "git-clang-format",
       "tool_sha256": "e190438d9e396d629eabd6a83c855969e81f4bdd2a211532c40cdeab9145a421",
@@ -5466,17 +6340,40 @@
       "arch": "x86_64",
       "archive_filename": "clang-extra-21.1.5-win-x86_64.tar.zst",
       "archive_path": "clang-extra\\win\\x86_64\\clang-extra-21.1.5-win-x86_64.tar.zst",
-      "archive_sha256": "aaf5bc0194f440cbba72aa8d41434f3d1f403739a8791c674edae6e3a49d2401",
-      "archive_url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/x86_64/clang-extra-21.1.5-win-x86_64.tar.zst",
+      "archive_sha256": "342b91b880a52c47223ac25a5a9652c56c6460fee93738ffd069b62ba07837c7",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/x86_64/clang-extra-21.1.5-win-x86_64.tar.zst",
       "component": "clang-extra",
-      "download_kind": "raw",
+      "download_kind": "lfs",
       "file_name": "git-clang-format",
       "parts": [],
       "path_in_archive": "bin/git-clang-format",
       "platform": "win",
       "probe_urls": [
-        "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/x86_64/clang-extra-21.1.5-win-x86_64.tar.zst"
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/x86_64/clang-extra-21.1.5-win-x86_64.tar.zst"
       ],
+      "provenance": {
+        "build_options": {
+          "mode": "prebuilt-extraction"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "8e2cd28cd4ba46613a46467b0c91b1cabead26cd",
+        "llvm_project_tag": "llvmorg-21.1.5",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.5",
+        "method": "extracted",
+        "target": {
+          "arch": "x86_64",
+          "platform": "win"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
       "size": 28325,
       "tool_name": "git-clang-format",
       "tool_sha256": "e190438d9e396d629eabd6a83c855969e81f4bdd2a211532c40cdeab9145a421",
@@ -5498,6 +6395,94 @@
       "probe_urls": [
         "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang/win/x86_64/llvm-21.1.5-win-x86_64.tar.zst"
       ],
+      "size": 19666,
+      "tool_name": "hwasan_symbolize",
+      "tool_sha256": "d2fa1ad02d4fc866504ecf87731cb47c3235d326aac811a6e59086dc5fc3b53a",
+      "tool_type": "file",
+      "version": "21.1.5"
+    },
+    {
+      "arch": "arm64",
+      "archive_filename": "clang-extra-21.1.5-linux-arm64.tar.zst",
+      "archive_path": "clang-extra\\linux\\arm64\\clang-extra-21.1.5-linux-arm64.tar.zst",
+      "archive_sha256": "fa48034cf7e29879ee3f0d89925aa3ef6d5dc068fb5e4d0af32af8a92f0f5643",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/arm64/clang-extra-21.1.5-linux-arm64.tar.zst",
+      "component": "clang-extra",
+      "download_kind": "lfs",
+      "file_name": "hwasan_symbolize",
+      "parts": [],
+      "path_in_archive": "lib/clang/21/bin/hwasan_symbolize",
+      "platform": "linux",
+      "probe_urls": [
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/arm64/clang-extra-21.1.5-linux-arm64.tar.zst"
+      ],
+      "provenance": {
+        "build_options": {
+          "mode": "prebuilt-extraction"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "8e2cd28cd4ba46613a46467b0c91b1cabead26cd",
+        "llvm_project_tag": "llvmorg-21.1.5",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.5",
+        "method": "extracted",
+        "target": {
+          "arch": "arm64",
+          "platform": "linux"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
+      "size": 19666,
+      "tool_name": "hwasan_symbolize",
+      "tool_sha256": "d2fa1ad02d4fc866504ecf87731cb47c3235d326aac811a6e59086dc5fc3b53a",
+      "tool_type": "file",
+      "version": "21.1.5"
+    },
+    {
+      "arch": "x86_64",
+      "archive_filename": "clang-extra-21.1.5-linux-x86_64.tar.zst",
+      "archive_path": "clang-extra\\linux\\x86_64\\clang-extra-21.1.5-linux-x86_64.tar.zst",
+      "archive_sha256": "e02a9fbf7e0ef2ae466ef90f7ac1fff03a165dfb707ddf3f4249e4be7360933e",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/x86_64/clang-extra-21.1.5-linux-x86_64.tar.zst",
+      "component": "clang-extra",
+      "download_kind": "lfs",
+      "file_name": "hwasan_symbolize",
+      "parts": [],
+      "path_in_archive": "lib/clang/21/bin/hwasan_symbolize",
+      "platform": "linux",
+      "probe_urls": [
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/x86_64/clang-extra-21.1.5-linux-x86_64.tar.zst"
+      ],
+      "provenance": {
+        "build_options": {
+          "mode": "prebuilt-extraction"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "8e2cd28cd4ba46613a46467b0c91b1cabead26cd",
+        "llvm_project_tag": "llvmorg-21.1.5",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.5",
+        "method": "extracted",
+        "target": {
+          "arch": "x86_64",
+          "platform": "linux"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
       "size": 19666,
       "tool_name": "hwasan_symbolize",
       "tool_sha256": "d2fa1ad02d4fc866504ecf87731cb47c3235d326aac811a6e59086dc5fc3b53a",
@@ -11247,17 +12232,40 @@
       "arch": "arm64",
       "archive_filename": "clang-extra-21.1.6-darwin-arm64.tar.zst",
       "archive_path": "clang-extra\\darwin\\arm64\\clang-extra-21.1.6-darwin-arm64.tar.zst",
-      "archive_sha256": "78ba5dc377392082ff05323aed5efaa5e5d5c84bbeb6e0b241964225195fab52",
-      "archive_url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/arm64/clang-extra-21.1.6-darwin-arm64.tar.zst",
+      "archive_sha256": "a668593eada9da5222b4c9d40fb84f72772cf4db1e9ca1cc91d82b38ec73a7a0",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/arm64/clang-extra-21.1.6-darwin-arm64.tar.zst",
       "component": "clang-extra",
-      "download_kind": "raw",
+      "download_kind": "lfs",
       "file_name": "run-clang-tidy",
       "parts": [],
       "path_in_archive": "bin/run-clang-tidy",
       "platform": "darwin",
       "probe_urls": [
-        "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/arm64/clang-extra-21.1.6-darwin-arm64.tar.zst"
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/arm64/clang-extra-21.1.6-darwin-arm64.tar.zst"
       ],
+      "provenance": {
+        "build_options": {
+          "mode": "prebuilt-extraction"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "a832a5222e489298337fbb5876f8dcaf072c5cca",
+        "llvm_project_tag": "llvmorg-21.1.6",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.6",
+        "method": "extracted",
+        "target": {
+          "arch": "arm64",
+          "platform": "darwin"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
       "size": 19695,
       "tool_name": "run-clang-tidy",
       "tool_sha256": "2b2bacf525daba5ab183f98fdbd0f21df8bb421e15d938b2245180944186fc73",
@@ -11268,17 +12276,43 @@
       "arch": "x86_64",
       "archive_filename": "clang-extra-21.1.6-darwin-x86_64.tar.zst",
       "archive_path": "clang-extra\\darwin\\x86_64\\clang-extra-21.1.6-darwin-x86_64.tar.zst",
-      "archive_sha256": "b436f9e260c4697a49e6aa9b5cc8e7e6c5139d42a13ba8b4884204c960955d45",
-      "archive_url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/x86_64/clang-extra-21.1.6-darwin-x86_64.tar.zst",
+      "archive_sha256": "9b87a73523cc9d9e9fb1781b552418fc48f4f77616f44d092a074d62a13c1934",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/x86_64/clang-extra-21.1.6-darwin-x86_64.tar.zst",
       "component": "clang-extra",
-      "download_kind": "raw",
+      "download_kind": "lfs",
       "file_name": "run-clang-tidy",
       "parts": [],
       "path_in_archive": "bin/run-clang-tidy",
       "platform": "darwin",
       "probe_urls": [
-        "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/x86_64/clang-extra-21.1.6-darwin-x86_64.tar.zst"
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/x86_64/clang-extra-21.1.6-darwin-x86_64.tar.zst"
       ],
+      "provenance": {
+        "build_options": {
+          "LLVM_ENABLE_PROJECTS": "clang;clang-tools-extra",
+          "LLVM_TARGETS_TO_BUILD": "X86",
+          "build_type": "Release",
+          "generator": "Ninja"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "a832a5222e489298337fbb5876f8dcaf072c5cca",
+        "llvm_project_tag": "llvmorg-21.1.6",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.6",
+        "method": "forge",
+        "target": {
+          "arch": "x86_64",
+          "platform": "darwin"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
       "size": 19695,
       "tool_name": "run-clang-tidy",
       "tool_sha256": "2b2bacf525daba5ab183f98fdbd0f21df8bb421e15d938b2245180944186fc73",
@@ -11286,20 +12320,87 @@
       "version": "21.1.6"
     },
     {
-      "arch": "x86_64",
-      "archive_filename": "clang-extra-21.1.5-linux-x86_64.tar.zst",
-      "archive_path": "clang-extra\\linux\\x86_64\\clang-extra-21.1.5-linux-x86_64.tar.zst",
-      "archive_sha256": "1d4d89fdd80f57fd862ce6f0a261389fa90b43ecba7143f0baa968566d155869",
-      "archive_url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/x86_64/clang-extra-21.1.5-linux-x86_64.tar.zst",
+      "arch": "arm64",
+      "archive_filename": "clang-extra-21.1.5-linux-arm64.tar.zst",
+      "archive_path": "clang-extra\\linux\\arm64\\clang-extra-21.1.5-linux-arm64.tar.zst",
+      "archive_sha256": "fa48034cf7e29879ee3f0d89925aa3ef6d5dc068fb5e4d0af32af8a92f0f5643",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/arm64/clang-extra-21.1.5-linux-arm64.tar.zst",
       "component": "clang-extra",
-      "download_kind": "raw",
+      "download_kind": "lfs",
       "file_name": "run-clang-tidy",
       "parts": [],
       "path_in_archive": "bin/run-clang-tidy",
       "platform": "linux",
       "probe_urls": [
-        "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/x86_64/clang-extra-21.1.5-linux-x86_64.tar.zst"
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/arm64/clang-extra-21.1.5-linux-arm64.tar.zst"
       ],
+      "provenance": {
+        "build_options": {
+          "mode": "prebuilt-extraction"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "8e2cd28cd4ba46613a46467b0c91b1cabead26cd",
+        "llvm_project_tag": "llvmorg-21.1.5",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.5",
+        "method": "extracted",
+        "target": {
+          "arch": "arm64",
+          "platform": "linux"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
+      "size": 19695,
+      "tool_name": "run-clang-tidy",
+      "tool_sha256": "2b2bacf525daba5ab183f98fdbd0f21df8bb421e15d938b2245180944186fc73",
+      "tool_type": "file",
+      "version": "21.1.5"
+    },
+    {
+      "arch": "x86_64",
+      "archive_filename": "clang-extra-21.1.5-linux-x86_64.tar.zst",
+      "archive_path": "clang-extra\\linux\\x86_64\\clang-extra-21.1.5-linux-x86_64.tar.zst",
+      "archive_sha256": "e02a9fbf7e0ef2ae466ef90f7ac1fff03a165dfb707ddf3f4249e4be7360933e",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/x86_64/clang-extra-21.1.5-linux-x86_64.tar.zst",
+      "component": "clang-extra",
+      "download_kind": "lfs",
+      "file_name": "run-clang-tidy",
+      "parts": [],
+      "path_in_archive": "bin/run-clang-tidy",
+      "platform": "linux",
+      "probe_urls": [
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/x86_64/clang-extra-21.1.5-linux-x86_64.tar.zst"
+      ],
+      "provenance": {
+        "build_options": {
+          "mode": "prebuilt-extraction"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "8e2cd28cd4ba46613a46467b0c91b1cabead26cd",
+        "llvm_project_tag": "llvmorg-21.1.5",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.5",
+        "method": "extracted",
+        "target": {
+          "arch": "x86_64",
+          "platform": "linux"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
       "size": 19695,
       "tool_name": "run-clang-tidy",
       "tool_sha256": "2b2bacf525daba5ab183f98fdbd0f21df8bb421e15d938b2245180944186fc73",
@@ -11310,17 +12411,40 @@
       "arch": "x86_64",
       "archive_filename": "clang-extra-21.1.5-win-x86_64.tar.zst",
       "archive_path": "clang-extra\\win\\x86_64\\clang-extra-21.1.5-win-x86_64.tar.zst",
-      "archive_sha256": "aaf5bc0194f440cbba72aa8d41434f3d1f403739a8791c674edae6e3a49d2401",
-      "archive_url": "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/x86_64/clang-extra-21.1.5-win-x86_64.tar.zst",
+      "archive_sha256": "342b91b880a52c47223ac25a5a9652c56c6460fee93738ffd069b62ba07837c7",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/x86_64/clang-extra-21.1.5-win-x86_64.tar.zst",
       "component": "clang-extra",
-      "download_kind": "raw",
+      "download_kind": "lfs",
       "file_name": "run-clang-tidy",
       "parts": [],
       "path_in_archive": "bin/run-clang-tidy",
       "platform": "win",
       "probe_urls": [
-        "https://raw.githubusercontent.com/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/x86_64/clang-extra-21.1.5-win-x86_64.tar.zst"
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/x86_64/clang-extra-21.1.5-win-x86_64.tar.zst"
       ],
+      "provenance": {
+        "build_options": {
+          "mode": "prebuilt-extraction"
+        },
+        "fetched_scripts": {},
+        "llvm_project_commit": "8e2cd28cd4ba46613a46467b0c91b1cabead26cd",
+        "llvm_project_tag": "llvmorg-21.1.5",
+        "llvm_source": "official llvm-project distribution",
+        "llvm_version": "21.1.5",
+        "method": "extracted",
+        "target": {
+          "arch": "x86_64",
+          "platform": "win"
+        },
+        "tools": [
+          "clang-format",
+          "clang-query",
+          "clang-tidy",
+          "git-clang-format",
+          "run-clang-tidy",
+          "clangd"
+        ]
+      },
       "size": 19695,
       "tool_name": "run-clang-tidy",
       "tool_sha256": "2b2bacf525daba5ab183f98fdbd0f21df8bb421e15d938b2245180944186fc73",

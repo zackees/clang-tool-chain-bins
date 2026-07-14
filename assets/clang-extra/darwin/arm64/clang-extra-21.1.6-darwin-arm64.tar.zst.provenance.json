@@ -1,0 +1,23 @@
+{
+  "method": "extracted",
+  "llvm_version": "21.1.6",
+  "llvm_project_tag": "llvmorg-21.1.6",
+  "llvm_project_commit": "a832a5222e489298337fbb5876f8dcaf072c5cca",
+  "llvm_source": "official llvm-project distribution",
+  "target": {
+    "platform": "darwin",
+    "arch": "arm64"
+  },
+  "tools": [
+    "clang-format",
+    "clang-query",
+    "clang-tidy",
+    "git-clang-format",
+    "run-clang-tidy",
+    "clangd"
+  ],
+  "build_options": {
+    "mode": "prebuilt-extraction"
+  },
+  "fetched_scripts": {}
+}

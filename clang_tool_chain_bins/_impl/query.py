@@ -42,6 +42,7 @@ class ToolRecord:
     parts: list[dict[str, Any]]
     download_kind: str | None = None
     probe_urls: list[str] | None = None
+    provenance: dict[str, Any] | None = None
 
 
 def _reset_remote_index_cache() -> None:
