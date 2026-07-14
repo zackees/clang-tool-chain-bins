@@ -15,6 +15,7 @@ dependencies = [
 # Query/install frontend (Python, runtime modules live in clang_tool_chain_bins._impl)
 clang-tool-chain-bins = "clang_tool_chain_bins._impl.cli:main"
 clang-tool-chain-bins-index = "clang_tool_chain_bins._impl.archive_index:main"
+create-clang-extra-archives = "tools.create_clang_extra_archives:main"
 
 # Rust-backed CLI shims (delegate to ctcb binary)
 fetch-and-archive = "clang_tool_chain_bins.cli:fetch_and_archive"

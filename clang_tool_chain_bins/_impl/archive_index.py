@@ -148,6 +148,14 @@ def _parse_sha256_sidefile(path: Path) -> str | None:
     return content.split()[0]
 
 
+def _load_provenance(archive_path: Path) -> dict[str, Any] | None:
+    path = Path(f"{archive_path}.provenance.json")
+    if not path.exists():
+        return None
+    data = _load_json(path)
+    return data if isinstance(data, dict) else None
+
+
 def _write_sha256_sidefile(path: Path, sha256: str, archive_name: str) -> None:
     path.write_text(f"{sha256}  {archive_name}\n", encoding="utf-8")
 
@@ -204,6 +212,7 @@ def _materialized_archive_path(archive_path: Path, manifest_info: ManifestArchiv
 def index_archive(archive_path: Path, assets_root: Path, manifest_lookup: dict[str, ManifestArchiveInfo]) -> dict[str, Any]:
     component, platform, arch = _infer_component_platform_arch(archive_path, assets_root)
     manifest_info = manifest_lookup.get(archive_path.name)
+    provenance = _load_provenance(archive_path)
     pointer_info = parse_git_lfs_pointer(archive_path)
     archive_sha256 = pointer_info["sha256"] if pointer_info else sha256_file(archive_path)
     part_asset_paths: list[Path] = []
@@ -295,6 +304,7 @@ def index_archive(archive_path: Path, assets_root: Path, manifest_lookup: dict[s
             "manifest_path": manifest_info.manifest_path if manifest_info else None,
             "parts": manifest_info.parts if manifest_info else [],
             "git_lfs_pointer": bool(pointer_info),
+            "provenance": provenance,
         },
         "file_count": len(files),
         "tool_count": len(tools),
@@ -349,6 +359,7 @@ def build_aggregate_index(assets_root: Path | None = None, output_path: Path | N
                 "download_kind": archive.get("download_kind"),
                 "probe_urls": archive.get("probe_urls", []),
                 "parts": archive.get("parts", []),
+                "provenance": archive.get("provenance"),
                 "index_path": str(sidecar_path.relative_to(root)),
                 "tool_count": data.get("tool_count", 0),
                 "file_count": data.get("file_count", 0),

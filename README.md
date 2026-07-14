@@ -52,6 +52,18 @@ Public API functions:
 
 ## Query CLI
 
+`clangd` is distributed in the `clang-extra` component for Windows x86_64,
+Linux x86_64/ARM64, and macOS x86_64/ARM64. This is the native language
+server; installing the VS Code extension alone does not provide this binary.
+
+```bash
+clang-tool-chain-bins query clangd --component clang-extra --platform linux --arch x86_64
+clang-tool-chain-bins install clangd --component clang-extra --platform linux --arch x86_64
+```
+
+The archive includes the Clang resource headers and runtime libraries needed
+by `clangd`, so the installation does not depend on a system LLVM tree.
+
 `query` is the discovery command. Default JSONL output returns one matched entry per line.
 
 - Patterns without glob characters are exact matches.
