@@ -271,7 +271,13 @@ jobs:
 
       - name: Build standalone binary
         shell: bash
-        run: soldr cargo build --release --target ${{ matrix.target }} -p ctcb-cli
+        env:
+          # setup-soldr's compiler wrapper can reuse native C objects across
+          # target triples (notably zstd-sys), producing host-format objects
+          # in cross-target links. Release builds must use cargo directly.
+          RUSTC_WRAPPER: ""
+          RUSTC_WORKSPACE_WRAPPER: ""
+        run: cargo build --release --target ${{ matrix.target }} -p ctcb-cli
 
       - name: Build wheel
         # --no-install-project + --no-sync: the wheel is built by the maturin
@@ -279,6 +285,9 @@ jobs:
         # via the soldr PEP 517 backend first is a wasted compile and the
         # backend's daemon does not start on macOS runners (soldr 0.7.98).
         shell: bash
+        env:
+          RUSTC_WRAPPER: ""
+          RUSTC_WORKSPACE_WRAPPER: ""
         run: |
           uv sync --no-install-project
           uv run --no-sync maturin build --release --target ${{ matrix.target }} --out dist
