@@ -39,7 +39,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: python -m pip install pyzstd
+      - run: python -m pip install pyzstd fasteners json5
       - name: Build from exact upstream distribution
         run: >-
           python tools/create_clang_extra_archives.py --download
@@ -75,7 +75,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: python -m pip install pyzstd
+      - run: python -m pip install pyzstd fasteners json5
       - name: Build pinned clangd source fallback
         shell: bash
         run: |
