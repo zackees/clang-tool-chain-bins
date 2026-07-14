@@ -166,16 +166,19 @@ jobs:
             target: aarch64-unknown-linux-gnu
             binary: ctcb
             binary_ext: ""
+            soldr_cache: false
             linker: aarch64-linux-gnu-gcc
             strip: aarch64-linux-gnu-strip
           - os: ubuntu-latest
             target: x86_64-unknown-linux-musl
             binary: ctcb
             binary_ext: ""
+            soldr_cache: false
           - os: ubuntu-latest
             target: aarch64-unknown-linux-musl
             binary: ctcb
             binary_ext: ""
+            soldr_cache: false
             linker: aarch64-unknown-linux-musl-gcc
             strip: aarch64-unknown-linux-musl-strip
           - os: macos-latest
@@ -200,7 +203,12 @@ jobs:
       - name: Setup Soldr (rustup + cached toolchain + zccache state)
         uses: zackees/setup-soldr@v0.9.62
         with:
-          cache: true
+          # Cross-target native objects are not interchangeable. In
+          # particular, zstd-sys can otherwise restore host-format objects
+          # into an ARM/musl build and fail at link time with "file in wrong
+          # format". Keep the cache for native targets, but force a clean
+          # target build for the cross targets.
+          cache: ${{ matrix.soldr_cache != false }}
           cache-key-suffix: release-${{ matrix.target }}
           # Opt out of soldr's `fast` linker default. `fast` injects
           # `-fuse-ld=lld` which Clang on macOS rejects ("invalid linker
