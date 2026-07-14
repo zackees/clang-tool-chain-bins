@@ -1,0 +1,23 @@
+{
+  "method": "extracted",
+  "llvm_version": "21.1.5",
+  "llvm_project_tag": "llvmorg-21.1.5",
+  "llvm_project_commit": "8e2cd28cd4ba46613a46467b0c91b1cabead26cd",
+  "llvm_source": "official llvm-project distribution",
+  "target": {
+    "platform": "linux",
+    "arch": "x86_64"
+  },
+  "tools": [
+    "clang-format",
+    "clang-query",
+    "clang-tidy",
+    "git-clang-format",
+    "run-clang-tidy",
+    "clangd"
+  ],
+  "build_options": {
+    "mode": "prebuilt-extraction"
+  },
+  "fetched_scripts": {}
+}

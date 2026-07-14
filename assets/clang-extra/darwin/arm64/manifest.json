@@ -1,7 +1,9 @@
 {
-  "latest": "21.1.6",
-  "21.1.6": {
-    "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/arm64/clang-extra-21.1.6-darwin-arm64.tar.zst",
-    "sha256": "78ba5dc377392082ff05323aed5efaa5e5d5c84bbeb6e0b241964225195fab52"
-  }
+  "versions": {
+    "21.1.6": {
+      "href": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/darwin/arm64/clang-extra-21.1.6-darwin-arm64.tar.zst",
+      "sha256": "a668593eada9da5222b4c9d40fb84f72772cf4db1e9ca1cc91d82b38ec73a7a0"
+    }
+  },
+  "latest": "21.1.6"
 }

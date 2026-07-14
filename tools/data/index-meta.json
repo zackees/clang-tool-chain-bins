@@ -4,6 +4,56 @@
   "indexes": [
     {
       "arch": "arm64",
+      "archive_path": "clang-extra\\darwin\\arm64\\clang-extra-21.1.6-darwin-arm64.tar.zst",
+      "archive_sha256": "a668593eada9da5222b4c9d40fb84f72772cf4db1e9ca1cc91d82b38ec73a7a0",
+      "component": "clang-extra",
+      "filename": "clang-extra-21.1.6-darwin-arm64.tar.zst",
+      "index_path": "clang-extra\\darwin\\arm64\\clang-extra-21.1.6-darwin-arm64.tar.zst.json",
+      "platform": "darwin",
+      "version": "21.1.6"
+    },
+    {
+      "arch": "x86_64",
+      "archive_path": "clang-extra\\darwin\\x86_64\\clang-extra-21.1.6-darwin-x86_64.tar.zst",
+      "archive_sha256": "9b87a73523cc9d9e9fb1781b552418fc48f4f77616f44d092a074d62a13c1934",
+      "component": "clang-extra",
+      "filename": "clang-extra-21.1.6-darwin-x86_64.tar.zst",
+      "index_path": "clang-extra\\darwin\\x86_64\\clang-extra-21.1.6-darwin-x86_64.tar.zst.json",
+      "platform": "darwin",
+      "version": "21.1.6"
+    },
+    {
+      "arch": "arm64",
+      "archive_path": "clang-extra\\linux\\arm64\\clang-extra-21.1.5-linux-arm64.tar.zst",
+      "archive_sha256": "fa48034cf7e29879ee3f0d89925aa3ef6d5dc068fb5e4d0af32af8a92f0f5643",
+      "component": "clang-extra",
+      "filename": "clang-extra-21.1.5-linux-arm64.tar.zst",
+      "index_path": "clang-extra\\linux\\arm64\\clang-extra-21.1.5-linux-arm64.tar.zst.json",
+      "platform": "linux",
+      "version": "21.1.5"
+    },
+    {
+      "arch": "x86_64",
+      "archive_path": "clang-extra\\linux\\x86_64\\clang-extra-21.1.5-linux-x86_64.tar.zst",
+      "archive_sha256": "e02a9fbf7e0ef2ae466ef90f7ac1fff03a165dfb707ddf3f4249e4be7360933e",
+      "component": "clang-extra",
+      "filename": "clang-extra-21.1.5-linux-x86_64.tar.zst",
+      "index_path": "clang-extra\\linux\\x86_64\\clang-extra-21.1.5-linux-x86_64.tar.zst.json",
+      "platform": "linux",
+      "version": "21.1.5"
+    },
+    {
+      "arch": "x86_64",
+      "archive_path": "clang-extra\\win\\x86_64\\clang-extra-21.1.5-win-x86_64.tar.zst",
+      "archive_sha256": "342b91b880a52c47223ac25a5a9652c56c6460fee93738ffd069b62ba07837c7",
+      "component": "clang-extra",
+      "filename": "clang-extra-21.1.5-win-x86_64.tar.zst",
+      "index_path": "clang-extra\\win\\x86_64\\clang-extra-21.1.5-win-x86_64.tar.zst.json",
+      "platform": "win",
+      "version": "21.1.5"
+    },
+    {
+      "arch": "arm64",
       "archive_path": "clang\\darwin\\arm64\\llvm-21.1.6-darwin-arm64.tar.zst",
       "archive_sha256": "f7631c8b96d76dadd9aa69be681e164a5b5fbbb0dd95ecf99764d9d2222ca65a",
       "component": "clang",
@@ -59,56 +109,6 @@
       "component": "clang",
       "filename": "llvm-21.1.5-win-x86_64.tar.zst",
       "index_path": "clang\\win\\x86_64\\llvm-21.1.5-win-x86_64.tar.zst.json",
-      "platform": "win",
-      "version": "21.1.5"
-    },
-    {
-      "arch": "arm64",
-      "archive_path": "clang-extra\\darwin\\arm64\\clang-extra-21.1.6-darwin-arm64.tar.zst",
-      "archive_sha256": "78ba5dc377392082ff05323aed5efaa5e5d5c84bbeb6e0b241964225195fab52",
-      "component": "clang-extra",
-      "filename": "clang-extra-21.1.6-darwin-arm64.tar.zst",
-      "index_path": "clang-extra\\darwin\\arm64\\clang-extra-21.1.6-darwin-arm64.tar.zst.json",
-      "platform": "darwin",
-      "version": "21.1.6"
-    },
-    {
-      "arch": "x86_64",
-      "archive_path": "clang-extra\\darwin\\x86_64\\clang-extra-21.1.6-darwin-x86_64.tar.zst",
-      "archive_sha256": "b436f9e260c4697a49e6aa9b5cc8e7e6c5139d42a13ba8b4884204c960955d45",
-      "component": "clang-extra",
-      "filename": "clang-extra-21.1.6-darwin-x86_64.tar.zst",
-      "index_path": "clang-extra\\darwin\\x86_64\\clang-extra-21.1.6-darwin-x86_64.tar.zst.json",
-      "platform": "darwin",
-      "version": "21.1.6"
-    },
-    {
-      "arch": "arm64",
-      "archive_path": "clang-extra\\linux\\arm64\\clang-extra-21.1.5-linux-arm64.tar.zst",
-      "archive_sha256": "32bdd014a4e100b24cd0e6e3ef52cbb7e90b2d73bf10f9c83c0b270d8602a5a0",
-      "component": "clang-extra",
-      "filename": "clang-extra-21.1.5-linux-arm64.tar.zst",
-      "index_path": "clang-extra\\linux\\arm64\\clang-extra-21.1.5-linux-arm64.tar.zst.json",
-      "platform": "linux",
-      "version": "21.1.5"
-    },
-    {
-      "arch": "x86_64",
-      "archive_path": "clang-extra\\linux\\x86_64\\clang-extra-21.1.5-linux-x86_64.tar.zst",
-      "archive_sha256": "1d4d89fdd80f57fd862ce6f0a261389fa90b43ecba7143f0baa968566d155869",
-      "component": "clang-extra",
-      "filename": "clang-extra-21.1.5-linux-x86_64.tar.zst",
-      "index_path": "clang-extra\\linux\\x86_64\\clang-extra-21.1.5-linux-x86_64.tar.zst.json",
-      "platform": "linux",
-      "version": "21.1.5"
-    },
-    {
-      "arch": "x86_64",
-      "archive_path": "clang-extra\\win\\x86_64\\clang-extra-21.1.5-win-x86_64.tar.zst",
-      "archive_sha256": "aaf5bc0194f440cbba72aa8d41434f3d1f403739a8791c674edae6e3a49d2401",
-      "component": "clang-extra",
-      "filename": "clang-extra-21.1.5-win-x86_64.tar.zst",
-      "index_path": "clang-extra\\win\\x86_64\\clang-extra-21.1.5-win-x86_64.tar.zst.json",
       "platform": "win",
       "version": "21.1.5"
     },
