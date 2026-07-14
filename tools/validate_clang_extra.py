@@ -63,19 +63,22 @@ def validate(archive: Path, target: str, expected_major: str, run_check: bool = 
 
         if run_check:
             fixture = root / "fixture.cpp"
-            fixture.write_text("#include <cstddef>\nint main() { return 0; }\n", encoding="utf-8")
+            fixture.write_text("#include <stddef.h>\nint main() { return 0; }\n", encoding="utf-8")
             (root / "compile_commands.json").write_text(
-                json.dumps([{"directory": str(root), "file": str(fixture), "arguments": ["clang++", "-std=c++20", "-target", "wasm32-wasi", "-c", str(fixture)]}]),
+                json.dumps([{"directory": str(root), "file": fixture.name, "arguments": ["clang++", "-std=c++20", "-target", "wasm32-wasi", "-nostdinc++", "-fsyntax-only", "-c", fixture.name]}]),
                 encoding="utf-8",
             )
-            subprocess.run(
+            check = subprocess.run(
                 [str(clangd), f"--check={fixture.name}", f"--compile-commands-dir={root}"],
-                check=True,
                 cwd=root,
                 capture_output=True,
                 text=True,
                 env=environment,
             )
+            if check.returncode != 0:
+                raise AssertionError(
+                    f"clangd --check failed with exit code {check.returncode}:\n{check.stdout}\n{check.stderr}"
+                )
 
 
 def _REQUIRED_NAMES(target: str) -> tuple[str, ...]:
