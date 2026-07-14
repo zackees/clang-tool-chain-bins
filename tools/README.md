@@ -19,6 +19,28 @@ python fetch_and_archive.py --platform win --arch x86_64 --source-dir ./extracte
 python fetch_and_archive.py --platform linux --arch arm64
 ```
 
+### `create_clang_extra_archives.py`
+
+Builds the `clang-extra` component from one extracted, version-pinned LLVM
+distribution. It keeps the five existing developer tools plus `clangd`, copies
+the matching `lib/clang/<version>` resource directory and runtime libraries,
+forces executable modes in the TAR, and writes a provenance sidecar.
+
+```bash
+python tools/create_clang_extra_archives.py \
+  --source-dir ./LLVM-21.1.5-Linux-X64 \
+  --output-dir ./assets/clang-extra \
+  --platform linux --arch x86_64 --version 21.1.5
+
+# Rebuild sidecars and both packaged index locations afterwards.
+python -m clang_tool_chain_bins._impl.archive_index
+```
+
+The source directory must come from the matching official LLVM release (or a
+Forge build using the same pinned `llvm-project` revision). The builder fails
+if any allowlisted tool or resource directory is missing; it never falls back
+to a system LLVM installation.
+
 **What it does:**
 1. Downloads LLVM from GitHub (or uses `--source-dir`)
 2. Extracts archive
