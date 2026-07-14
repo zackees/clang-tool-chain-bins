@@ -14,8 +14,10 @@ import hashlib
 import json
 import shutil
 import stat
+import subprocess
 import tarfile
 import tempfile
+import urllib.request
 from pathlib import Path
 
 import pyzstd
@@ -29,16 +31,44 @@ SUPPORTED_TARGETS = {
 }
 EXTRA_TOOLS = ("clang-format", "clang-query", "clang-tidy", "git-clang-format", "run-clang-tidy", "clangd")
 LLVM_DOWNLOAD_URLS = {
-    ("win", "x86_64"): "LLVM-{version}-win64.exe",
-    ("linux", "x86_64"): "LLVM-{version}-Linux-X64.tar.xz",
-    ("linux", "arm64"): "clang+llvm-{version}-aarch64-linux-gnu.tar.xz",
-    ("darwin", "x86_64"): "LLVM-{version}-macOS-X64.tar.xz",
-    ("darwin", "arm64"): "LLVM-{version}-macOS-ARM64.tar.xz",
+    ("win", "x86_64"): "https://github.com/llvm/llvm-project/releases/download/llvmorg-{version}/LLVM-{version}-win64.exe",
+    ("linux", "x86_64"): "https://github.com/llvm/llvm-project/releases/download/llvmorg-{version}/LLVM-{version}-Linux-X64.tar.xz",
+    ("linux", "arm64"): "https://github.com/llvm/llvm-project/releases/download/llvmorg-{version}/LLVM-{version}-Linux-ARM64.tar.xz",
+    ("darwin", "x86_64"): "https://github.com/llvm/llvm-project/releases/download/llvmorg-{version}/LLVM-{version}-macOS-X64.tar.xz",
+    ("darwin", "arm64"): "https://github.com/llvm/llvm-project/releases/download/llvmorg-{version}/LLVM-{version}-macOS-ARM64.tar.xz",
 }
 
 
 def expected_binary_name(platform: str) -> str:
     return "clangd.exe" if platform == "win" else "clangd"
+
+
+def download_llvm(platform: str, arch: str, version: str, work_dir: Path) -> Path:
+    """Download the exact upstream distribution used for this target."""
+    try:
+        url = LLVM_DOWNLOAD_URLS[(platform, arch)].format(version=version)
+    except KeyError as error:
+        raise ValueError(f"no upstream LLVM distribution for {platform}/{arch}; use the Forge source fallback") from error
+    work_dir.mkdir(parents=True, exist_ok=True)
+    archive = work_dir / Path(url).name
+    if not archive.exists():
+        urllib.request.urlretrieve(url, archive)
+    return archive
+
+
+def extract_llvm(archive: Path, extract_dir: Path, platform: str) -> Path:
+    """Extract an official release using 7-Zip on Windows or tar.xz elsewhere."""
+    extract_dir.mkdir(parents=True, exist_ok=True)
+    if archive.suffix == ".exe":
+        try:
+            subprocess.run(["7z", "x", str(archive), f"-o{extract_dir}", "-y"], check=True, capture_output=True, text=True)
+        except FileNotFoundError as error:
+            raise RuntimeError("7z is required to extract the Windows LLVM installer") from error
+    elif archive.name.endswith(".tar.xz"):
+        subprocess.run(["tar", "-xJf", str(archive), "-C", str(extract_dir)], check=True)
+    else:
+        raise ValueError(f"unsupported LLVM archive: {archive}")
+    return _find_root(extract_dir)
 
 
 def _find_root(directory: Path) -> Path:
@@ -64,6 +94,8 @@ def stage_clang_extra(
     arch: str,
     version: str,
     llvm_commit: str | None = None,
+    provenance_method: str = "extracted",
+    build_options: dict | None = None,
 ) -> dict:
     """Stage tools and all runtime data needed by clangd.
 
@@ -99,14 +131,14 @@ def stage_clang_extra(
             _copy_file(library, destination_bin / library.name)
 
     return {
-        "method": "extracted",
+        "method": provenance_method,
         "llvm_version": version,
         "llvm_project_tag": f"llvmorg-{version}",
         "llvm_project_commit": llvm_commit,
         "llvm_source": "official llvm-project distribution",
         "target": {"platform": platform, "arch": arch},
         "tools": list(EXTRA_TOOLS),
-        "build_options": {"mode": "prebuilt-extraction"},
+        "build_options": build_options or {"mode": "prebuilt-extraction"},
     }
 
 
@@ -140,11 +172,15 @@ def build_archive(
     arch: str,
     version: str,
     llvm_commit: str | None = None,
+    provenance_method: str = "extracted",
+    build_options: dict | None = None,
 ) -> Path:
     filename = f"clang-extra-{version}-{platform}-{arch}.tar.zst"
     with tempfile.TemporaryDirectory(prefix="clang-extra-") as temporary:
         staging = Path(temporary) / "staging"
-        provenance = stage_clang_extra(source_dir, staging, platform, arch, version, llvm_commit)
+        provenance = stage_clang_extra(
+            source_dir, staging, platform, arch, version, llvm_commit, provenance_method, build_options
+        )
         output = output_dir / platform / arch / filename
         create_archive(staging, output)
         digest = hashlib.sha256(output.read_bytes()).hexdigest()
@@ -152,6 +188,23 @@ def build_archive(
         (output.parent / f"{filename}.provenance.json").write_text(json.dumps(provenance, indent=2) + "\n", encoding="utf-8")
         update_manifests(output_dir, platform, arch, version, filename, digest)
     return output
+
+
+def build_downloaded_archive(
+    output_dir: Path,
+    platform: str,
+    arch: str,
+    version: str,
+    work_dir: Path,
+    llvm_commit: str | None = None,
+    provenance_method: str = "extracted",
+    build_options: dict | None = None,
+) -> Path:
+    """Download, extract, and package one native upstream distribution."""
+    archive = download_llvm(platform, arch, version, work_dir)
+    with tempfile.TemporaryDirectory(prefix="llvm-extract-") as extracted:
+        source = extract_llvm(archive, Path(extracted), platform)
+        return build_archive(source, output_dir, platform, arch, version, llvm_commit, provenance_method, build_options)
 
 
 def update_manifests(output_dir: Path, platform: str, arch: str, version: str, filename: str, digest: str) -> None:
@@ -184,14 +237,41 @@ def update_manifests(output_dir: Path, platform: str, arch: str, version: str, f
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--source-dir", type=Path, required=True, help="Extracted official LLVM or Forge staging directory")
+    source_group = parser.add_mutually_exclusive_group()
+    source_group.add_argument("--source-dir", type=Path, help="Extracted official LLVM or Forge staging directory")
+    source_group.add_argument("--download", action="store_true", help="Download and extract the matching official LLVM distribution")
     parser.add_argument("--output-dir", type=Path, default=Path("assets/clang-extra"))
     parser.add_argument("--platform", choices=sorted({target[0] for target in SUPPORTED_TARGETS}), required=True)
     parser.add_argument("--arch", choices=sorted({target[1] for target in SUPPORTED_TARGETS}), required=True)
     parser.add_argument("--version", required=True)
     parser.add_argument("--llvm-commit", help="Resolved llvm-project commit for provenance auditing")
+    parser.add_argument("--provenance-method", choices=("extracted", "forge"), default="extracted")
+    parser.add_argument("--build-options-json", help="JSON object recorded in provenance")
+    parser.add_argument("--work-dir", type=Path, default=Path("tools/work/clang-extra"))
     args = parser.parse_args(argv)
-    build_archive(args.source_dir, args.output_dir, args.platform, args.arch, args.version, args.llvm_commit)
+    build_options = json.loads(args.build_options_json) if args.build_options_json else None
+    if args.source_dir is not None:
+        build_archive(
+            args.source_dir,
+            args.output_dir,
+            args.platform,
+            args.arch,
+            args.version,
+            args.llvm_commit,
+            args.provenance_method,
+            build_options,
+        )
+    else:
+        build_downloaded_archive(
+            args.output_dir,
+            args.platform,
+            args.arch,
+            args.version,
+            args.work_dir,
+            args.llvm_commit,
+            args.provenance_method,
+            build_options,
+        )
     return 0
 
 

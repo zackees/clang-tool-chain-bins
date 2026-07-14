@@ -1,0 +1,127 @@
+name: Build and validate clang-extra archives
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  official:
+    name: ${{ matrix.platform }}/${{ matrix.arch }} (upstream)
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: windows-2025
+            platform: win
+            arch: x86_64
+            version: "21.1.5"
+            commit: 8e2cd28cd4ba46613a46467b0c91b1cabead26cd
+          - runner: ubuntu-24.04
+            platform: linux
+            arch: x86_64
+            version: "21.1.5"
+            commit: 8e2cd28cd4ba46613a46467b0c91b1cabead26cd
+          - runner: ubuntu-24.04-arm
+            platform: linux
+            arch: arm64
+            version: "21.1.5"
+            commit: 8e2cd28cd4ba46613a46467b0c91b1cabead26cd
+          - runner: macos-14
+            platform: darwin
+            arch: arm64
+            version: "21.1.6"
+            commit: a832a5222e489298337fbb5876f8dcaf072c5cca
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install pyzstd
+      - name: Build from exact upstream distribution
+        run: >-
+          python tools/create_clang_extra_archives.py --download
+          --work-dir tools/work/clang-extra
+          --output-dir out/assets/clang-extra
+          --platform ${{ matrix.platform }} --arch ${{ matrix.arch }}
+          --version ${{ matrix.version }} --llvm-commit ${{ matrix.commit }}
+      - name: Generate archive index
+        shell: bash
+        run: >-
+          python -m clang_tool_chain_bins._impl.archive_index
+          --assets-root out/assets
+          --aggregate-output out/tools/data/tool-index.json
+          --meta-output out/tools/data/index-meta.json
+      - name: Native clangd validation
+        run: >-
+          python tools/validate_clang_extra.py
+          out/assets/clang-extra/${{ matrix.platform }}/${{ matrix.arch }}/clang-extra-${{ matrix.version }}-${{ matrix.platform }}-${{ matrix.arch }}.tar.zst
+          --platform ${{ matrix.platform }} --expected-major 21
+      - uses: actions/upload-artifact@v4
+        with:
+          name: clang-extra-${{ matrix.platform }}-${{ matrix.arch }}
+          path: out
+          if-no-files-found: error
+
+  macos-x86-source:
+    name: darwin/x86_64 (Forge source fallback)
+    runs-on: macos-15-large
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install pyzstd
+      - name: Build pinned clangd source fallback
+        shell: bash
+        run: |
+          brew install cmake ninja
+          git clone --filter=blob:none --no-checkout https://github.com/llvm/llvm-project.git llvm-project
+          git -C llvm-project checkout a832a5222e489298337fbb5876f8dcaf072c5cca
+          cmake -S llvm-project/llvm -B llvm-build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DLLVM_ENABLE_PROJECTS='clang;clang-tools-extra' \
+            -DLLVM_TARGETS_TO_BUILD=X86 \
+            -DLLVM_ENABLE_ASSERTIONS=OFF
+          cmake --build llvm-build --target clangd
+          python - <<'PY'
+          from pathlib import Path
+          import pyzstd, tarfile
+          archive = Path('assets/clang-extra/darwin/x86_64/clang-extra-21.1.6-darwin-x86_64.tar.zst')
+          root = Path('merged')
+          root.mkdir()
+          with archive.open('rb') as raw, pyzstd.ZstdFile(raw) as compressed, tarfile.open(fileobj=compressed, mode='r|') as tar:
+              tar.extractall(root)
+          (root / 'bin').mkdir(exist_ok=True)
+          (root / 'lib').mkdir(exist_ok=True)
+          import shutil
+          shutil.copy2('llvm-build/bin/clangd', root / 'bin/clangd')
+          shutil.copytree('llvm-build/lib/clang', root / 'lib/clang')
+          PY
+          python tools/create_clang_extra_archives.py \
+            --source-dir merged --output-dir out/assets/clang-extra \
+            --platform darwin --arch x86_64 --version 21.1.6 \
+            --llvm-commit a832a5222e489298337fbb5876f8dcaf072c5cca \
+            --provenance-method forge \
+            --build-options-json '{"generator":"Ninja","build_type":"Release","LLVM_ENABLE_PROJECTS":"clang;clang-tools-extra","LLVM_TARGETS_TO_BUILD":"X86"}'
+      - name: Generate archive index
+        shell: bash
+        run: >-
+          python -m clang_tool_chain_bins._impl.archive_index
+          --assets-root out/assets
+          --aggregate-output out/tools/data/tool-index.json
+          --meta-output out/tools/data/index-meta.json
+      - name: Native clangd validation
+        run: >-
+          python tools/validate_clang_extra.py
+          out/assets/clang-extra/darwin/x86_64/clang-extra-21.1.6-darwin-x86_64.tar.zst
+          --platform darwin --expected-major 21
+      - uses: actions/upload-artifact@v4
+        with:
+          name: clang-extra-darwin-x86_64
+          path: out
+          if-no-files-found: error

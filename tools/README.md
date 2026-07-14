@@ -41,6 +41,19 @@ Forge build using the same pinned `llvm-project` revision). The builder fails
 if any allowlisted tool or resource directory is missing; it never falls back
 to a system LLVM installation.
 
+For native CI/release builds, omit `--source-dir` and use `--download` for the
+four upstream targets. The macOS x86_64 lane uses the pinned source fallback.
+Run `validate-clang-extra` on the native runner before uploading its artifact;
+it checks archive contents, executable mode, `clangd --version`, dependencies,
+and an isolated C++20/WASM-shaped `clangd --check` fixture. After all five
+artifacts pass, integrate them with:
+
+```bash
+integrate-clang-extra-artifacts ./downloaded-artifacts --repo-root .
+```
+
+That command regenerates the five sidecars and both aggregate index locations.
+
 **What it does:**
 1. Downloads LLVM from GitHub (or uses `--source-dir`)
 2. Extracts archive
