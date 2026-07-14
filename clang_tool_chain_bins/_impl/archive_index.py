@@ -385,6 +385,7 @@ def build_aggregate_index(assets_root: Path | None = None, output_path: Path | N
                     "download_kind": archive.get("download_kind"),
                     "probe_urls": archive.get("probe_urls", []),
                     "parts": archive.get("parts", []),
+                    "provenance": archive.get("provenance"),
                 }
             )
 
@@ -402,7 +403,7 @@ def build_aggregate_index(assets_root: Path | None = None, output_path: Path | N
     # Backward-compat: mirror to repo-root tools/data/tool-index.json so the
     # GitHub raw URL used by older wheels keeps resolving (see query.py).
     repo_mirror = Path(__file__).resolve().parents[2] / "tools" / "data" / "tool-index.json"
-    if repo_mirror.parent.is_dir():
+    if output_path is None and repo_mirror.parent.is_dir():
         repo_mirror.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
     return output
 
@@ -451,7 +452,7 @@ def build_meta_index(assets_root: Path | None = None, output_path: Path | None =
     }
     output.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
     repo_mirror = Path(__file__).resolve().parents[2] / "tools" / "data" / "index-meta.json"
-    if repo_mirror.parent.is_dir():
+    if output_path is None and repo_mirror.parent.is_dir():
         repo_mirror.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
     return output
 

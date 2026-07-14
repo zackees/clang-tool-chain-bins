@@ -16,6 +16,8 @@ dependencies = [
 clang-tool-chain-bins = "clang_tool_chain_bins._impl.cli:main"
 clang-tool-chain-bins-index = "clang_tool_chain_bins._impl.archive_index:main"
 create-clang-extra-archives = "tools.create_clang_extra_archives:main"
+validate-clang-extra = "tools.validate_clang_extra:main"
+integrate-clang-extra-artifacts = "tools.integrate_clang_extra_artifacts:main"
 
 # Rust-backed CLI shims (delegate to ctcb binary)
 fetch-and-archive = "clang_tool_chain_bins.cli:fetch_and_archive"
