@@ -230,7 +230,7 @@ jobs:
           # absent. Reinstall the target and verify the sysroot contents.
           soldr rustup target remove --toolchain "$TOOLCHAIN" "$TARGET" || true
           soldr rustup target add --toolchain "$TOOLCHAIN" "$TARGET"
-          SYSROOT="$(soldr rustc +"$TOOLCHAIN" --print sysroot)"
+          SYSROOT="$(soldr rustc --print sysroot)"
           test -d "$SYSROOT/lib/rustlib/$TARGET/lib"
 
       - name: Install musl tools (x86_64-linux-musl)
