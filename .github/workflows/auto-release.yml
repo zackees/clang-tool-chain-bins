@@ -373,6 +373,11 @@ jobs:
               sleep 30
             fi
           done
+          # cargo publish may remove its staging archive after upload. Create
+          # fresh, byte-identical package archives for the provenance step.
+          for crate in ctcb-core ctcb-checksum ctcb-archive ctcb-dedup ctcb-download ctcb-strip ctcb-manifest ctcb-split ctcb-cli; do
+            cargo package -p "$crate" --no-verify --allow-dirty
+          done
       - name: Attest crate artifacts (GitHub provenance)
         # cargo publish leaves <crate>-<version>.crate in target/package/.
         # Attesting after publish is fine — the bytes are identical to what
