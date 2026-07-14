@@ -137,7 +137,9 @@ def stage_clang_extra(
         filename = name + (".exe" if platform == "win" else "")
         _copy_file(bin_dir / filename, destination_bin / filename, platform != "win")
     for name in ("git-clang-format", "run-clang-tidy"):
-        filename = name + (".exe" if platform == "win" else "")
+        # These are Python helper scripts, not PE executables. The historical
+        # clang-extra contract exposes them without a platform suffix.
+        filename = name
         source = bin_dir / filename
         if source.is_file():
             _copy_file(source, destination_bin / filename, platform != "win")
