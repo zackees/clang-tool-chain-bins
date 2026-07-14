@@ -222,7 +222,16 @@ jobs:
 
       - name: Ensure target stdlib is installed
         shell: bash
-        run: rustup target add --toolchain "${RUSTUP_TOOLCHAIN:-stable}" "${{ matrix.target }}"
+        run: |
+          TOOLCHAIN="${RUSTUP_TOOLCHAIN:-stable}"
+          TARGET="${{ matrix.target }}"
+          # setup-soldr can restore stale rustup metadata that says a target
+          # is current while its lib/rustlib/<target>/lib/core-* files are
+          # absent. Reinstall the target and verify the sysroot contents.
+          soldr rustup target remove --toolchain "$TOOLCHAIN" "$TARGET" || true
+          soldr rustup target add --toolchain "$TOOLCHAIN" "$TARGET"
+          SYSROOT="$(soldr rustc +"$TOOLCHAIN" --print sysroot)"
+          test -d "$SYSROOT/lib/rustlib/$TARGET/lib"
 
       - name: Install musl tools (x86_64-linux-musl)
         if: matrix.target == 'x86_64-unknown-linux-musl'
