@@ -200,38 +200,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Soldr (rustup + cached toolchain + zccache state)
-        uses: zackees/setup-soldr@v0.9.62
+      - name: Install Rust toolchain and target
+        uses: dtolnay/rust-toolchain@stable
         with:
-          # Cross-target native objects are not interchangeable. In
-          # particular, zstd-sys can otherwise restore host-format objects
-          # into an ARM/musl build and fail at link time with "file in wrong
-          # format". Keep the cache for native targets, but force a clean
-          # target build for the cross targets.
-          cache: ${{ matrix.soldr_cache != false }}
-          cache-key-suffix: release-${{ matrix.target }}
-          # Opt out of soldr's `fast` linker default. `fast` injects
-          # `-fuse-ld=lld` which Clang on macOS rejects ("invalid linker
-          # name"), failing the cdylib link step of ctcb-cli. The
-          # platform-default value tells setup-soldr to leave the linker
-          # choice to cargo/rust-toolchain.toml. See
-          # https://github.com/zackees/clang-tool-chain-bins/issues (release
-          # pipeline hardening) and the soldr 'fast' linker note in the
-          # action description.
-          linker: platform-default
-
-      - name: Ensure target stdlib is installed
-        shell: bash
-        run: |
-          TOOLCHAIN="${RUSTUP_TOOLCHAIN:-stable}"
-          TARGET="${{ matrix.target }}"
-          # setup-soldr can restore stale rustup metadata that says a target
-          # is current while its lib/rustlib/<target>/lib/core-* files are
-          # absent. Reinstall the target and verify the sysroot contents.
-          soldr rustup target remove --toolchain "$TOOLCHAIN" "$TARGET" || true
-          soldr rustup target add --toolchain "$TOOLCHAIN" "$TARGET"
-          SYSROOT="$(soldr rustc --print sysroot)"
-          test -d "$SYSROOT/lib/rustlib/$TARGET/lib"
+          targets: ${{ matrix.target }}
 
       - name: Install musl tools (x86_64-linux-musl)
         if: matrix.target == 'x86_64-unknown-linux-musl'
