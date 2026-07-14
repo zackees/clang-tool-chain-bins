@@ -154,6 +154,13 @@ def stage_clang_extra(
     shutil.copytree(resources, staging_dir / "lib" / "clang")
     for pattern in (("*.dll",) if platform == "win" else ("*.so", "*.so.*", "*.dylib")):
         for library in sorted((root / "lib").glob(pattern)):
+            # LLVM macOS distributions may carry their build-host libc++;
+            # bundling it makes clangd load an ABI-incompatible dylib on a
+            # newer runner. The system C++ runtime is the required runtime
+            # for the official macOS clangd binaries; LLVM/Clang dylibs still
+            # remain packaged.
+            if platform == "darwin" and library.name.startswith(("libc++", "libc++abi")):
+                continue
             _copy_file(library, staging_dir / "lib" / library.name, platform != "win")
     # Windows LLVM releases keep DLLs beside the executables.
     if platform == "win":
