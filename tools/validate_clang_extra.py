@@ -79,7 +79,8 @@ def validate(archive: Path, target: str, expected_major: str, run_check: bool = 
 
 
 def _REQUIRED_NAMES(target: str) -> tuple[str, ...]:
-    return tuple(_binary_name(name, target) for name in (*REQUIRED_TOOLS, "clangd"))
+    compiled = tuple(_binary_name(name, target) for name in ("clang-format", "clang-query", "clang-tidy", "clangd"))
+    return (*compiled, "git-clang-format", "run-clang-tidy")
 
 
 def main(argv: list[str] | None = None) -> int:
