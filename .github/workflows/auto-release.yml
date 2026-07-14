@@ -222,7 +222,7 @@ jobs:
 
       - name: Ensure target stdlib is installed
         shell: bash
-        run: rustup target add ${{ matrix.target }}
+        run: rustup target add --toolchain "${RUSTUP_TOOLCHAIN:-stable}" "${{ matrix.target }}"
 
       - name: Install musl tools (x86_64-linux-musl)
         if: matrix.target == 'x86_64-unknown-linux-musl'
