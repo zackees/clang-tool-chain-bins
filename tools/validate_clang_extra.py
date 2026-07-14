@@ -46,9 +46,18 @@ def validate(archive: Path, target: str, expected_major: str, run_check: bool = 
             environment["LD_LIBRARY_PATH"] = str(root / "lib") + os.pathsep + environment.get("LD_LIBRARY_PATH", "")
         elif target == "darwin":
             environment["DYLD_LIBRARY_PATH"] = str(root / "lib") + os.pathsep + environment.get("DYLD_LIBRARY_PATH", "")
-        version = subprocess.run(
-            [str(clangd), "--version"], check=True, capture_output=True, text=True, env=environment
-        ).stdout
+        version_result = subprocess.run([str(clangd), "--version"], capture_output=True, text=True, env=environment)
+        if version_result.returncode != 0:
+            dependency_output = ""
+            if target == "darwin":
+                dependency_output = subprocess.run(
+                    ["otool", "-L", str(clangd)], capture_output=True, text=True
+                ).stdout
+            raise AssertionError(
+                f"clangd --version failed with exit code {version_result.returncode}:\n"
+                f"{version_result.stdout}\n{version_result.stderr}\n{dependency_output}"
+            )
+        version = version_result.stdout
         if f"version {expected_major}." not in version and f"LLVM {expected_major}" not in version:
             raise AssertionError(f"unexpected clangd version: {version.strip()}")
 
