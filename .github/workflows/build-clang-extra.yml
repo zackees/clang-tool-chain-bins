@@ -87,7 +87,7 @@ jobs:
             -DLLVM_ENABLE_PROJECTS='clang;clang-tools-extra' \
             -DLLVM_TARGETS_TO_BUILD=X86 \
             -DLLVM_ENABLE_ASSERTIONS=OFF
-          cmake --build llvm-build --target clangd
+          cmake --build llvm-build --target clangd --parallel "$(sysctl -n hw.ncpu)"
           python - <<'PY'
           from pathlib import Path
           import pyzstd, tarfile
