@@ -30,6 +30,10 @@ SUPPORTED_TARGETS = {
     ("darwin", "arm64"),
 }
 EXTRA_TOOLS = ("clang-format", "clang-query", "clang-tidy", "git-clang-format", "run-clang-tidy", "clangd")
+SCRIPT_SOURCES = {
+    "git-clang-format": "clang/tools/clang-format/git-clang-format",
+    "run-clang-tidy": "clang-tools-extra/clang-tidy/tool/run-clang-tidy.py",
+}
 LLVM_DOWNLOAD_URLS = {
     ("win", "x86_64"): "https://github.com/llvm/llvm-project/releases/download/llvmorg-{version}/LLVM-{version}-win64.exe",
     ("linux", "x86_64"): "https://github.com/llvm/llvm-project/releases/download/llvmorg-{version}/LLVM-{version}-Linux-X64.tar.xz",
@@ -87,6 +91,17 @@ def _copy_file(source: Path, destination: Path, executable: bool = False) -> Non
         destination.chmod(destination.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
 
 
+def _copy_release_script(destination: Path, name: str, version: str, executable: bool) -> str:
+    relative = SCRIPT_SOURCES[name]
+    url = f"https://raw.githubusercontent.com/llvm/llvm-project/llvmorg-{version}/{relative}"
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    with urllib.request.urlopen(url) as response:
+        destination.write_bytes(response.read())
+    if executable:
+        destination.chmod(destination.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+    return url
+
+
 def stage_clang_extra(
     source_dir: Path,
     staging_dir: Path,
@@ -108,13 +123,26 @@ def stage_clang_extra(
     root = _find_root(source_dir)
     bin_dir = root / "bin"
     destination_bin = staging_dir / "bin"
-    missing = [name for name in EXTRA_TOOLS if not (bin_dir / (name + (".exe" if platform == "win" else ""))).is_file()]
+    compiled_tools = ("clang-format", "clang-query", "clang-tidy", "clangd")
+    missing = [
+        name
+        for name in compiled_tools
+        if not (bin_dir / (name + (".exe" if platform == "win" else ""))).is_file()
+    ]
     if missing:
         raise FileNotFoundError(f"LLVM distribution is missing clang-extra tools: {', '.join(missing)}")
 
-    for name in EXTRA_TOOLS:
+    fetched_scripts: dict[str, str] = {}
+    for name in compiled_tools:
         filename = name + (".exe" if platform == "win" else "")
         _copy_file(bin_dir / filename, destination_bin / filename, platform != "win")
+    for name in ("git-clang-format", "run-clang-tidy"):
+        filename = name + (".exe" if platform == "win" else "")
+        source = bin_dir / filename
+        if source.is_file():
+            _copy_file(source, destination_bin / filename, platform != "win")
+        else:
+            fetched_scripts[name] = _copy_release_script(destination_bin / filename, name, version, platform != "win")
 
     # clangd loads the Clang resource directory and, on Windows/Unix LLVM
     # distributions, sibling runtime libraries from these locations.
@@ -139,6 +167,7 @@ def stage_clang_extra(
         "target": {"platform": platform, "arch": arch},
         "tools": list(EXTRA_TOOLS),
         "build_options": build_options or {"mode": "prebuilt-extraction"},
+        "fetched_scripts": fetched_scripts,
     }
 
 
