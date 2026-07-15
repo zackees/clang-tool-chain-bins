@@ -27,6 +27,9 @@ class ClangdConan(ConanFile):
     requires = ()
     exports_sources = "CMakeLists.txt"
 
+    def configure(self):
+        self.settings.rm_safe("compiler.cppstd")
+
     def layout(self):
         self.folders.source = "source"
         self.folders.build = "build"
@@ -40,6 +43,7 @@ class ClangdConan(ConanFile):
         toolchain.variables["LLVM_ENABLE_PROJECTS"] = "clang;clang-tools-extra"
         toolchain.variables["LLVM_TARGETS_TO_BUILD"] = "AArch64"
         toolchain.variables["LLVM_ENABLE_ASSERTIONS"] = False
+        toolchain.variables["CMAKE_CXX_STANDARD"] = 17
         toolchain.variables["CMAKE_BUILD_TYPE"] = "Release"
         toolchain.generate()
 

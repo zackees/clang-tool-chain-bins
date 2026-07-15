@@ -154,6 +154,8 @@ class ClangExtraBuilderTests(unittest.TestCase):
         self.assertNotIn('generator="Ninja"', recipe)
         self.assertNotIn('toolchain.variables["CMAKE_INSTALL_PREFIX"]', recipe)
         self.assertIn('toolchain.variables["LLVM_TARGETS_TO_BUILD"] = "AArch64"', recipe)
+        self.assertIn('self.settings.rm_safe("compiler.cppstd")', recipe)
+        self.assertIn('toolchain.variables["CMAKE_CXX_STANDARD"] = 17', recipe)
         self.assertIn('raise RuntimeError(f"CMake did not produce {tool}.exe")', recipe)
 
     def test_forge_recipe_finds_multiconfig_resource_headers(self) -> None:
