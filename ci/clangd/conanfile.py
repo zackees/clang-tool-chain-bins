@@ -12,6 +12,14 @@ LLVM_COMMIT = "8e2cd28cd4ba46613a46467b0c91b1cabead26cd"
 COMPILED_TOOLS = ("clangd", "clang-format", "clang-query", "clang-tidy")
 
 
+def find_clang_resource_include(build_folder, major):
+    candidates = Path(build_folder).glob(f"**/lib/clang/{major}/include")
+    for candidate in sorted(candidates):
+        if (candidate / "stddef.h").is_file():
+            return candidate
+    raise RuntimeError(f"CMake did not produce Clang {major} resource headers")
+
+
 class ClangdConan(ConanFile):
     name = "clangd"
     version = "21.1.5"
@@ -28,12 +36,11 @@ class ClangdConan(ConanFile):
         self.run(f"git -C llvm-project checkout {LLVM_COMMIT}")
 
     def generate(self):
-        toolchain = CMakeToolchain(self, generator="Ninja")
+        toolchain = CMakeToolchain(self)
         toolchain.variables["LLVM_ENABLE_PROJECTS"] = "clang;clang-tools-extra"
         toolchain.variables["LLVM_TARGETS_TO_BUILD"] = "AArch64"
         toolchain.variables["LLVM_ENABLE_ASSERTIONS"] = False
         toolchain.variables["CMAKE_BUILD_TYPE"] = "Release"
-        toolchain.variables["CMAKE_INSTALL_PREFIX"] = self.package_folder
         toolchain.generate()
 
     def build(self):
@@ -44,10 +51,17 @@ class ClangdConan(ConanFile):
 
     def package(self):
         source_root = Path(self.source_folder) / "llvm-project"
-        build_bin = Path(self.build_folder) / "bin"
         package_bin = Path(self.package_folder) / "bin"
         for tool in COMPILED_TOOLS:
-            copy(self, f"{tool}.exe", src=str(build_bin), dst=str(package_bin))
+            copy(
+                self,
+                f"{tool}.exe",
+                src=self.build_folder,
+                dst=str(package_bin),
+                keep_path=False,
+            )
+            if not (package_bin / f"{tool}.exe").is_file():
+                raise RuntimeError(f"CMake did not produce {tool}.exe")
         copy(
             self,
             "git-clang-format",
@@ -61,13 +75,17 @@ class ClangdConan(ConanFile):
             dst=str(package_bin),
         )
         (package_bin / "run-clang-tidy.py").rename(package_bin / "run-clang-tidy")
-        copy(self, "*.dll", src=str(build_bin), dst=str(package_bin))
+        copy(self, "*.dll", src=self.build_folder, dst=str(package_bin), keep_path=False)
+        resource_include = find_clang_resource_include(self.build_folder, "21")
+        packaged_include = Path(self.package_folder) / "lib" / "clang" / "21" / "include"
         copy(
             self,
             "*",
-            src=str(Path(self.build_folder) / "lib" / "clang" / "21" / "include"),
-            dst=str(Path(self.package_folder) / "lib" / "clang" / "21" / "include"),
+            src=str(resource_include),
+            dst=str(packaged_include),
         )
+        if not (packaged_include / "stddef.h").is_file():
+            raise RuntimeError("Clang resource headers were not packaged")
 
     def package_info(self):
         self.cpp_info.bindirs = ["bin"]

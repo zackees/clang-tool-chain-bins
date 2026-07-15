@@ -1,11 +1,15 @@
 from __future__ import annotations
 
 import json
+import runpy
 import stat
+import sys
 import tarfile
 import tempfile
+import types
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 import pyzstd
 
@@ -22,6 +26,25 @@ from tools.integrate_clang_extra_artifacts import merge_archive_records, merge_c
 
 
 class ClangExtraBuilderTests(unittest.TestCase):
+    def _load_forge_recipe(self) -> dict[str, object]:
+        conan = types.ModuleType("conan")
+        conan.ConanFile = object
+        conan_tools = types.ModuleType("conan.tools")
+        conan_cmake = types.ModuleType("conan.tools.cmake")
+        conan_cmake.CMake = object
+        conan_cmake.CMakeToolchain = object
+        conan_files = types.ModuleType("conan.tools.files")
+        conan_files.copy = lambda *args, **kwargs: None
+        modules = {
+            "conan": conan,
+            "conan.tools": conan_tools,
+            "conan.tools.cmake": conan_cmake,
+            "conan.tools.files": conan_files,
+        }
+        recipe = Path(__file__).parents[1] / "ci" / "clangd" / "conanfile.py"
+        with patch.dict(sys.modules, modules):
+            return runpy.run_path(str(recipe))
+
     def _source(self, root: Path, platform: str = "linux") -> Path:
         (root / "bin").mkdir(parents=True)
         (root / "lib" / "clang" / "21" / "include").mkdir(parents=True)
@@ -124,6 +147,27 @@ class ClangExtraBuilderTests(unittest.TestCase):
             self.assertEqual(provenance["llvm_project_commit"], "8e2cd28cd4ba46613a46467b0c91b1cabead26cd")
             self.assertEqual(provenance["target"], {"platform": "win", "arch": "arm64"})
             self.assertEqual(provenance["build_options"]["extraction_method"], "7z")
+
+    def test_forge_recipe_does_not_force_generator_or_install_prefix(self) -> None:
+        recipe = (Path(__file__).parents[1] / "ci" / "clangd" / "conanfile.py").read_text(encoding="utf-8")
+        self.assertIn("toolchain = CMakeToolchain(self)", recipe)
+        self.assertNotIn('generator="Ninja"', recipe)
+        self.assertNotIn('toolchain.variables["CMAKE_INSTALL_PREFIX"]', recipe)
+        self.assertIn('toolchain.variables["LLVM_TARGETS_TO_BUILD"] = "AArch64"', recipe)
+        self.assertIn('raise RuntimeError(f"CMake did not produce {tool}.exe")', recipe)
+
+    def test_forge_recipe_finds_multiconfig_resource_headers(self) -> None:
+        find_resource_include = self._load_forge_recipe()["find_clang_resource_include"]
+        with tempfile.TemporaryDirectory() as directory:
+            build = Path(directory) / "build"
+            expected = build / "Release" / "lib" / "clang" / "21" / "include"
+            expected.mkdir(parents=True)
+            (expected / "stddef.h").write_text("#pragma once\n", encoding="utf-8")
+            self.assertEqual(find_resource_include(build, "21"), expected)
+
+            (expected / "stddef.h").unlink()
+            with self.assertRaisesRegex(RuntimeError, "did not produce Clang 21 resource headers"):
+                find_resource_include(build, "21")
 
     def test_integration_merges_windows_arm64_without_losing_existing_targets(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
