@@ -12,6 +12,23 @@ LLVM_COMMIT = "8e2cd28cd4ba46613a46467b0c91b1cabead26cd"
 COMPILED_TOOLS = ("clangd", "clang-format", "clang-query", "clang-tidy")
 
 
+def find_build_output(build_folder, filename):
+    matches = sorted(Path(build_folder).rglob(filename))
+    if len(matches) == 1:
+        return matches[0]
+    if not matches:
+        raise RuntimeError(f"CMake did not produce {filename}")
+    raise RuntimeError(f"CMake produced multiple {filename} outputs: {matches}")
+
+
+def find_compiled_tool_outputs(build_folder):
+    outputs = [find_build_output(build_folder, f"{tool}.exe") for tool in COMPILED_TOOLS]
+    output_dirs = {output.parent for output in outputs}
+    if len(output_dirs) != 1:
+        raise RuntimeError(f"CMake produced compiled tools in multiple directories: {output_dirs}")
+    return outputs
+
+
 def find_clang_resource_include(build_folder, major):
     candidates = Path(build_folder).glob(f"**/lib/clang/{major}/include")
     for candidate in sorted(candidates):
@@ -56,16 +73,17 @@ class ClangdConan(ConanFile):
     def package(self):
         source_root = Path(self.source_folder) / "llvm-project"
         package_bin = Path(self.package_folder) / "bin"
-        for tool in COMPILED_TOOLS:
+        compiled_outputs = find_compiled_tool_outputs(self.build_folder)
+        for executable in compiled_outputs:
             copy(
                 self,
-                f"{tool}.exe",
-                src=self.build_folder,
+                executable.name,
+                src=str(executable.parent),
                 dst=str(package_bin),
                 keep_path=False,
             )
-            if not (package_bin / f"{tool}.exe").is_file():
-                raise RuntimeError(f"CMake did not produce {tool}.exe")
+            if not (package_bin / executable.name).is_file():
+                raise RuntimeError(f"CMake did not package {executable.name}")
         copy(
             self,
             "git-clang-format",
@@ -79,7 +97,9 @@ class ClangdConan(ConanFile):
             dst=str(package_bin),
         )
         (package_bin / "run-clang-tidy.py").rename(package_bin / "run-clang-tidy")
-        copy(self, "*.dll", src=self.build_folder, dst=str(package_bin), keep_path=False)
+        tool_output_dir = compiled_outputs[0].parent
+        for runtime in sorted(tool_output_dir.glob("*.dll")):
+            copy(self, runtime.name, src=str(runtime.parent), dst=str(package_bin), keep_path=False)
         resource_include = find_clang_resource_include(self.build_folder, "21")
         packaged_include = Path(self.package_folder) / "lib" / "clang" / "21" / "include"
         copy(

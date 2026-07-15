@@ -156,20 +156,40 @@ class ClangExtraBuilderTests(unittest.TestCase):
         self.assertIn('toolchain.variables["LLVM_TARGETS_TO_BUILD"] = "AArch64"', recipe)
         self.assertIn('self.settings.rm_safe("compiler.cppstd")', recipe)
         self.assertIn('toolchain.variables["CMAKE_CXX_STANDARD"] = 17', recipe)
-        self.assertIn('raise RuntimeError(f"CMake did not produce {tool}.exe")', recipe)
+        self.assertIn('tool_output_dir.glob("*.dll")', recipe)
 
     def test_forge_recipe_finds_multiconfig_resource_headers(self) -> None:
-        find_resource_include = self._load_forge_recipe()["find_clang_resource_include"]
+        recipe = self._load_forge_recipe()
+        find_build_output = recipe["find_build_output"]
+        find_compiled_tool_outputs = recipe["find_compiled_tool_outputs"]
+        find_resource_include = recipe["find_clang_resource_include"]
         with tempfile.TemporaryDirectory() as directory:
             build = Path(directory) / "build"
+            executables = [build / "Release" / "bin" / f"{tool}.exe" for tool in recipe["COMPILED_TOOLS"]]
+            executables[0].parent.mkdir(parents=True)
+            for executable in executables:
+                executable.touch()
             expected = build / "Release" / "lib" / "clang" / "21" / "include"
             expected.mkdir(parents=True)
             (expected / "stddef.h").write_text("#pragma once\n", encoding="utf-8")
+            self.assertEqual(find_build_output(build, "clangd.exe"), executables[0])
+            self.assertEqual(find_compiled_tool_outputs(build), executables)
             self.assertEqual(find_resource_include(build, "21"), expected)
 
+            executables[0].unlink()
             (expected / "stddef.h").unlink()
+            with self.assertRaisesRegex(RuntimeError, "did not produce clangd.exe"):
+                find_build_output(build, "clangd.exe")
             with self.assertRaisesRegex(RuntimeError, "did not produce Clang 21 resource headers"):
                 find_resource_include(build, "21")
+
+            executables[0].parent.mkdir(parents=True, exist_ok=True)
+            executables[0].touch()
+            moved = build / "Other" / "bin" / executables[-1].name
+            moved.parent.mkdir(parents=True)
+            executables[-1].replace(moved)
+            with self.assertRaisesRegex(RuntimeError, "compiled tools in multiple directories"):
+                find_compiled_tool_outputs(build)
 
     def test_integration_merges_windows_arm64_without_losing_existing_targets(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
