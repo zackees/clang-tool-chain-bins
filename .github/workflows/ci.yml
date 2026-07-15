@@ -67,8 +67,14 @@ jobs:
           uv run --no-sync maturin develop --release
       - name: Run Python tests
         run: uv run --no-sync pytest python/tests/ -v
-      - name: Validate clang-extra builder
-        run: uv run --no-sync pytest tests/test_clang_extra_builder.py -v
+      - name: Validate clang-extra build, indexes, query, and install behavior
+        run: >-
+          uv run --no-sync pytest
+          tests/test_clang_extra_builder.py
+          tests/test_clang_extra_validator.py
+          tests/test_query.py
+          tests/test_install.py
+          tests/test_api.py -v
       - name: PEP 517 backend smoke (soldr builds the wheel)
         if: matrix.os == 'ubuntu-latest'
         run: uv build --wheel

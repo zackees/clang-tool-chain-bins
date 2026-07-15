@@ -1,0 +1,26 @@
+{
+  "method": "extracted",
+  "llvm_version": "21.1.5",
+  "llvm_project_tag": "llvmorg-21.1.5",
+  "llvm_project_commit": "8e2cd28cd4ba46613a46467b0c91b1cabead26cd",
+  "llvm_source": "official llvm-project distribution",
+  "target": {
+    "platform": "win",
+    "arch": "arm64"
+  },
+  "tools": [
+    "clang-format",
+    "clang-query",
+    "clang-tidy",
+    "git-clang-format",
+    "run-clang-tidy",
+    "clangd"
+  ],
+  "build_options": {
+    "mode": "prebuilt-extraction",
+    "upstream_url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-21.1.5/LLVM-21.1.5-woa64.exe",
+    "upstream_sha256": "d570e77cd37791372ddab07fe892a2a25f0824821dc57e546118a3f1ee4b66de",
+    "extraction_method": "7z"
+  },
+  "fetched_scripts": {}
+}

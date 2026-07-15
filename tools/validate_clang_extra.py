@@ -7,7 +7,6 @@ import argparse
 import json
 import os
 import platform as host_platform
-import shutil
 import struct
 import subprocess
 import tarfile
@@ -84,7 +83,11 @@ def validate(
         if target != "win" and not clangd.stat().st_mode & 0o111:
             raise AssertionError(f"{clangd} is not executable")
         environment = os.environ.copy()
-        if target == "linux":
+        if target == "win":
+            # Executables are addressed by absolute path. Restrict PATH so a
+            # developer-installed LLVM cannot mask a missing archive DLL.
+            environment["PATH"] = str(bin_dir)
+        elif target == "linux":
             environment["LD_LIBRARY_PATH"] = str(root / "lib") + os.pathsep + environment.get("LD_LIBRARY_PATH", "")
         elif target == "darwin":
             environment["DYLD_LIBRARY_PATH"] = str(root / "lib") + os.pathsep + environment.get("DYLD_LIBRARY_PATH", "")

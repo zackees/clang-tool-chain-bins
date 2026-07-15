@@ -1,6 +1,6 @@
 {
   "aggregate_index_path": "tool-index.json",
-  "index_count": 31,
+  "index_count": 32,
   "indexes": [
     {
       "arch": "arm64",
@@ -40,6 +40,16 @@
       "filename": "clang-extra-21.1.5-linux-x86_64.tar.zst",
       "index_path": "clang-extra\\linux\\x86_64\\clang-extra-21.1.5-linux-x86_64.tar.zst.json",
       "platform": "linux",
+      "version": "21.1.5"
+    },
+    {
+      "arch": "arm64",
+      "archive_path": "clang-extra\\win\\arm64\\clang-extra-21.1.5-win-arm64.tar.zst",
+      "archive_sha256": "00f220603612c22a063159745e2834508b6278bcd575dbe8e1ddf4b4784c81ef",
+      "component": "clang-extra",
+      "filename": "clang-extra-21.1.5-win-arm64.tar.zst",
+      "index_path": "clang-extra\\win\\arm64\\clang-extra-21.1.5-win-arm64.tar.zst.json",
+      "platform": "win",
       "version": "21.1.5"
     },
     {

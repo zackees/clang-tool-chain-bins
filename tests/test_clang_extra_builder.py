@@ -18,6 +18,7 @@ from tools.create_clang_extra_archives import (
     download_llvm,
     stage_clang_extra,
 )
+from tools.integrate_clang_extra_artifacts import merge_archive_records, merge_component_manifest
 
 
 class ClangExtraBuilderTests(unittest.TestCase):
@@ -123,6 +124,82 @@ class ClangExtraBuilderTests(unittest.TestCase):
             self.assertEqual(provenance["llvm_project_commit"], "8e2cd28cd4ba46613a46467b0c91b1cabead26cd")
             self.assertEqual(provenance["target"], {"platform": "win", "arch": "arm64"})
             self.assertEqual(provenance["build_options"]["extraction_method"], "7z")
+
+    def test_integration_merges_windows_arm64_without_losing_existing_targets(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            component = Path(directory) / "assets" / "clang-extra"
+            component.mkdir(parents=True)
+            (component / "manifest.json").write_text(
+                json.dumps(
+                    {
+                        "platforms": [
+                            {
+                                "platform": "win",
+                                "architectures": [
+                                    {"arch": "x86_64", "manifest_path": "win/x86_64/manifest.json"}
+                                ],
+                            }
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+            archive = component / "win" / "arm64" / "clang-extra-21.1.5-win-arm64.tar.zst"
+            archive.parent.mkdir(parents=True)
+            archive.touch()
+
+            merge_component_manifest(component, [archive])
+
+            root = json.loads((component / "manifest.json").read_text(encoding="utf-8"))
+            targets = {
+                (platform["platform"], arch["arch"])
+                for platform in root["platforms"]
+                for arch in platform["architectures"]
+            }
+            self.assertEqual(targets, {("win", "x86_64"), ("win", "arm64")})
+
+    def test_integration_preserves_unindexed_legacy_aggregate_records(self) -> None:
+        existing = {
+            "schema_version": 1,
+            "archives": [
+                {
+                    "component": "lldb",
+                    "filename": "legacy.tar.zst",
+                    "relative_path": "legacy.tar.zst",
+                },
+                {
+                    "component": "clang-extra",
+                    "filename": "old.tar.zst",
+                    "relative_path": "new.tar.zst",
+                },
+            ],
+        }
+        generated = {
+            "schema_version": 1,
+            "archives": [
+                {
+                    "component": "clang-extra",
+                    "filename": "new.tar.zst",
+                    "relative_path": "new.tar.zst",
+                },
+            ],
+        }
+
+        merged = merge_archive_records(existing, generated, "archives", {"new.tar.zst"})
+
+        self.assertEqual(
+            [(item["component"], item["filename"]) for item in merged["archives"]],
+            [("lldb", "legacy.tar.zst"), ("clang-extra", "new.tar.zst")],
+        )
+
+    def test_integration_rejects_missing_generated_archive_records(self) -> None:
+        with self.assertRaisesRegex(ValueError, "missing archives"):
+            merge_archive_records(
+                {"archives": []},
+                {"archives": []},
+                "archives",
+                {"clang-extra/win/arm64/archive.tar.zst"},
+            )
 
 
 if __name__ == "__main__":

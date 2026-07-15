@@ -1,5 +1,5 @@
 {
-  "archive_count": 31,
+  "archive_count": 32,
   "archives": [
     {
       "arch": "arm64",
@@ -274,6 +274,24 @@
       "sha256": "e02a9fbf7e0ef2ae466ef90f7ac1fff03a165dfb707ddf3f4249e4be7360933e",
       "tool_count": 7,
       "url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/linux/x86_64/clang-extra-21.1.5-linux-x86_64.tar.zst",
+      "version": "21.1.5"
+    },
+    {
+      "arch": "arm64",
+      "component": "clang-extra",
+      "download_kind": "lfs",
+      "file_count": 322,
+      "filename": "clang-extra-21.1.5-win-arm64.tar.zst",
+      "index_path": "clang-extra\\win\\arm64\\clang-extra-21.1.5-win-arm64.tar.zst.json",
+      "parts": [],
+      "platform": "win",
+      "probe_urls": [
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/arm64/clang-extra-21.1.5-win-arm64.tar.zst"
+      ],
+      "relative_path": "clang-extra\\win\\arm64\\clang-extra-21.1.5-win-arm64.tar.zst",
+      "sha256": "00f220603612c22a063159745e2834508b6278bcd575dbe8e1ddf4b4784c81ef",
+      "tool_count": 6,
+      "url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/arm64/clang-extra-21.1.5-win-arm64.tar.zst",
       "version": "21.1.5"
     },
     {
@@ -709,7 +727,7 @@
     }
   ],
   "schema_version": 1,
-  "tool_count": 696,
+  "tool_count": 702,
   "tools": [
     {
       "arch": "mingw-x86_64",
@@ -4878,6 +4896,27 @@
       "version": "21.1.5"
     },
     {
+      "arch": "arm64",
+      "archive_filename": "clang-extra-21.1.5-win-arm64.tar.zst",
+      "archive_path": "clang-extra\\win\\arm64\\clang-extra-21.1.5-win-arm64.tar.zst",
+      "archive_sha256": "00f220603612c22a063159745e2834508b6278bcd575dbe8e1ddf4b4784c81ef",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/arm64/clang-extra-21.1.5-win-arm64.tar.zst",
+      "component": "clang-extra",
+      "download_kind": "lfs",
+      "file_name": "clang-format.exe",
+      "parts": [],
+      "path_in_archive": "bin/clang-format.exe",
+      "platform": "win",
+      "probe_urls": [
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/arm64/clang-extra-21.1.5-win-arm64.tar.zst"
+      ],
+      "size": 3660288,
+      "tool_name": "clang-format",
+      "tool_sha256": "669f689ddf1d2b9e5ded81836fd1da0c773d86482a3454ca62a7729507cc312d",
+      "tool_type": "file",
+      "version": "21.1.5"
+    },
+    {
       "arch": "x86_64",
       "archive_filename": "clang-extra-21.1.5-win-x86_64.tar.zst",
       "archive_path": "clang-extra\\win\\x86_64\\clang-extra-21.1.5-win-x86_64.tar.zst",
@@ -5139,6 +5178,27 @@
       "size": 72505376,
       "tool_name": "clang-query",
       "tool_sha256": "e8c042584f8b031b1091990483fe69b1382a56776139e59b74a242e4c4b7a95e",
+      "tool_type": "file",
+      "version": "21.1.5"
+    },
+    {
+      "arch": "arm64",
+      "archive_filename": "clang-extra-21.1.5-win-arm64.tar.zst",
+      "archive_path": "clang-extra\\win\\arm64\\clang-extra-21.1.5-win-arm64.tar.zst",
+      "archive_sha256": "00f220603612c22a063159745e2834508b6278bcd575dbe8e1ddf4b4784c81ef",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/arm64/clang-extra-21.1.5-win-arm64.tar.zst",
+      "component": "clang-extra",
+      "download_kind": "lfs",
+      "file_name": "clang-query.exe",
+      "parts": [],
+      "path_in_archive": "bin/clang-query.exe",
+      "platform": "win",
+      "probe_urls": [
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/arm64/clang-extra-21.1.5-win-arm64.tar.zst"
+      ],
+      "size": 28803072,
+      "tool_name": "clang-query",
+      "tool_sha256": "59e59f1b9449a7c0c35d9b98505dc962eb188793e72f4548711a226c0386ba4b",
       "tool_type": "file",
       "version": "21.1.5"
     },
@@ -5576,6 +5636,27 @@
       "version": "21.1.5"
     },
     {
+      "arch": "arm64",
+      "archive_filename": "clang-extra-21.1.5-win-arm64.tar.zst",
+      "archive_path": "clang-extra\\win\\arm64\\clang-extra-21.1.5-win-arm64.tar.zst",
+      "archive_sha256": "00f220603612c22a063159745e2834508b6278bcd575dbe8e1ddf4b4784c81ef",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/arm64/clang-extra-21.1.5-win-arm64.tar.zst",
+      "component": "clang-extra",
+      "download_kind": "lfs",
+      "file_name": "clang-tidy.exe",
+      "parts": [],
+      "path_in_archive": "bin/clang-tidy.exe",
+      "platform": "win",
+      "probe_urls": [
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/arm64/clang-extra-21.1.5-win-arm64.tar.zst"
+      ],
+      "size": 52306944,
+      "tool_name": "clang-tidy",
+      "tool_sha256": "536116c24f5461db1312b4cfada069b7701f1c45eb80506d1f06b52100a9063b",
+      "tool_type": "file",
+      "version": "21.1.5"
+    },
+    {
       "arch": "x86_64",
       "archive_filename": "clang-extra-21.1.5-win-x86_64.tar.zst",
       "archive_path": "clang-extra\\win\\x86_64\\clang-extra-21.1.5-win-x86_64.tar.zst",
@@ -5816,6 +5897,27 @@
       "size": 100539280,
       "tool_name": "clangd",
       "tool_sha256": "26a89213310f41bc4b63184726aa1f1995703aef69de1d00b41a562d7e6afe69",
+      "tool_type": "file",
+      "version": "21.1.5"
+    },
+    {
+      "arch": "arm64",
+      "archive_filename": "clang-extra-21.1.5-win-arm64.tar.zst",
+      "archive_path": "clang-extra\\win\\arm64\\clang-extra-21.1.5-win-arm64.tar.zst",
+      "archive_sha256": "00f220603612c22a063159745e2834508b6278bcd575dbe8e1ddf4b4784c81ef",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/arm64/clang-extra-21.1.5-win-arm64.tar.zst",
+      "component": "clang-extra",
+      "download_kind": "lfs",
+      "file_name": "clangd.exe",
+      "parts": [],
+      "path_in_archive": "bin/clangd.exe",
+      "platform": "win",
+      "probe_urls": [
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/arm64/clang-extra-21.1.5-win-arm64.tar.zst"
+      ],
+      "size": 41637376,
+      "tool_name": "clangd",
+      "tool_sha256": "38534a0e6ad32512ef8f57ee640b8f30da19137c7deb43a25d7d1bb3488f7441",
       "tool_type": "file",
       "version": "21.1.5"
     },
@@ -6330,6 +6432,27 @@
           "clangd"
         ]
       },
+      "size": 28325,
+      "tool_name": "git-clang-format",
+      "tool_sha256": "e190438d9e396d629eabd6a83c855969e81f4bdd2a211532c40cdeab9145a421",
+      "tool_type": "file",
+      "version": "21.1.5"
+    },
+    {
+      "arch": "arm64",
+      "archive_filename": "clang-extra-21.1.5-win-arm64.tar.zst",
+      "archive_path": "clang-extra\\win\\arm64\\clang-extra-21.1.5-win-arm64.tar.zst",
+      "archive_sha256": "00f220603612c22a063159745e2834508b6278bcd575dbe8e1ddf4b4784c81ef",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/arm64/clang-extra-21.1.5-win-arm64.tar.zst",
+      "component": "clang-extra",
+      "download_kind": "lfs",
+      "file_name": "git-clang-format",
+      "parts": [],
+      "path_in_archive": "bin/git-clang-format",
+      "platform": "win",
+      "probe_urls": [
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/arm64/clang-extra-21.1.5-win-arm64.tar.zst"
+      ],
       "size": 28325,
       "tool_name": "git-clang-format",
       "tool_sha256": "e190438d9e396d629eabd6a83c855969e81f4bdd2a211532c40cdeab9145a421",
@@ -12401,6 +12524,27 @@
           "clangd"
         ]
       },
+      "size": 19695,
+      "tool_name": "run-clang-tidy",
+      "tool_sha256": "2b2bacf525daba5ab183f98fdbd0f21df8bb421e15d938b2245180944186fc73",
+      "tool_type": "file",
+      "version": "21.1.5"
+    },
+    {
+      "arch": "arm64",
+      "archive_filename": "clang-extra-21.1.5-win-arm64.tar.zst",
+      "archive_path": "clang-extra\\win\\arm64\\clang-extra-21.1.5-win-arm64.tar.zst",
+      "archive_sha256": "00f220603612c22a063159745e2834508b6278bcd575dbe8e1ddf4b4784c81ef",
+      "archive_url": "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/arm64/clang-extra-21.1.5-win-arm64.tar.zst",
+      "component": "clang-extra",
+      "download_kind": "lfs",
+      "file_name": "run-clang-tidy",
+      "parts": [],
+      "path_in_archive": "bin/run-clang-tidy",
+      "platform": "win",
+      "probe_urls": [
+        "https://media.githubusercontent.com/media/zackees/clang-tool-chain-bins/main/assets/clang-extra/win/arm64/clang-extra-21.1.5-win-arm64.tar.zst"
+      ],
       "size": 19695,
       "tool_name": "run-clang-tidy",
       "tool_sha256": "2b2bacf525daba5ab183f98fdbd0f21df8bb421e15d938b2245180944186fc73",

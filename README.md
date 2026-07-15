@@ -121,7 +121,7 @@ Each JSON line for a match includes the aggregate index metadata plus derived lo
 - `install_path`
 - `installed`
 
-`installed` is a local state check against the selected home directory. It becomes true when the install directory or its `done.txt` marker already exists there; it is not a remote availability check.
+`installed` is a local state check against the selected home directory. It becomes true only when the matching `done.txt` marker and the requested tool binary both exist; a stale marker without the binary is rejected.
 
 `install_path` is always the resolved destination for that archive candidate, even when `installed` is `false`. `source_urls` resolves to the concrete download URL list for that match; for normal archives it is a one-item list, and for multipart archives it contains the part URLs.
 

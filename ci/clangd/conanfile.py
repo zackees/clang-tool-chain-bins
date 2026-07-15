@@ -1,5 +1,7 @@
 """Forge/Conan fallback recipe for targets without an LLVM binary release."""
 
+from pathlib import Path
+
 from conan import ConanFile
 from conan.tools.cmake import CMake, CMakeToolchain
 from conan.tools.files import copy
@@ -41,14 +43,30 @@ class ClangdConan(ConanFile):
             cmake.build(target=target)
 
     def package(self):
+        source_root = Path(self.source_folder) / "llvm-project"
+        build_bin = Path(self.build_folder) / "bin"
+        package_bin = Path(self.package_folder) / "bin"
         for tool in COMPILED_TOOLS:
-            copy(self, f"{tool}.exe", src=self.build_folder / "bin", dst=self.package_folder / "bin")
-        copy(self, "*.dll", src=self.build_folder / "bin", dst=self.package_folder / "bin")
+            copy(self, f"{tool}.exe", src=str(build_bin), dst=str(package_bin))
+        copy(
+            self,
+            "git-clang-format",
+            src=str(source_root / "clang" / "tools" / "clang-format"),
+            dst=str(package_bin),
+        )
+        copy(
+            self,
+            "run-clang-tidy.py",
+            src=str(source_root / "clang-tools-extra" / "clang-tidy" / "tool"),
+            dst=str(package_bin),
+        )
+        (package_bin / "run-clang-tidy.py").rename(package_bin / "run-clang-tidy")
+        copy(self, "*.dll", src=str(build_bin), dst=str(package_bin))
         copy(
             self,
             "*",
-            src=self.build_folder / "lib" / "clang" / "21" / "include",
-            dst=self.package_folder / "lib" / "clang" / "21" / "include",
+            src=str(Path(self.build_folder) / "lib" / "clang" / "21" / "include"),
+            dst=str(Path(self.package_folder) / "lib" / "clang" / "21" / "include"),
         )
 
     def package_info(self):
