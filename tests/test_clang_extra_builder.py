@@ -10,7 +10,14 @@ from pathlib import Path
 import pyzstd
 
 from clang_tool_chain_bins._impl.archive_index import build_aggregate_index, build_meta_index, build_sidecar_indexes
-from tools.create_clang_extra_archives import EXTRA_TOOLS, SUPPORTED_TARGETS, build_archive, stage_clang_extra
+from tools.create_clang_extra_archives import (
+    EXTRA_TOOLS,
+    LLVM_DOWNLOAD_SHA256,
+    SUPPORTED_TARGETS,
+    build_archive,
+    download_llvm,
+    stage_clang_extra,
+)
 
 
 class ClangExtraBuilderTests(unittest.TestCase):
@@ -18,7 +25,8 @@ class ClangExtraBuilderTests(unittest.TestCase):
         (root / "bin").mkdir(parents=True)
         (root / "lib" / "clang" / "21" / "include").mkdir(parents=True)
         for name in EXTRA_TOOLS:
-            path = root / "bin" / (name + (".exe" if platform == "win" else ""))
+            suffix = ".exe" if platform == "win" and name not in {"git-clang-format", "run-clang-tidy"} else ""
+            path = root / "bin" / (name + suffix)
             path.write_bytes(name.encode())
             if platform != "win":
                 path.chmod(0o755)
@@ -80,9 +88,41 @@ class ClangExtraBuilderTests(unittest.TestCase):
 
     def test_supported_targets_are_exactly_issue_allowlist(self) -> None:
         self.assertEqual(SUPPORTED_TARGETS, {
-            ("win", "x86_64"), ("linux", "x86_64"), ("linux", "arm64"),
+            ("win", "x86_64"), ("win", "arm64"), ("linux", "x86_64"), ("linux", "arm64"),
             ("darwin", "x86_64"), ("darwin", "arm64"),
         })
+
+    def test_windows_arm64_download_is_pinned_and_hash_verified(self) -> None:
+        expected = "d570e77cd37791372ddab07fe892a2a25f0824821dc57e546118a3f1ee4b66de"
+        self.assertEqual(LLVM_DOWNLOAD_SHA256[("win", "arm64", "21.1.5")], expected)
+        with tempfile.TemporaryDirectory() as directory:
+            work = Path(directory)
+            payload = work / "LLVM-21.1.5-woa64.exe"
+            payload.write_bytes(b"not-the-pinned-upstream-payload")
+            with self.assertRaisesRegex(ValueError, "SHA256 mismatch"):
+                download_llvm("win", "arm64", "21.1.5", work)
+
+    def test_windows_arm64_provenance_records_upstream_and_revision(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = self._source(root / "llvm", platform="win")
+            provenance = stage_clang_extra(
+                source,
+                root / "staging",
+                "win",
+                "arm64",
+                "21.1.5",
+                "8e2cd28cd4ba46613a46467b0c91b1cabead26cd",
+                build_options={
+                    "upstream_url": "https://example.invalid/LLVM-21.1.5-woa64.exe",
+                    "upstream_sha256": "d570e77cd37791372ddab07fe892a2a25f0824821dc57e546118a3f1ee4b66de",
+                    "extraction_method": "7z",
+                },
+            )
+            self.assertEqual(provenance["llvm_project_tag"], "llvmorg-21.1.5")
+            self.assertEqual(provenance["llvm_project_commit"], "8e2cd28cd4ba46613a46467b0c91b1cabead26cd")
+            self.assertEqual(provenance["target"], {"platform": "win", "arch": "arm64"})
+            self.assertEqual(provenance["build_options"]["extraction_method"], "7z")
 
 
 if __name__ == "__main__":

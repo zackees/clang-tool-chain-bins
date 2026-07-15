@@ -2,6 +2,17 @@ name: Build and validate clang-extra archives
 
 on:
   workflow_dispatch:
+    inputs:
+      exercise_forge_fallback:
+        description: Also prove the pinned native Windows ARM64 Forge fallback
+        required: false
+        default: false
+        type: boolean
+      windows_arm64_only:
+        description: Build only the native Windows ARM64 official lane
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -9,6 +20,7 @@ permissions:
 jobs:
   official:
     name: ${{ matrix.platform }}/${{ matrix.arch }} (upstream)
+    if: ${{ !inputs.windows_arm64_only }}
     runs-on: ${{ matrix.runner }}
     strategy:
       fail-fast: false
@@ -58,15 +70,71 @@ jobs:
         run: >-
           python tools/validate_clang_extra.py
           out/assets/clang-extra/${{ matrix.platform }}/${{ matrix.arch }}/clang-extra-${{ matrix.version }}-${{ matrix.platform }}-${{ matrix.arch }}.tar.zst
-          --platform ${{ matrix.platform }} --expected-major 21
+          --platform ${{ matrix.platform }} --expected-major 21 --expected-arch ${{ matrix.arch }}
       - uses: actions/upload-artifact@v4
         with:
           name: clang-extra-${{ matrix.platform }}-${{ matrix.arch }}
           path: out
           if-no-files-found: error
 
+  windows-arm64-official:
+    name: win/arm64 (upstream, native validation)
+    runs-on: windows-11-arm
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install pyzstd fasteners json5
+      - name: Build SHA256-pinned official LLVM 21.1.5 payload
+        run: >-
+          python tools/create_clang_extra_archives.py --download
+          --work-dir tools/work/clang-extra
+          --output-dir out/assets/clang-extra
+          --platform win --arch arm64 --version 21.1.5
+          --llvm-commit 8e2cd28cd4ba46613a46467b0c91b1cabead26cd
+      - name: Generate archive index
+        shell: bash
+        run: >-
+          python -m clang_tool_chain_bins._impl.archive_index
+          --assets-root out/assets
+          --aggregate-output out/tools/data/tool-index.json
+          --meta-output out/tools/data/index-meta.json
+      - name: Native ARM64 tools, runtime, and clangd fixture validation
+        run: >-
+          python tools/validate_clang_extra.py
+          out/assets/clang-extra/win/arm64/clang-extra-21.1.5-win-arm64.tar.zst
+          --platform win --expected-major 21 --expected-arch arm64
+      - uses: actions/upload-artifact@v4
+        with:
+          name: clang-extra-win-arm64
+          path: out
+          if-no-files-found: error
+
+  windows-arm64-forge-fallback:
+    name: win/arm64 (Forge fallback proof)
+    if: ${{ inputs.exercise_forge_fallback }}
+    uses: zackees/forge/.github/workflows/forge-conan.yml@main
+    with:
+      recipe_repo: zackees/clang-tool-chain-bins
+      recipe_ref: ${{ github.ref_name }}
+      recipe_path: ci/clangd
+      name: clangd
+      version: "21.1.5"
+      build_type: Release
+      windows_x64: false
+      windows_x64_gnu: false
+      windows_arm64: true
+      linux_x64: false
+      linux_arm64: false
+      linux_x64_musl: false
+      linux_arm64_musl: false
+      macos_x64: false
+      macos_arm64: false
+
   macos-x86-source:
     name: darwin/x86_64 (Forge source fallback)
+    if: ${{ !inputs.windows_arm64_only }}
     runs-on: macos-15-large
     steps:
       - uses: actions/checkout@v4
@@ -119,7 +187,7 @@ jobs:
         run: >-
           python tools/validate_clang_extra.py
           out/assets/clang-extra/darwin/x86_64/clang-extra-21.1.6-darwin-x86_64.tar.zst
-          --platform darwin --expected-major 21
+          --platform darwin --expected-major 21 --expected-arch x86_64
       - uses: actions/upload-artifact@v4
         with:
           name: clang-extra-darwin-x86_64

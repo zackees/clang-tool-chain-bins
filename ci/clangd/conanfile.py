@@ -5,13 +5,14 @@ from conan.tools.cmake import CMake, CMakeToolchain
 from conan.tools.files import copy
 
 
-LLVM_TAG = "llvmorg-21.1.6"
-LLVM_COMMIT = "a832a5222e489298337fbb5876f8dcaf072c5cca"
+LLVM_TAG = "llvmorg-21.1.5"
+LLVM_COMMIT = "8e2cd28cd4ba46613a46467b0c91b1cabead26cd"
+COMPILED_TOOLS = ("clangd", "clang-format", "clang-query", "clang-tidy")
 
 
 class ClangdConan(ConanFile):
     name = "clangd"
-    version = "21.1.6"
+    version = "21.1.5"
     settings = "os", "arch", "compiler", "build_type"
     requires = ()
     exports_sources = "CMakeLists.txt"
@@ -25,9 +26,9 @@ class ClangdConan(ConanFile):
         self.run(f"git -C llvm-project checkout {LLVM_COMMIT}")
 
     def generate(self):
-        toolchain = CMakeToolchain(self)
+        toolchain = CMakeToolchain(self, generator="Ninja")
         toolchain.variables["LLVM_ENABLE_PROJECTS"] = "clang;clang-tools-extra"
-        toolchain.variables["LLVM_TARGETS_TO_BUILD"] = "Native"
+        toolchain.variables["LLVM_TARGETS_TO_BUILD"] = "AArch64"
         toolchain.variables["LLVM_ENABLE_ASSERTIONS"] = False
         toolchain.variables["CMAKE_BUILD_TYPE"] = "Release"
         toolchain.variables["CMAKE_INSTALL_PREFIX"] = self.package_folder
@@ -36,10 +37,13 @@ class ClangdConan(ConanFile):
     def build(self):
         cmake = CMake(self)
         cmake.configure(build_script_folder="llvm-project/llvm")
-        cmake.build(target="clangd")
+        for target in COMPILED_TOOLS:
+            cmake.build(target=target)
 
     def package(self):
-        copy(self, "clangd", src=self.build_folder / "bin", dst=self.package_folder / "bin")
+        for tool in COMPILED_TOOLS:
+            copy(self, f"{tool}.exe", src=self.build_folder / "bin", dst=self.package_folder / "bin")
+        copy(self, "*.dll", src=self.build_folder / "bin", dst=self.package_folder / "bin")
         copy(
             self,
             "*",

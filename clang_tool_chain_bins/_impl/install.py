@@ -283,7 +283,10 @@ def is_match_installed(match: dict[str, Any], *, home_dir: Path | None = None) -
     done_file = install_dir / "done.txt"
     if not done_file.exists():
         return False
-    return match["archive_sha256"] in done_file.read_text(encoding="utf-8")
+    if match["archive_sha256"] not in done_file.read_text(encoding="utf-8"):
+        return False
+    tool_path = install_dir.joinpath(*PurePosixPath(match["path_in_archive"]).parts)
+    return tool_path.is_file()
 
 
 def _write_done_file(match: dict[str, Any], install_dir: Path) -> None:

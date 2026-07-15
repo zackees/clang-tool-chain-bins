@@ -32,6 +32,7 @@ def _make_test_archive(archive_path: Path, members: dict[str, bytes]) -> None:
 def _make_match(archive_path: Path) -> dict[str, object]:
     return {
         "tool_name": "clang",
+        "path_in_archive": "bin/clang",
         "component": "clang",
         "version": "21.1.5",
         "platform": "linux",
@@ -52,6 +53,7 @@ def _make_multipart_match(part_paths: list[Path], *, archive_name: str = "llvm-2
 
     return {
         "tool_name": "clang",
+        "path_in_archive": "bin/clang",
         "component": "clang",
         "version": "21.1.5",
         "platform": "linux",
@@ -476,6 +478,8 @@ class InstallTests(unittest.TestCase):
             install_dir = get_install_dir("clang", "linux", "x86_64", home_dir)
             install_dir.mkdir(parents=True, exist_ok=True)
             (install_dir / "done.txt").write_text(f"archive_sha256={match['archive_sha256']}\n", encoding="utf-8")
+            (install_dir / "bin").mkdir()
+            (install_dir / "bin" / "clang").write_bytes(b"clang")
 
             with patch("tools.install._ensure_cached") as ensure_cached_mock:
                 result = install.ensure_match(match, home_dir=home_dir)
@@ -512,10 +516,34 @@ class InstallTests(unittest.TestCase):
             install_dir = get_install_dir("clang", "linux", "x86_64", home_dir)
             install_dir.mkdir(parents=True, exist_ok=True)
             (install_dir / "done.txt").write_text(f"archive_sha256={match['archive_sha256']}\n", encoding="utf-8")
+            (install_dir / "bin").mkdir()
+            (install_dir / "bin" / "clang").write_bytes(b"clang")
 
             result = install.tryinstall_match(match, home_dir=home_dir)
 
             self.assertEqual(result["status"], "already_installed")
+
+    def test_stale_done_marker_without_requested_tool_is_not_installed(self) -> None:
+        with TemporaryDirectory() as tmp:
+            tmp_root = Path(tmp)
+            archive_path = tmp_root / "archives" / "llvm-21.1.5-win-arm64.tar.zst"
+            _make_test_archive(archive_path, {"bin/clangd.exe": b"clangd"})
+            match = _make_match(archive_path)
+            match.update(
+                {
+                    "tool_name": "clangd",
+                    "path_in_archive": "bin/clangd.exe",
+                    "component": "clang-extra",
+                    "platform": "win",
+                    "arch": "arm64",
+                }
+            )
+            home_dir = tmp_root / "home"
+            install_dir = get_install_dir("clang-extra", "win", "arm64", home_dir)
+            install_dir.mkdir(parents=True)
+            (install_dir / "done.txt").write_text(f"archive_sha256={match['archive_sha256']}\n", encoding="utf-8")
+
+            self.assertFalse(install.is_match_installed(match, home_dir=home_dir))
 
     def test_install_main_requires_filters_when_multiple_candidates_exist(self) -> None:
         with TemporaryDirectory() as tmp:

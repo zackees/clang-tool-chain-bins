@@ -52,9 +52,15 @@ Public API functions:
 
 ## Query CLI
 
-`clangd` is distributed in the `clang-extra` component for Windows x86_64,
+`clangd` is distributed in the `clang-extra` component for Windows x86_64/ARM64,
 Linux x86_64/ARM64, and macOS x86_64/ARM64. This is the native language
 server; installing the VS Code extension alone does not provide this binary.
+
+Windows ARM64 uses the SHA256-pinned official LLVM 21.1.5 `woa64` installer.
+The native `windows-11-arm` lane rejects x86_64 PE binaries and validates all
+four compiled tools, isolated runtime loading, and the C++20/WASM clangd fixture.
+The optional Forge fallback uses the pinned LLVM source revision and enables
+only Forge's native `windows_arm64` target.
 
 ```bash
 clang-tool-chain-bins query clangd --component clang-extra --platform linux --arch x86_64

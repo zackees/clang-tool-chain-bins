@@ -296,6 +296,9 @@ class TestRequiredPlatformCoverage:
     def test_clang_extra_win_x86_64(self):
         self._assert_platform_exists("clang-extra", "win", "x86_64")
 
+    def test_clang_extra_win_arm64(self):
+        self._assert_platform_exists("clang-extra", "win", "arm64")
+
     # -- lldb: required by LLDB CI jobs --
 
     def test_lldb_win_x86_64(self):
