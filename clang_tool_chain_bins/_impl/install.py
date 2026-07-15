@@ -12,6 +12,7 @@ import tempfile
 from pathlib import Path, PurePosixPath
 from typing import TYPE_CHECKING, Any
 from urllib.parse import urlparse, unquote
+from urllib.request import urlopen
 
 import fasteners
 import pyzstd
@@ -85,6 +86,16 @@ def _copy_multipart_file_urls(urls: list[str], destination: Path) -> None:
                 raise ValueError(f"expected file:// URL, got {url}")
             with source_path.open("rb") as in_f:
                 shutil.copyfileobj(in_f, out_f)
+
+
+def _fetch_with_http(url: str, destination: Path) -> None:
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        with urlopen(url, timeout=60) as response, destination.open("wb") as out_f:
+            shutil.copyfileobj(response, out_f, length=1024 * 1024)
+    except Exception:
+        destination.unlink(missing_ok=True)
+        raise
 
 
 def _zccache_binary_name() -> str:
@@ -205,7 +216,7 @@ def _fetch_archive(match: dict[str, Any], destination: Path) -> None:
     if _local_file_path_from_url(archive_url) is not None:
         _copy_file_url(archive_url, destination)
         return
-    _fetch_with_zccache(archive_url, destination, match["archive_sha256"])
+    _fetch_with_http(archive_url, destination)
 
 
 def _validated_member_path(base_dir: Path, member_name: str) -> Path:
