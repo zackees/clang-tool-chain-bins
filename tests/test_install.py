@@ -5,13 +5,13 @@ import json
 import os
 import shutil
 import subprocess
+import sys
 import tarfile
 import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
-import fasteners
 import pyzstd
 from tools import install
 from tools.common import get_install_dir, get_lock_path, sha256_file
@@ -500,13 +500,33 @@ class InstallTests(unittest.TestCase):
             match = _make_match(archive_path)
             home_dir = tmp_root / "home"
             lock_path = get_lock_path("clang", "linux", "x86_64", home_dir)
-            lock = fasteners.InterProcessLock(str(lock_path))
-            self.assertTrue(lock.acquire(blocking=False))
+            holder = subprocess.Popen(
+                [
+                    sys.executable,
+                    "-c",
+                    (
+                        "import fasteners, sys; "
+                        "lock = fasteners.InterProcessLock(sys.argv[1]); "
+                        "assert lock.acquire(blocking=False); "
+                        "print('locked', flush=True); "
+                        "sys.stdin.read(1); "
+                        "lock.release()"
+                    ),
+                    str(lock_path),
+                ],
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+            )
             try:
+                self.assertEqual(holder.stdout.readline().strip(), "locked")
                 result = install.tryinstall_match(match, home_dir=home_dir)
             finally:
-                lock.release()
-                lock._do_close()
+                holder.stdin.write("x")
+                holder.stdin.flush()
+                _, stderr = holder.communicate(timeout=10)
+                self.assertEqual(holder.returncode, 0, stderr)
 
             self.assertEqual(result["operation"], "tryinstall")
             self.assertEqual(result["status"], "locked")
