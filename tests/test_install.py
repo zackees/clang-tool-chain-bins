@@ -66,6 +66,11 @@ def _make_multipart_match(part_paths: list[Path], *, archive_name: str = "llvm-2
 
 
 class InstallTests(unittest.TestCase):
+    def test_local_file_url_preserves_absolute_path(self) -> None:
+        with TemporaryDirectory() as tmp:
+            path = Path(tmp) / "archive.tar.zst"
+            self.assertEqual(install._local_file_path_from_url(path.as_uri()), path)
+
     def tearDown(self) -> None:
         install._resolve_zccache_binary.cache_clear()
         install._assert_zccache_download_support.cache_clear()

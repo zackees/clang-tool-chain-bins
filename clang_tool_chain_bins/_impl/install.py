@@ -62,7 +62,10 @@ def _local_file_path_from_url(url: str) -> Path | None:
     parsed = urlparse(url)
     if parsed.scheme != "file":
         return None
-    return Path(unquote(parsed.path.lstrip("/")))
+    path = unquote(parsed.path)
+    if os.name == "nt":
+        path = path.lstrip("/")
+    return Path(path)
 
 
 def _copy_file_url(url: str, destination: Path) -> None:
