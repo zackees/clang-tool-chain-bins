@@ -52,9 +52,15 @@ Public API functions:
 
 ## Query CLI
 
-`clangd` is distributed in the `clang-extra` component for Windows x86_64,
+`clangd` is distributed in the `clang-extra` component for Windows x86_64/ARM64,
 Linux x86_64/ARM64, and macOS x86_64/ARM64. This is the native language
 server; installing the VS Code extension alone does not provide this binary.
+
+Windows ARM64 uses the SHA256-pinned official LLVM 21.1.5 `woa64` installer.
+The native `windows-11-arm` lane rejects x86_64 PE binaries and validates all
+four compiled tools, isolated runtime loading, and the C++20/WASM clangd fixture.
+The optional Forge fallback uses the pinned LLVM source revision and enables
+only Forge's native `windows_arm64` target.
 
 ```bash
 clang-tool-chain-bins query clangd --component clang-extra --platform linux --arch x86_64
@@ -115,7 +121,7 @@ Each JSON line for a match includes the aggregate index metadata plus derived lo
 - `install_path`
 - `installed`
 
-`installed` is a local state check against the selected home directory. It becomes true when the install directory or its `done.txt` marker already exists there; it is not a remote availability check.
+`installed` is a local state check against the selected home directory. It becomes true only when the matching `done.txt` marker and the requested tool binary both exist; a stale marker without the binary is rejected.
 
 `install_path` is always the resolved destination for that archive candidate, even when `installed` is `false`. `source_urls` resolves to the concrete download URL list for that match; for normal archives it is a one-item list, and for multipart archives it contains the part URLs.
 

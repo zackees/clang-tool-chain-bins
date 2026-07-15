@@ -137,7 +137,16 @@ class QueryTests(unittest.TestCase):
 
             install_dir = home_dir / "clang" / "linux" / "x86_64"
             install_dir.mkdir(parents=True, exist_ok=True)
-            (install_dir / "done.txt").write_text("ok\n", encoding="utf-8")
+            (install_dir / "done.txt").write_text(
+                "archive_sha256=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\n",
+                encoding="utf-8",
+            )
+
+            stale = query.query_records(["clang"], records=records, home_dir=home_dir)
+            self.assertFalse(stale[0]["matches"][0]["installed"])
+
+            (install_dir / "bin").mkdir()
+            (install_dir / "bin" / "clang").write_bytes(b"clang")
 
             second = query.query_records(["clang"], records=records, home_dir=home_dir)
             self.assertTrue(second[0]["matches"][0]["installed"])

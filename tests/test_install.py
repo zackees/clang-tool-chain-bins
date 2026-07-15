@@ -5,13 +5,13 @@ import json
 import os
 import shutil
 import subprocess
+import sys
 import tarfile
 import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
-import fasteners
 import pyzstd
 from tools import install
 from tools.common import get_install_dir, get_lock_path, sha256_file
@@ -32,6 +32,7 @@ def _make_test_archive(archive_path: Path, members: dict[str, bytes]) -> None:
 def _make_match(archive_path: Path) -> dict[str, object]:
     return {
         "tool_name": "clang",
+        "path_in_archive": "bin/clang",
         "component": "clang",
         "version": "21.1.5",
         "platform": "linux",
@@ -52,6 +53,7 @@ def _make_multipart_match(part_paths: list[Path], *, archive_name: str = "llvm-2
 
     return {
         "tool_name": "clang",
+        "path_in_archive": "bin/clang",
         "component": "clang",
         "version": "21.1.5",
         "platform": "linux",
@@ -64,6 +66,11 @@ def _make_multipart_match(part_paths: list[Path], *, archive_name: str = "llvm-2
 
 
 class InstallTests(unittest.TestCase):
+    def test_local_file_url_preserves_absolute_path(self) -> None:
+        with TemporaryDirectory() as tmp:
+            path = Path(tmp) / "archive.tar.zst"
+            self.assertEqual(install._local_file_path_from_url(path.as_uri()), path)
+
     def tearDown(self) -> None:
         install._resolve_zccache_binary.cache_clear()
         install._assert_zccache_download_support.cache_clear()
@@ -476,6 +483,8 @@ class InstallTests(unittest.TestCase):
             install_dir = get_install_dir("clang", "linux", "x86_64", home_dir)
             install_dir.mkdir(parents=True, exist_ok=True)
             (install_dir / "done.txt").write_text(f"archive_sha256={match['archive_sha256']}\n", encoding="utf-8")
+            (install_dir / "bin").mkdir()
+            (install_dir / "bin" / "clang").write_bytes(b"clang")
 
             with patch("tools.install._ensure_cached") as ensure_cached_mock:
                 result = install.ensure_match(match, home_dir=home_dir)
@@ -491,13 +500,33 @@ class InstallTests(unittest.TestCase):
             match = _make_match(archive_path)
             home_dir = tmp_root / "home"
             lock_path = get_lock_path("clang", "linux", "x86_64", home_dir)
-            lock = fasteners.InterProcessLock(str(lock_path))
-            self.assertTrue(lock.acquire(blocking=False))
+            holder = subprocess.Popen(
+                [
+                    sys.executable,
+                    "-c",
+                    (
+                        "import fasteners, sys; "
+                        "lock = fasteners.InterProcessLock(sys.argv[1]); "
+                        "assert lock.acquire(blocking=False); "
+                        "print('locked', flush=True); "
+                        "sys.stdin.read(1); "
+                        "lock.release()"
+                    ),
+                    str(lock_path),
+                ],
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+            )
             try:
+                self.assertEqual(holder.stdout.readline().strip(), "locked")
                 result = install.tryinstall_match(match, home_dir=home_dir)
             finally:
-                lock.release()
-                lock._do_close()
+                holder.stdin.write("x")
+                holder.stdin.flush()
+                _, stderr = holder.communicate(timeout=10)
+                self.assertEqual(holder.returncode, 0, stderr)
 
             self.assertEqual(result["operation"], "tryinstall")
             self.assertEqual(result["status"], "locked")
@@ -512,10 +541,34 @@ class InstallTests(unittest.TestCase):
             install_dir = get_install_dir("clang", "linux", "x86_64", home_dir)
             install_dir.mkdir(parents=True, exist_ok=True)
             (install_dir / "done.txt").write_text(f"archive_sha256={match['archive_sha256']}\n", encoding="utf-8")
+            (install_dir / "bin").mkdir()
+            (install_dir / "bin" / "clang").write_bytes(b"clang")
 
             result = install.tryinstall_match(match, home_dir=home_dir)
 
             self.assertEqual(result["status"], "already_installed")
+
+    def test_stale_done_marker_without_requested_tool_is_not_installed(self) -> None:
+        with TemporaryDirectory() as tmp:
+            tmp_root = Path(tmp)
+            archive_path = tmp_root / "archives" / "llvm-21.1.5-win-arm64.tar.zst"
+            _make_test_archive(archive_path, {"bin/clangd.exe": b"clangd"})
+            match = _make_match(archive_path)
+            match.update(
+                {
+                    "tool_name": "clangd",
+                    "path_in_archive": "bin/clangd.exe",
+                    "component": "clang-extra",
+                    "platform": "win",
+                    "arch": "arm64",
+                }
+            )
+            home_dir = tmp_root / "home"
+            install_dir = get_install_dir("clang-extra", "win", "arm64", home_dir)
+            install_dir.mkdir(parents=True)
+            (install_dir / "done.txt").write_text(f"archive_sha256={match['archive_sha256']}\n", encoding="utf-8")
+
+            self.assertFalse(install.is_match_installed(match, home_dir=home_dir))
 
     def test_install_main_requires_filters_when_multiple_candidates_exist(self) -> None:
         with TemporaryDirectory() as tmp:

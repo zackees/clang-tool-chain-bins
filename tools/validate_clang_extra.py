@@ -7,7 +7,7 @@ import argparse
 import json
 import os
 import platform as host_platform
-import shutil
+import struct
 import subprocess
 import tarfile
 import tempfile
@@ -16,6 +16,10 @@ from pathlib import Path
 import pyzstd
 
 REQUIRED_TOOLS = ("clang-format", "clang-query", "clang-tidy", "git-clang-format", "run-clang-tidy")
+COMPILED_TOOLS = ("clang-format", "clang-query", "clang-tidy", "clangd")
+PE_MACHINE_X86_64 = 0x8664
+PE_MACHINE_ARM64 = 0xAA64
+PE_MACHINE_BY_ARCH = {"x86_64": PE_MACHINE_X86_64, "arm64": PE_MACHINE_ARM64}
 
 
 def _binary_name(name: str, target: str) -> str:
@@ -29,7 +33,35 @@ def _extract(archive: Path, destination: Path) -> None:
         tar.extractall(destination)
 
 
-def validate(archive: Path, target: str, expected_major: str, run_check: bool = True) -> None:
+def read_pe_machine(executable: Path) -> int:
+    with executable.open("rb") as stream:
+        header = stream.read(64)
+        if len(header) < 64 or header[:2] != b"MZ":
+            raise AssertionError(f"{executable} is not a PE executable")
+        pe_offset = struct.unpack_from("<I", header, 0x3C)[0]
+        stream.seek(pe_offset)
+        pe_header = stream.read(6)
+    if len(pe_header) != 6 or pe_header[:4] != b"PE\0\0":
+        raise AssertionError(f"{executable} has an invalid PE header")
+    return struct.unpack_from("<H", pe_header, 4)[0]
+
+
+def validate_pe_machine(executable: Path, expected_arch: str) -> None:
+    expected = PE_MACHINE_BY_ARCH[expected_arch]
+    actual = read_pe_machine(executable)
+    if actual != expected:
+        raise AssertionError(
+            f"{executable} has PE machine 0x{actual:04x}; expected 0x{expected:04x} for {expected_arch}"
+        )
+
+
+def validate(
+    archive: Path,
+    target: str,
+    expected_major: str,
+    run_check: bool = True,
+    expected_arch: str | None = None,
+) -> None:
     with tempfile.TemporaryDirectory(prefix="clang-extra-validate-") as temporary:
         root = Path(temporary)
         _extract(archive, root)
@@ -38,28 +70,42 @@ def validate(archive: Path, target: str, expected_major: str, run_check: bool = 
         missing = [name for name in required if not (bin_dir / name).is_file()]
         if missing:
             raise AssertionError(f"archive is missing tools: {', '.join(missing)}")
-        clangd = bin_dir / _binary_name("clangd", target)
+        compiled = [bin_dir / _binary_name(name, target) for name in COMPILED_TOOLS]
+        clangd = compiled[-1]
+        resource_headers = root / "lib" / "clang" / expected_major / "include"
+        if not resource_headers.is_dir():
+            raise AssertionError(f"archive is missing Clang resource headers: {resource_headers}")
+        if target == "win":
+            if expected_arch is None:
+                raise AssertionError("Windows validation requires --expected-arch")
+            for executable in compiled:
+                validate_pe_machine(executable, expected_arch)
         if target != "win" and not clangd.stat().st_mode & 0o111:
             raise AssertionError(f"{clangd} is not executable")
         environment = os.environ.copy()
-        if target == "linux":
+        if target == "win":
+            # Executables are addressed by absolute path. Restrict PATH so a
+            # developer-installed LLVM cannot mask a missing archive DLL.
+            environment["PATH"] = str(bin_dir)
+        elif target == "linux":
             environment["LD_LIBRARY_PATH"] = str(root / "lib") + os.pathsep + environment.get("LD_LIBRARY_PATH", "")
         elif target == "darwin":
             environment["DYLD_LIBRARY_PATH"] = str(root / "lib") + os.pathsep + environment.get("DYLD_LIBRARY_PATH", "")
-        version_result = subprocess.run([str(clangd), "--version"], capture_output=True, text=True, env=environment)
-        if version_result.returncode != 0:
-            dependency_output = ""
-            if target == "darwin":
-                dependency_output = subprocess.run(
-                    ["otool", "-L", str(clangd)], capture_output=True, text=True
-                ).stdout
-            raise AssertionError(
-                f"clangd --version failed with exit code {version_result.returncode}:\n"
-                f"{version_result.stdout}\n{version_result.stderr}\n{dependency_output}"
-            )
-        version = version_result.stdout
-        if f"version {expected_major}." not in version and f"LLVM {expected_major}" not in version:
-            raise AssertionError(f"unexpected clangd version: {version.strip()}")
+        for executable in compiled:
+            version_result = subprocess.run([str(executable), "--version"], capture_output=True, text=True, env=environment)
+            if version_result.returncode != 0:
+                dependency_output = ""
+                if target == "darwin":
+                    dependency_output = subprocess.run(
+                        ["otool", "-L", str(executable)], capture_output=True, text=True
+                    ).stdout
+                raise AssertionError(
+                    f"{executable.name} --version failed with exit code {version_result.returncode}:\n"
+                    f"{version_result.stdout}\n{version_result.stderr}\n{dependency_output}"
+                )
+            version = version_result.stdout + version_result.stderr
+            if f"version {expected_major}." not in version and f"LLVM {expected_major}" not in version:
+                raise AssertionError(f"unexpected {executable.name} version: {version.strip()}")
 
         if target == "linux":
             dependencies = subprocess.run(["ldd", str(clangd)], check=True, capture_output=True, text=True).stdout
@@ -100,9 +146,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("archive", type=Path)
     parser.add_argument("--platform", choices=("win", "linux", "darwin"), required=True)
     parser.add_argument("--expected-major", required=True)
+    parser.add_argument("--expected-arch", choices=("x86_64", "arm64"))
     parser.add_argument("--skip-check", action="store_true")
     args = parser.parse_args(argv)
-    validate(args.archive, args.platform, args.expected_major, not args.skip_check)
+    validate(args.archive, args.platform, args.expected_major, not args.skip_check, args.expected_arch)
     print(f"validated {args.archive} on {host_platform.platform()}")
     return 0
 

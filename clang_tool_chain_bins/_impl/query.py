@@ -7,7 +7,7 @@ import subprocess
 import urllib.request
 from dataclasses import asdict, dataclass
 from fnmatch import fnmatchcase
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import TYPE_CHECKING, Any
 
 from .archive_index import aggregate_index_path
@@ -233,7 +233,13 @@ def query_records(
                 get_cache_path(record.component, record.platform, record.arch, record.archive_sha256, resolved_home)
             )
             match["install_path"] = str(install_dir)
-            match["installed"] = (install_dir / "done.txt").exists() or install_dir.exists()
+            done_file = install_dir / "done.txt"
+            tool_path = install_dir.joinpath(*PurePosixPath(record.path_in_archive).parts)
+            match["installed"] = (
+                done_file.is_file()
+                and record.archive_sha256 in done_file.read_text(encoding="utf-8")
+                and tool_path.is_file()
+            )
             match["source_urls"] = _record_source_urls(record)
             match["url"] = record.archive_url
             matches.append(match)

@@ -24,6 +24,7 @@ import pyzstd
 
 SUPPORTED_TARGETS = {
     ("win", "x86_64"),
+    ("win", "arm64"),
     ("linux", "x86_64"),
     ("linux", "arm64"),
     ("darwin", "x86_64"),
@@ -36,15 +37,27 @@ SCRIPT_SOURCES = {
 }
 LLVM_DOWNLOAD_URLS = {
     ("win", "x86_64"): "https://github.com/llvm/llvm-project/releases/download/llvmorg-{version}/LLVM-{version}-win64.exe",
+    ("win", "arm64"): "https://github.com/llvm/llvm-project/releases/download/llvmorg-{version}/LLVM-{version}-woa64.exe",
     ("linux", "x86_64"): "https://github.com/llvm/llvm-project/releases/download/llvmorg-{version}/LLVM-{version}-Linux-X64.tar.xz",
     ("linux", "arm64"): "https://github.com/llvm/llvm-project/releases/download/llvmorg-{version}/LLVM-{version}-Linux-ARM64.tar.xz",
     ("darwin", "x86_64"): "https://github.com/llvm/llvm-project/releases/download/llvmorg-{version}/LLVM-{version}-macOS-X64.tar.xz",
     ("darwin", "arm64"): "https://github.com/llvm/llvm-project/releases/download/llvmorg-{version}/LLVM-{version}-macOS-ARM64.tar.xz",
 }
+LLVM_DOWNLOAD_SHA256 = {
+    ("win", "arm64", "21.1.5"): "d570e77cd37791372ddab07fe892a2a25f0824821dc57e546118a3f1ee4b66de",
+}
 
 
 def expected_binary_name(platform: str) -> str:
     return "clangd.exe" if platform == "win" else "clangd"
+
+
+def _sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def download_llvm(platform: str, arch: str, version: str, work_dir: Path) -> Path:
@@ -57,6 +70,14 @@ def download_llvm(platform: str, arch: str, version: str, work_dir: Path) -> Pat
     archive = work_dir / Path(url).name
     if not archive.exists():
         urllib.request.urlretrieve(url, archive)
+    expected_sha256 = LLVM_DOWNLOAD_SHA256.get((platform, arch, version))
+    if platform == "win" and arch == "arm64" and expected_sha256 is None:
+        raise ValueError(f"no pinned SHA256 for upstream LLVM distribution {platform}/{arch} {version}")
+    if expected_sha256 is not None:
+        digest = _sha256_file(archive)
+        if digest != expected_sha256:
+            archive.unlink(missing_ok=True)
+            raise ValueError(f"upstream LLVM SHA256 mismatch for {Path(url).name}: {digest} != {expected_sha256}")
     return archive
 
 
@@ -240,9 +261,28 @@ def build_downloaded_archive(
 ) -> Path:
     """Download, extract, and package one native upstream distribution."""
     archive = download_llvm(platform, arch, version, work_dir)
+    url = LLVM_DOWNLOAD_URLS[(platform, arch)].format(version=version)
+    effective_options = dict(build_options or {})
+    effective_options.update(
+        {
+            "mode": "prebuilt-extraction",
+            "upstream_url": url,
+            "upstream_sha256": _sha256_file(archive),
+            "extraction_method": "7z" if archive.suffix == ".exe" else "tar-xz",
+        }
+    )
     with tempfile.TemporaryDirectory(prefix="llvm-extract-") as extracted:
         source = extract_llvm(archive, Path(extracted), platform)
-        return build_archive(source, output_dir, platform, arch, version, llvm_commit, provenance_method, build_options)
+        return build_archive(
+            source,
+            output_dir,
+            platform,
+            arch,
+            version,
+            llvm_commit,
+            provenance_method,
+            effective_options,
+        )
 
 
 def update_manifests(output_dir: Path, platform: str, arch: str, version: str, filename: str, digest: str) -> None:
