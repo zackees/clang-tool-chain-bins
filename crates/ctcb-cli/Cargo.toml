@@ -19,14 +19,14 @@ crate-type = ["cdylib", "rlib"]
 clap = { workspace = true }
 anyhow = { workspace = true }
 indicatif = { workspace = true }
-ctcb-core = { path = "../ctcb-core", version = "0.4.5" }
-ctcb-checksum = { path = "../ctcb-checksum", version = "0.4.5" }
-ctcb-archive = { path = "../ctcb-archive", version = "0.4.5" }
-ctcb-dedup = { path = "../ctcb-dedup", version = "0.4.5" }
-ctcb-download = { path = "../ctcb-download", version = "0.4.5" }
-ctcb-strip = { path = "../ctcb-strip", version = "0.4.5" }
-ctcb-manifest = { path = "../ctcb-manifest", version = "0.4.5" }
-ctcb-split = { path = "../ctcb-split", version = "0.4.5" }
+ctcb-core = { path = "../ctcb-core", version = "0.4.6" }
+ctcb-checksum = { path = "../ctcb-checksum", version = "0.4.6" }
+ctcb-archive = { path = "../ctcb-archive", version = "0.4.6" }
+ctcb-dedup = { path = "../ctcb-dedup", version = "0.4.6" }
+ctcb-download = { path = "../ctcb-download", version = "0.4.6" }
+ctcb-strip = { path = "../ctcb-strip", version = "0.4.6" }
+ctcb-manifest = { path = "../ctcb-manifest", version = "0.4.6" }
+ctcb-split = { path = "../ctcb-split", version = "0.4.6" }
 walkdir = { workspace = true }
 pyo3 = { workspace = true, optional = true }
 serde_json = { workspace = true }

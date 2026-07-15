@@ -117,7 +117,7 @@ class InstallTests(unittest.TestCase):
             self.assertTrue(cache_path.exists())
             self.assertEqual(sha256_file(cache_path), match["archive_sha256"])
 
-    def test_ensure_cached_uses_zccache_for_http_downloads(self) -> None:
+    def test_ensure_cached_uses_direct_http_for_single_file_downloads(self) -> None:
         with TemporaryDirectory() as tmp:
             tmp_root = Path(tmp)
             archive_path = tmp_root / "archives" / "llvm-21.1.5-linux-x86_64.tar.zst"
@@ -126,18 +126,56 @@ class InstallTests(unittest.TestCase):
             match["archive_url"] = "https://example.invalid/llvm-21.1.5-linux-x86_64.tar.zst"
             home_dir = tmp_root / "home"
 
-            def _fake_fetch(source: str | list[str], destination: Path, expected_sha256: str) -> None:
+            def _fake_fetch(source: str, destination: Path) -> None:
                 self.assertEqual(source, match["archive_url"])
-                self.assertEqual(expected_sha256, match["archive_sha256"])
                 destination.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copyfile(archive_path, destination)
 
-            with patch("tools.install._fetch_with_zccache", side_effect=_fake_fetch) as fetch_mock:
+            with patch("tools.install._fetch_with_http", side_effect=_fake_fetch) as fetch_mock:
                 cache_path = install._ensure_cached(match, home_dir)
 
             self.assertTrue(cache_path.exists())
             self.assertEqual(sha256_file(cache_path), match["archive_sha256"])
             fetch_mock.assert_called_once()
+
+    def test_fetch_with_http_streams_response_and_removes_partial_failure(self) -> None:
+        with TemporaryDirectory() as tmp:
+            destination = Path(tmp) / "cache" / "archive.tar.zst"
+            payload = b"streamed archive"
+
+            class ChunkedResponse(io.BytesIO):
+                requested_sizes: list[int]
+
+                def __init__(self, content: bytes) -> None:
+                    super().__init__(content)
+                    self.requested_sizes = []
+
+                def read(self, size: int = -1) -> bytes:
+                    if size < 0:
+                        raise AssertionError("download attempted an unbounded read")
+                    self.requested_sizes.append(size)
+                    return super().read(min(size, 3))
+
+            response = ChunkedResponse(payload)
+            with patch("tools.install.urlopen", return_value=response) as urlopen_mock:
+                install._fetch_with_http("https://example.invalid/archive.tar.zst", destination)
+
+            self.assertEqual(destination.read_bytes(), payload)
+            self.assertGreater(len(response.requested_sizes), 1)
+            self.assertEqual(set(response.requested_sizes), {1024 * 1024})
+            urlopen_mock.assert_called_once_with("https://example.invalid/archive.tar.zst", timeout=60)
+
+            class BrokenResponse(io.BytesIO):
+                def read(self, size: int = -1) -> bytes:
+                    data = super().read(size)
+                    if data:
+                        return data
+                    raise OSError("connection lost")
+
+            with patch("tools.install.urlopen", return_value=BrokenResponse(b"partial")):
+                with self.assertRaisesRegex(OSError, "connection lost"):
+                    install._fetch_with_http("https://example.invalid/archive.tar.zst", destination)
+            self.assertFalse(destination.exists())
 
     def test_ensure_cached_uses_zccache_for_http_multipart_downloads(self) -> None:
         with TemporaryDirectory() as tmp:
