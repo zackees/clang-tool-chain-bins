@@ -86,6 +86,10 @@ jobs:
           tests/test_api.py -v
       - name: PEP 517 backend smoke (soldr builds the wheel)
         if: matrix.os == 'ubuntu-latest'
+        # The backend's own PyPI soldr may differ from setup-soldr's, and only
+        # one soldr version can own a cache root: give it an isolated root.
+        env:
+          SOLDR_CACHE_DIR: ${{ runner.temp }}/pep517-soldr
         run: uv build --wheel
 
   manifests:
