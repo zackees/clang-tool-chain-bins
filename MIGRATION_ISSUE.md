@@ -497,7 +497,7 @@ This issue is designed for an **orchestrating agent** that dispatches phases seq
    - Steps: `cargo fmt --check`, `cargo clippy`, `cargo test --workspace`
    - Maturin build with `--zig` for cross-compilation
    - `uv run pytest` for Python tests
-   - Cache: `Swatinem/rust-cache@v2`
+   - Cache: `zackees/setup-soldr@v0` with its build cache on, and `soldr cargo ...` for every cargo step (`Swatinem/rust-cache` is banned with no exceptions, zackees/ci.yml CACHE-025)
 
 13.2. Create `.github/workflows/release.yml`:
    - Trigger on `v*` tags
