@@ -100,6 +100,9 @@ ESSENTIAL_BINARIES = {
     # Import library tools
     "llvm-dlltool",
     "llvm-lib",
+    # Windows resource / manifest tools (CMake Windows-Clang needs an RC compiler)
+    "llvm-rc",
+    "llvm-mt",
     # NOTE: Removed clang-format, clang-tidy, and clang-query to reduce archive size
     # These are code quality tools, not needed for compilation
 }

@@ -35,6 +35,9 @@ pub const ESSENTIAL_BINARIES: &[&str] = &[
     "llvm-readobj",
     "llvm-dlltool",
     "llvm-lib",
+    // Windows resource / manifest tools (CMake Windows-Clang needs an RC compiler)
+    "llvm-rc",
+    "llvm-mt",
     // Additional utilities
     "llvm-as",
     "llvm-dis",
